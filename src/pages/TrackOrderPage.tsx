@@ -52,12 +52,6 @@ export const TrackOrderPage: React.FC<TrackOrderPageProps> = ({ initialRef, navi
     fetchOrder(reference, phone);
   };
 
-  const handleLoadDemo = () => {
-    setReference('ZT-78912');
-    setPhone('+923001234567');
-    fetchOrder('ZT-78912', '+923001234567');
-  };
-
   // Status mapping
   const steps: { key: OrderStatus; label: string; desc: string }[] = [
     { key: 'pending', label: 'Order Received', desc: 'Registered with host' },
@@ -134,16 +128,6 @@ export const TrackOrderPage: React.FC<TrackOrderPageProps> = ({ initialRef, navi
           </div>
         </form>
 
-        <div className="pt-2 flex items-center justify-between text-xs text-[#6B7280] border-t border-[#F4F4F4]">
-          <span>Security Notice: Tracking is protected by phone matching to prevent data leaks.</span>
-          <button
-            type="button"
-            onClick={handleLoadDemo}
-            className="text-[#D71920] font-semibold hover:underline"
-          >
-            Quick-load Demo Order (ZT-78912)
-          </button>
-        </div>
       </div>
 
       {errorMsg && (
