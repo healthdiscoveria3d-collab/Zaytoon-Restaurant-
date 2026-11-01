@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ArrowRight, Flame, MapPin, ShoppingBag, Utensils, Clock3, Star, Plus, Tag, ChefHat } from 'lucide-react';
-import { initialCategories, initialMenuItems, initialDeals } from '../data/initialData.ts';
+import { initialCategories, initialMenuItems, initialDeals, initialSiteSettings } from '../data/initialData.ts';
 import { useCart } from '../context/CartContext.tsx';
 
 interface HomePageProps { navigate: (path: string) => void; }
@@ -10,9 +10,11 @@ export const HomePage: React.FC<HomePageProps> = ({ navigate }) => {
   const [categories, setCategories] = useState(initialCategories);
   const [menuItems, setMenuItems] = useState(initialMenuItems);
   const [deals, setDeals] = useState(initialDeals);
+  const [siteSettings, setSiteSettings] = useState(initialSiteSettings);
   useEffect(() => {
-    Promise.all([fetch('/api/v1/menu/categories').then(r => r.json()), fetch('/api/v1/menu/items').then(r => r.json()), fetch('/api/v1/deals/active').then(r => r.json())])
-      .then(([categoryResult, itemResult, dealResult]) => {
+    Promise.all([fetch('/api/v1/site-settings/public').then(r => r.json()), fetch('/api/v1/menu/categories').then(r => r.json()), fetch('/api/v1/menu/items').then(r => r.json()), fetch('/api/v1/deals/active').then(r => r.json())])
+      .then(([settingsResult, categoryResult, itemResult, dealResult]) => {
+        if (settingsResult.success && settingsResult.data) setSiteSettings({ ...initialSiteSettings, ...settingsResult.data });
         if (categoryResult.success && Array.isArray(categoryResult.data)) setCategories(categoryResult.data);
         if (itemResult.success && Array.isArray(itemResult.data)) setMenuItems(itemResult.data);
         if (dealResult.success && Array.isArray(dealResult.data)) setDeals(dealResult.data);
@@ -31,12 +33,12 @@ export const HomePage: React.FC<HomePageProps> = ({ navigate }) => {
           <div className="max-w-2xl text-white">
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-[10px] font-black uppercase tracking-[.2em] backdrop-blur"><Flame size={14} className="text-[#F4C542]"/> Fresh from our kitchen</div>
             <h1 className="text-5xl font-black uppercase leading-[.92] tracking-[-.055em] sm:text-7xl lg:text-[82px]">Big flavours.<br/><span className="text-[#F4C542]">Better moments.</span></h1>
-            <p className="mt-6 max-w-lg text-sm leading-7 text-white/80 sm:text-lg">From sizzling BBQ to Pakistani favourites, bring everyone together around a table full of flavour.</p>
+            <p className="mt-6 max-w-lg text-sm leading-7 text-white/80 sm:text-lg">{siteSettings.tagline}</p>
             <div className="mt-8 flex flex-wrap gap-3">
               <button onClick={() => navigate('/menu')} className="inline-flex items-center gap-3 rounded-full bg-[#D71920] px-7 py-4 text-xs font-black uppercase tracking-wider text-white shadow-lg shadow-red-950/30 transition hover:-translate-y-1 hover:bg-[#b5121b]">Explore menu <ArrowRight size={17}/></button>
               <button onClick={() => navigate('/deals')} className="rounded-full border border-white/70 bg-white/5 px-7 py-4 text-xs font-black uppercase tracking-wider text-white backdrop-blur transition hover:bg-white hover:text-black">View latest deals</button>
             </div>
-            <div className="mt-10 flex flex-wrap gap-x-6 gap-y-3 text-[10px] font-bold uppercase tracking-wider text-white/75"><span className="flex items-center gap-2"><Utensils size={14} className="text-[#F4C542]"/> Pakistani favourites</span><span className="flex items-center gap-2"><ShoppingBag size={14} className="text-[#F4C542]"/> Easy online ordering</span><span className="flex items-center gap-2"><MapPin size={14} className="text-[#F4C542]"/> Ghazi Ghat, DG Khan</span></div>
+            <div className="mt-10 flex flex-wrap gap-x-6 gap-y-3 text-[10px] font-bold uppercase tracking-wider text-white/75"><span className="flex items-center gap-2"><Utensils size={14} className="text-[#F4C542]"/> Pakistani favourites</span><span className="flex items-center gap-2"><ShoppingBag size={14} className="text-[#F4C542]"/> Easy online ordering</span><span className="flex items-center gap-2"><MapPin size={14} className="text-[#F4C542]"/> {siteSettings.locationName}</span></div>
           </div>
         </div>
         <div className="absolute bottom-0 right-0 hidden h-1.5 w-1/3 bg-[#D71920] sm:block"/>
