@@ -99,13 +99,15 @@ export const AccountPage: React.FC<AccountPageProps> = ({ navigate, initialRef }
           )}
         </section>
 
-        <section className="mt-8 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm sm:p-6">
-          <div className="mb-2 flex flex-wrap items-center justify-between gap-2 px-2">
-            <div><p className="text-[9px] font-black uppercase tracking-[.2em] text-[#D71920]">Orders</p><h2 className="mt-1 text-2xl font-black uppercase">Track Your Order</h2></div>
-            <span className="rounded-full bg-gray-100 px-3 py-2 text-[9px] font-bold uppercase text-gray-500">Inside My Account</span>
-          </div>
-          <TrackOrderPage initialRef={initialRef} navigate={navigate}/>
-        </section>
+        {customer && (
+          <section className="mt-8 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm sm:p-6">
+            <div className="mb-2 flex flex-wrap items-center justify-between gap-2 px-2">
+              <div><p className="text-[9px] font-black uppercase tracking-[.2em] text-[#D71920]">Orders</p><h2 className="mt-1 text-2xl font-black uppercase">Track Your Order</h2></div>
+              <span className="rounded-full bg-gray-100 px-3 py-2 text-[9px] font-bold uppercase text-gray-500">Inside My Account</span>
+            </div>
+            <TrackOrderPage initialRef={initialRef} navigate={navigate}/>
+          </section>
+        )}
         <div className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-[#171717] p-5 text-white">
           <div><p className="text-sm font-black">Want to order something?</p><p className="mt-1 text-xs text-white/60">Explore the Zaytoon menu.</p></div>
           <button onClick={() => navigate('/menu')} className="inline-flex items-center gap-2 rounded-full bg-[#D71920] px-5 py-3 text-[10px] font-black uppercase">Browse Menu <ArrowRight size={14}/></button>
