@@ -110,6 +110,7 @@ export interface GalleryItem {
 }
 
 export interface SiteSettings {
+  logoUrl?: string;
   brandName: string;
   tagline: string;
   locationName: string;
