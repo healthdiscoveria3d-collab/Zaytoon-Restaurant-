@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express';
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
+import { createHmac, timingSafeEqual } from 'crypto';
 import {
   initialSiteSettings,
   initialCategories,
@@ -134,6 +135,177 @@ async function hydrateDatabase() {
 
   inquiries.splice(0, inquiries.length, ...(await listRecords<ContactInquiry>('inquiries')));
 }
+
+// ==========================================
+// Private Admin API
+// Credentials are supplied only through Render environment variables.
+// ==========================================
+const adminLoginAttempts = new Map<string, { count: number; resetAt: number }>();
+const ADMIN_COOKIE = 'zaytoon_admin_session';
+const ADMIN_SESSION_SECONDS = 8 * 60 * 60;
+
+function safeEqual(a: string, b: string) {
+  const left = Buffer.from(a);
+  const right = Buffer.from(b);
+  return left.length === right.length && timingSafeEqual(left, right);
+}
+
+function signAdminToken(payload: string) {
+  const secret = process.env.ADMIN_SESSION_SECRET;
+  if (!secret) throw new Error('Admin session secret is not configured.');
+  return createHmac('sha256', secret).update(payload).digest('base64url');
+}
+
+function getAdminToken(req: Request): string | null {
+  const cookies = (req.headers.cookie || '').split(';');
+  const entry = cookies.map((part) => part.trim()).find((part) => part.startsWith(ADMIN_COOKIE + '='));
+  return entry ? decodeURIComponent(entry.slice(ADMIN_COOKIE.length + 1)) : null;
+}
+
+function isAdminAuthenticated(req: Request) {
+  const token = getAdminToken(req);
+  if (!token) return false;
+  const [payload, signature] = token.split('.');
+  if (!payload || !signature) return false;
+  try {
+    if (!safeEqual(signature, signAdminToken(payload))) return false;
+    const decoded = JSON.parse(Buffer.from(payload, 'base64url').toString('utf8'));
+    return decoded.user === process.env.ADMIN_USERNAME && Number(decoded.exp) > Math.floor(Date.now() / 1000);
+  } catch {
+    return false;
+  }
+}
+
+function requireAdmin(req: Request, res: Response, next: () => void) {
+  if (!isAdminAuthenticated(req)) {
+    res.status(401).json({ success: false, message: 'Admin login required.' });
+    return;
+  }
+  next();
+}
+
+app.post('/api/admin/login', (req: Request, res: Response) => {
+  const username = String(req.body?.username || '');
+  const password = String(req.body?.password || '');
+  const configuredUsername = process.env.ADMIN_USERNAME || '';
+  const configuredPassword = process.env.ADMIN_PASSWORD || '';
+  const sessionSecret = process.env.ADMIN_SESSION_SECRET || '';
+
+  if (!configuredUsername || !configuredPassword || sessionSecret.length < 32) {
+    res.status(503).json({ success: false, message: 'Admin credentials are not configured in the hosting environment.' });
+    return;
+  }
+
+  const ip = req.ip || req.socket.remoteAddress || 'unknown';
+  const now = Date.now();
+  const attempts = adminLoginAttempts.get(ip);
+  if (attempts && attempts.resetAt > now && attempts.count >= 5) {
+    res.status(429).json({ success: false, message: 'Too many login attempts. Try again in 15 minutes.' });
+    return;
+  }
+
+  if (!safeEqual(username, configuredUsername) || !safeEqual(password, configuredPassword)) {
+    const nextAttempts = attempts && attempts.resetAt > now
+      ? { count: attempts.count + 1, resetAt: attempts.resetAt }
+      : { count: 1, resetAt: now + 15 * 60 * 1000 };
+    adminLoginAttempts.set(ip, nextAttempts);
+    res.status(401).json({ success: false, message: 'Incorrect username or password.' });
+    return;
+  }
+
+  adminLoginAttempts.delete(ip);
+  const payload = Buffer.from(JSON.stringify({
+    user: configuredUsername,
+    exp: Math.floor(Date.now() / 1000) + ADMIN_SESSION_SECONDS,
+  })).toString('base64url');
+  const token = payload + '.' + signAdminToken(payload);
+  const secure = process.env.NODE_ENV === 'production' ? '; Secure' : '';
+  res.setHeader('Set-Cookie', `${ADMIN_COOKIE}=${encodeURIComponent(token)}; HttpOnly; SameSite=Strict; Path=/api/admin; Max-Age=${ADMIN_SESSION_SECONDS}${secure}`);
+  res.json({ success: true, username: configuredUsername });
+});
+
+app.post('/api/admin/logout', (_req: Request, res: Response) => {
+  const secure = process.env.NODE_ENV === 'production' ? '; Secure' : '';
+  res.setHeader('Set-Cookie', `${ADMIN_COOKIE}=; HttpOnly; SameSite=Strict; Path=/api/admin; Max-Age=0${secure}`);
+  res.json({ success: true });
+});
+
+app.get('/api/admin/me', requireAdmin, (_req: Request, res: Response) => {
+  res.json({ success: true, username: process.env.ADMIN_USERNAME });
+});
+
+app.get('/api/admin/dashboard', requireAdmin, (_req: Request, res: Response) => {
+  const orderList = Array.from(orders.values());
+  const reservationList = Array.from(reservations.values());
+  res.json({
+    success: true,
+    data: {
+      totalOrders: orderList.length,
+      pendingOrders: orderList.filter((item) => item.status === 'pending').length,
+      activeReservations: reservationList.filter((item) => item.status === 'received' || item.status === 'confirmed').length,
+      unreadMessages: inquiries.length,
+      recentOrders: orderList.sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, 5),
+      recentReservations: reservationList.sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, 5),
+    },
+  });
+});
+
+app.get('/api/admin/orders', requireAdmin, (_req: Request, res: Response) => {
+  const data = Array.from(orders.values()).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+  res.json({ success: true, data });
+});
+
+app.patch('/api/admin/orders/:reference/status', requireAdmin, async (req: Request, res: Response) => {
+  const order = orders.get(req.params.reference);
+  const allowed: OrderStatus[] = ['pending', 'confirmed', 'preparing', 'ready', 'out_for_delivery', 'completed', 'cancelled'];
+  const status = req.body?.status as OrderStatus;
+  if (!order) {
+    res.status(404).json({ success: false, message: 'Order not found.' });
+    return;
+  }
+  if (!allowed.includes(status)) {
+    res.status(400).json({ success: false, message: 'Invalid order status.' });
+    return;
+  }
+  order.status = status;
+  order.updatedAt = new Date().toISOString();
+  try {
+    if (databaseEnabled) await saveRecord('orders', order.reference, order);
+    res.json({ success: true, data: order });
+  } catch {
+    res.status(500).json({ success: false, message: 'Could not save order update.' });
+  }
+});
+
+app.get('/api/admin/reservations', requireAdmin, (_req: Request, res: Response) => {
+  const data = Array.from(reservations.values()).sort((a, b) => (a.date + a.timeSlot).localeCompare(b.date + b.timeSlot));
+  res.json({ success: true, data });
+});
+
+app.patch('/api/admin/reservations/:reference/status', requireAdmin, async (req: Request, res: Response) => {
+  const reservation = reservations.get(req.params.reference);
+  const allowed = ['received', 'confirmed', 'declined', 'cancelled'];
+  const status = String(req.body?.status || '');
+  if (!reservation) {
+    res.status(404).json({ success: false, message: 'Reservation not found.' });
+    return;
+  }
+  if (!allowed.includes(status)) {
+    res.status(400).json({ success: false, message: 'Invalid reservation status.' });
+    return;
+  }
+  reservation.status = status as Reservation['status'];
+  try {
+    if (databaseEnabled) await saveRecord('reservations', reservation.reference, reservation);
+    res.json({ success: true, data: reservation });
+  } catch {
+    res.status(500).json({ success: false, message: 'Could not save reservation update.' });
+  }
+});
+
+app.get('/api/admin/messages', requireAdmin, (_req: Request, res: Response) => {
+  res.json({ success: true, data: [...inquiries].sort((a, b) => b.createdAt.localeCompare(a.createdAt)) });
+});
 
 // ==========================================
 // API v1 Routes (Clean Public Surface)
