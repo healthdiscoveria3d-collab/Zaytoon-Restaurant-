@@ -193,10 +193,7 @@ export const ReservationPage: React.FC<ReservationPageProps> = ({ navigate }) =>
                     onChange={(e) => setSeatingPreference(e.target.value)}
                     className="w-full text-sm p-3 rounded-lg border border-[#F4F4F4] bg-white focus:outline-none focus:ring-1 focus:ring-[#F4C542]"
                   >
-                    <option value="outdoor_riverside">Outdoor Standard Terrace (Indus View)</option>
-                    <option value="indoor_family_hall">Air-Conditioned Indoor Family Hall</option>
-                    <option value="executive_lounge">Executive / Travelers Lounge</option>
-                    <option value="any">First Available Best Table</option>
+                    {(Array.isArray(bookingSettings.reservationSeatingOptions) ? bookingSettings.reservationSeatingOptions : ['outdoor_riverside', 'indoor_family_hall', 'executive_lounge', 'any']).map((option: string) => <option key={option} value={option}>{({ indoor_family_hall: 'Air-Conditioned Indoor Family Hall', outdoor_riverside: 'Outdoor Standard Terrace (Indus View)', executive_lounge: 'Executive / Travelers Lounge', any: 'First Available Best Table' } as Record<string, string>)[option] || option.replaceAll('_', ' ')}</option>)}
                   </select>
                 </div>
               </div>
