@@ -236,6 +236,88 @@ function requireAdmin(req: Request, res: Response, next: () => void) {
   next();
 }
 
+// Customer accounts use PostgreSQL-backed records and signed HttpOnly sessions.
+const CUSTOMER_COOKIE = 'zaytoon_customer_session';
+const CUSTOMER_SESSION_SECONDS = 30 * 24 * 60 * 60;
+type CustomerRecord = { fullName: string; email: string; passwordSalt: string; passwordHash: string; createdAt: string };
+function customerSignature(payload: string) {
+  const secret = process.env.ADMIN_SESSION_SECRET || '';
+  if (secret.length < 32) throw new Error('Session signing is not configured.');
+  return createHmac('sha256', secret).update(payload).digest('base64url');
+}
+function customerEmailFromRequest(req: Request): string | null {
+  const cookie = (req.headers.cookie || '').split(';').map(v => v.trim()).find(v => v.startsWith(CUSTOMER_COOKIE + '='));
+  if (!cookie) return null;
+  try {
+    const token = decodeURIComponent(cookie.slice(CUSTOMER_COOKIE.length + 1));
+    const [payload, signature] = token.split('.');
+    if (!payload || !signature || !safeEqual(signature, customerSignature(payload))) return null;
+    const session = JSON.parse(Buffer.from(payload, 'base64url').toString('utf8'));
+    return typeof session.email === 'string' && Number(session.exp) > Math.floor(Date.now() / 1000) ? session.email : null;
+  } catch { return null; }
+}
+function issueCustomerSession(res: Response, email: string) {
+  const payload = Buffer.from(JSON.stringify({ email, exp: Math.floor(Date.now() / 1000) + CUSTOMER_SESSION_SECONDS })).toString('base64url');
+  const token = payload + '.' + customerSignature(payload);
+  const secure = process.env.NODE_ENV === 'production' ? '; Secure' : '';
+  res.setHeader('Set-Cookie', `${CUSTOMER_COOKIE}=${encodeURIComponent(token)}; HttpOnly; SameSite=Lax; Path=/api/v1/customer; Max-Age=${CUSTOMER_SESSION_SECONDS}${secure}`);
+}
+function customerPublicData(customer: CustomerRecord) {
+  return { fullName: customer.fullName, email: customer.email, createdAt: customer.createdAt };
+}
+app.post('/api/v1/customer/signup', async (req: Request, res: Response) => {
+  try {
+    if (!databaseEnabled) { res.status(503).json({ success: false, message: 'Customer accounts need the database connection.' }); return; }
+    const fullName = String(req.body?.fullName || '').trim();
+    const email = String(req.body?.email || '').trim().toLowerCase();
+    const password = String(req.body?.password || '');
+    if (fullName.length < 2 || !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email) || password.length < 8) {
+      res.status(400).json({ success: false, message: 'Enter your name, valid email and password of at least 8 characters.' }); return;
+    }
+    if (await getRecord<CustomerRecord>('customers', email)) {
+      res.status(409).json({ success: false, message: 'This email already has an account. Please log in.' }); return;
+    }
+    const salt = randomBytes(16).toString('hex');
+    const customer: CustomerRecord = { fullName, email, passwordSalt: salt, passwordHash: scryptSync(password, salt, 64).toString('hex'), createdAt: new Date().toISOString() };
+    await saveRecord('customers', email, customer);
+    issueCustomerSession(res, email);
+    res.status(201).json({ success: true, data: customerPublicData(customer) });
+  } catch {
+    res.status(500).json({ success: false, message: 'Could not create account. Please try again.' });
+  }
+});
+app.post('/api/v1/customer/login', async (req: Request, res: Response) => {
+  try {
+    if (!databaseEnabled) { res.status(503).json({ success: false, message: 'Customer accounts need the database connection.' }); return; }
+    const email = String(req.body?.email || '').trim().toLowerCase();
+    const password = String(req.body?.password || '');
+    const customer = await getRecord<CustomerRecord>('customers', email);
+    if (!customer || !safeEqual(scryptSync(password, customer.passwordSalt, 64).toString('hex'), customer.passwordHash)) {
+      res.status(401).json({ success: false, message: 'Email or password is incorrect.' }); return;
+    }
+    issueCustomerSession(res, email);
+    res.json({ success: true, data: customerPublicData(customer) });
+  } catch {
+    res.status(500).json({ success: false, message: 'Could not log in. Please try again.' });
+  }
+});
+app.get('/api/v1/customer/me', async (req: Request, res: Response) => {
+  try {
+    const email = customerEmailFromRequest(req);
+    if (!email) { res.status(401).json({ success: false, message: 'Please log in.' }); return; }
+    const customer = await getRecord<CustomerRecord>('customers', email);
+    if (!customer) { res.status(401).json({ success: false, message: 'Account not found.' }); return; }
+    res.json({ success: true, data: customerPublicData(customer) });
+  } catch {
+    res.status(500).json({ success: false, message: 'Could not load your account.' });
+  }
+});
+app.post('/api/v1/customer/logout', (_req: Request, res: Response) => {
+  const secure = process.env.NODE_ENV === 'production' ? '; Secure' : '';
+  res.setHeader('Set-Cookie', `${CUSTOMER_COOKIE}=; HttpOnly; SameSite=Lax; Path=/api/v1/customer; Max-Age=0${secure}`);
+  res.json({ success: true });
+});
+
 app.get('/api/admin/config-status', (_req: Request, res: Response) => {
   const usernameConfigured = Boolean(process.env.ADMIN_USERNAME);
   const passwordConfigured = Boolean(process.env.ADMIN_PASSWORD);
