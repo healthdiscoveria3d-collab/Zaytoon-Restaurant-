@@ -1,5 +1,13 @@
 import { SiteSettings, MenuCategory, MenuItem, Deal, GalleryItem } from '../types/index.ts';
-const karahiPhoto = '/images/food_pakistani_karahi_bbq.jpg';
+const karahiPhoto = 'https://images.deliveryhero.io/image/fd-pk/Products/12662364.jpg';
+const muttonKarahiPhoto = 'https://static.tossdown.com/images/bea46b94-c2d0-4080-80aa-7588b7511f37.jpg';
+const bbqPhoto = 'https://images.squarespace-cdn.com/content/v1/612d4825ee7c3b7ba3e215b7/1757986614639-ZLNUPUWWEVATPTST579L/kabab.png';
+const malaiBotiPhoto = 'https://www.pakistanrecipes.com/cdn/recipes/malai_boti_optimized.jpg';
+const biryaniPhoto = 'https://images.deliveryhero.io/image/fd-pk/Products/98313288.jpg';
+const drinksPhoto = 'https://res.cloudinary.com/matspecialen-no/image/upload/w_650%2Ch_650%2Cc_limit%2Cf_auto%2Cq_auto/v1770898588/p_9314p_default_1';
+const kheerPhoto = 'https://pakistani.recipes/images/recipes/og/chawal-ki-kheer-slow.webp';
+const naanPhoto = 'https://images.deliveryhero.io/image/fd-pk/products/4835237.jpg';
+const chaiPhoto = 'https://images.deliveryhero.io/image/fd-pk/products/8366239.jpg';
 const familyPhoto = '/images/deal_special_family_platter.jpg';
 const heroPhoto = '/images/hero_zaytoon_dining.jpg';
 const interiorPhoto = '/images/restaurant_interior.jpg';
@@ -29,7 +37,7 @@ export const initialCategories: MenuCategory[] = [
     slug: 'karahi-handi',
     description: 'Traditional slow-cooked clay handis and wok-fried shinwari karahis prepared fresh per order with pure butter or desi ghee.',
     displayOrder: 1,
-    image: karahiPhoto,
+    image: muttonKarahiPhoto,
     badge: 'Popular',
   },
   {
@@ -38,7 +46,7 @@ export const initialCategories: MenuCategory[] = [
     slug: 'bbq-tandoor',
     description: 'Smoky skewers and seekh kebabs grilled over open charcoal pits, seasoned with hand-pounded spices.',
     displayOrder: 2,
-    image: karahiPhoto,
+    image: bbqPhoto,
     badge: 'Hot Charcoal',
   },
   {
@@ -47,7 +55,7 @@ export const initialCategories: MenuCategory[] = [
     slug: 'rice-biryani',
     description: 'Long-grain aromatic basmati layered with tender cuts, saffron, caramelized onions, and house raita.',
     displayOrder: 3,
-    image: heroPhoto,
+    image: biryaniPhoto,
     badge: 'Royal Feast',
   },
   {
@@ -56,7 +64,7 @@ export const initialCategories: MenuCategory[] = [
     slug: 'cold-drinks-water',
     description: 'Carbonated beverages and sealed drinking water bottles.',
     displayOrder: 4,
-    image: interiorPhoto,
+    image: drinksPhoto,
     badge: 'Retail MRP',
   },
   {
@@ -65,7 +73,7 @@ export const initialCategories: MenuCategory[] = [
     slug: 'cafe-desserts',
     description: 'Traditional sweet halwas, kheer, chilled kulfi, and Karak Chai brewed fresh for night travelers.',
     displayOrder: 5,
-    image: interiorPhoto,
+    image: kheerPhoto,
     badge: '24/7 Chai',
   },
   {
@@ -74,7 +82,7 @@ export const initialCategories: MenuCategory[] = [
     slug: 'tandoori-breads',
     description: 'Piping hot roghni naan, garlic tandoori kulcha, fresh salads, and cooling mint chutneys.',
     displayOrder: 6,
-    image: karahiPhoto,
+    image: naanPhoto,
     badge: 'Fresh Tandoor',
   },
 ];
@@ -90,7 +98,7 @@ export const initialMenuItems: MenuItem[] = [
     description: 'Fresh Indus valley mutton wok-tossed with ripe vine tomatoes, fresh ginger slivers, whole black pepper, and desi butter.',
     price: 2850,
     priceNote: 'Demo rate (Subject to daily livestock market rate)',
-    image: 'https://foodyz.pk/assets/traditional_pakistani_karahi_and_handi_meat_curries_in_copper_pots.-BMLOjauE.webp',
+    image: muttonKarahiPhoto,
     isAvailable: true,
     isFeatured: true,
     isDemoItem: true,
@@ -107,7 +115,7 @@ export const initialMenuItems: MenuItem[] = [
     description: 'Tender bone-in chicken braised solely with salt, fresh tomatoes, and green chilies in its own juices.',
     price: 1750,
     priceNote: 'Demo rate',
-    image: 'https://static.tossdown.com/images/7cd176c2-bc46-4495-a789-e763f2b83875.jpg',
+    image: karahiPhoto,
     isAvailable: true,
     isFeatured: true,
     isDemoItem: true,
@@ -124,7 +132,7 @@ export const initialMenuItems: MenuItem[] = [
     description: 'Creamy yogurt, almond paste, and subtle green cardamom gravy with velvety char-grilled boneless chicken chunks.',
     price: 1850,
     priceNote: 'Demo rate',
-    image: 'https://www.skipthedishes.com/_next/image?q=75&url=https%3A%2F%2Fmenu-images-static.skipthedishes.com%2Fimages%2Fresized%2Flarge-7887d656d8f8f62b2068.jpg&w=3840',
+    image: muttonKarahiPhoto,
     isAvailable: true,
     isFeatured: false,
     isDemoItem: true,
@@ -143,7 +151,7 @@ export const initialMenuItems: MenuItem[] = [
     description: 'Finely minced beef spiced with roasted coriander, cumin, and onion, charred over red hot coals.',
     price: 980,
     priceNote: 'Demo rate',
-    image: 'https://snapcalorie-webflow-website.s3.us-east-2.amazonaws.com/media/food_pics_v2/medium/beef_seekh_kabab.jpg',
+    image: bbqPhoto,
     isAvailable: true,
     isFeatured: true,
     isDemoItem: true,
@@ -160,7 +168,7 @@ export const initialMenuItems: MenuItem[] = [
     description: 'Melt-in-mouth chicken cubes marinated overnight in heavy dairy cream, green chili paste, and white pepper.',
     price: 1150,
     priceNote: 'Demo rate',
-    image: 'https://hamariweb.com/recipes/images/recipeimages/10957.jpg',
+    image: malaiBotiPhoto,
     isAvailable: true,
     isFeatured: false,
     isDemoItem: true,
@@ -179,7 +187,7 @@ export const initialMenuItems: MenuItem[] = [
     description: 'Sealed clay pot basmati rice layered with succulent spiced mutton, whole prunes, saffron milk, and fresh mint.',
     price: 1350,
     priceNote: 'Demo rate',
-    image: 'https://images.deliveryhero.io/image/fd-pk/Products/76523368.jpg?width=%25s',
+    image: biryaniPhoto,
     isAvailable: true,
     isFeatured: true,
     isDemoItem: true,
@@ -196,7 +204,7 @@ export const initialMenuItems: MenuItem[] = [
     description: 'Subtly sweet seasoned rice topped with caramelized julienne carrots, golden raisins, and fall-apart beef shank.',
     price: 1450,
     priceNote: 'Demo rate',
-    image: 'https://falasteenifoodie.com/wp-content/uploads/2024/11/DSC02253-1024x683.jpg',
+    image: biryaniPhoto,
     isAvailable: true,
     isFeatured: false,
     isDemoItem: true,
@@ -215,7 +223,7 @@ export const initialMenuItems: MenuItem[] = [
     description: 'Purified sealed premium mineral drinking water bottle with factory cap seal.',
     price: 140,
     priceNote: 'Retail MRP',
-    image: 'https://mir-s3-cdn-cf.behance.net/project_modules/max_3840/efefc2183340421.653e672d33832.jpg',
+    image: drinksPhoto,
     isAvailable: true,
     isFeatured: false,
     isDemoItem: false,
@@ -231,7 +239,7 @@ export const initialMenuItems: MenuItem[] = [
     description: 'Convenient 500ml sealed drinking water bottle.',
     price: 80,
     priceNote: 'Retail MRP',
-    image: 'https://mir-s3-cdn-cf.behance.net/project_modules/max_3840/efefc2183340421.653e672d33832.jpg',
+    image: drinksPhoto,
     isAvailable: true,
     isFeatured: false,
     isDemoItem: false,
@@ -247,7 +255,7 @@ export const initialMenuItems: MenuItem[] = [
     description: 'Choice of chilled Coca-Cola, Sprite, or Fanta in factory-sealed bottles.',
     price: 220,
     priceNote: 'Retail MRP',
-    image: 'https://mir-s3-cdn-cf.behance.net/project_modules/hd/b0409810054645.560deb8631f53.jpg',
+    image: drinksPhoto,
     isAvailable: true,
     isFeatured: false,
     isDemoItem: false,
@@ -265,7 +273,7 @@ export const initialMenuItems: MenuItem[] = [
     description: 'Thick creamy buffalo milk boiled with strong whole leaf Assam tea and crushed green cardamom pods.',
     price: 180,
     priceNote: 'Demo rate',
-    image: 'https://images.unsplash.com/photo-1571934811356-5cc061b6821f?auto=format&fit=crop&w=1000&q=85',
+    image: chaiPhoto,
     isAvailable: true,
     isFeatured: true,
     isDemoItem: true,
@@ -281,7 +289,7 @@ export const initialMenuItems: MenuItem[] = [
     description: 'Traditional slow-reduced rice pudding scented with real Iranian saffron, pistachios, and silver leaf.',
     price: 360,
     priceNote: 'Demo rate',
-    image: 'https://images.deliveryhero.io/image/fd-pk/LH/w1jv-hero.jpg',
+    image: kheerPhoto,
     isAvailable: true,
     isFeatured: false,
     isDemoItem: true,
@@ -299,7 +307,7 @@ export const initialMenuItems: MenuItem[] = [
     description: 'Fluffy clay oven bread brushed generously with melted ghee and sprinkled with toasted sesame seeds.',
     price: 120,
     priceNote: 'Demo rate',
-    image: 'https://images.deliveryhero.io/image/fd-pk/products/47993006.jpg?width=%25s',
+    image: naanPhoto,
     isAvailable: true,
     isFeatured: false,
     isDemoItem: true,
@@ -315,7 +323,7 @@ export const initialMenuItems: MenuItem[] = [
     description: 'Tandoori flatbread topped with minced roasted garlic, fresh coriander leaves, and clarified butter.',
     price: 140,
     priceNote: 'Demo rate',
-    image: 'https://www.midamarhalal.com/cdn/shop/files/GarlicNaan_635d9283-15a8-4df2-9894-cd20bcaad918.jpg?v=1740159148',
+    image: naanPhoto,
     isAvailable: true,
     isFeatured: false,
     isDemoItem: true,
@@ -361,7 +369,7 @@ export const initialDeals: Deal[] = [
     slug: 'highway-express-platter',
     shortDescription: 'Quick turnaround hot meal for highway drivers and transit passengers on N-70.',
     fullDescription: 'Designed for fast, satisfying transit stops near Ghazi Ghat Toll Plaza. Prepared within 15 minutes of confirmation. Features sizzling chicken boti, fragrant pulao rice, 2 hot rotis, raita, and hot Karak Chai.',
-    image: karahiPhoto,
+    image: malaiBotiPhoto,
     originalPrice: 1950,
     offerPrice: 1650,
     discountPercentage: 15,
@@ -389,7 +397,7 @@ export const initialDeals: Deal[] = [
     slug: 'midnight-karahi-special',
     shortDescription: 'Late-night dining duo offer active from 10:00 PM to 4:00 AM on the Indus banks.',
     fullDescription: 'Experience the tranquil night breeze over the Indus with a freshly cooked Chicken Shinwari Karahi, 4 piping hot naans, fresh mint raita, and 2 cups of spiced Karak tea.',
-    image: heroPhoto,
+    image: muttonKarahiPhoto,
     originalPrice: 2450,
     offerPrice: 2050,
     discountPercentage: 16,
