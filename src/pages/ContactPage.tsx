@@ -59,15 +59,15 @@ export const ContactPage: React.FC = () => {
   return (
     <div className="space-y-12 pb-24">
       {/* Header */}
-      <section className="bg-[#12372D] text-white py-16">
+      <section className="bg-[#D71920] text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
-          <span className="text-xs font-semibold uppercase tracking-widest text-[#B69A62]">
+          <span className="text-xs font-semibold uppercase tracking-widest text-[#F4C542]">
             Reach Our Team
           </span>
-          <h1 className="text-4xl sm:text-5xl font-display font-bold text-[#F7F3EA]">
+          <h1 className="text-4xl sm:text-5xl font-display font-bold text-[#FFFFFF]">
             Contact & Directions
           </h1>
-          <p className="text-sm sm:text-base text-[#EDE5D7]/85 max-w-2xl mx-auto">
+          <p className="text-sm sm:text-base text-[#F4F4F4]/85 max-w-2xl mx-auto">
             Situated directly along the Indus riverbank near Ghazi Ghat Toll Plaza on the N-70 Highway.
           </p>
         </div>
@@ -77,38 +77,38 @@ export const ContactPage: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
           {/* Left: Contact Info & Map Card */}
           <div className="lg:col-span-5 space-y-6">
-            <div className="bg-white p-6 sm:p-8 rounded-xl border border-[#EDE5D7] shadow-sm space-y-6">
-              <h2 className="font-display font-bold text-xl text-[#12372D]">
+            <div className="bg-white p-6 sm:p-8 rounded-xl border border-[#F4F4F4] shadow-sm space-y-6">
+              <h2 className="font-display font-bold text-xl text-[#D71920]">
                 Restaurant Coordinates
               </h2>
 
-              <div className="space-y-4 text-sm text-[#242824]/85">
+              <div className="space-y-4 text-sm text-[#171717]/85">
                 <div className="flex items-start gap-3">
-                  <MapPin className="w-5 h-5 text-[#B69A62] shrink-0 mt-0.5" />
+                  <MapPin className="w-5 h-5 text-[#F4C542] shrink-0 mt-0.5" />
                   <div>
-                    <strong className="block text-[#12372D]">Physical Location:</strong>
+                    <strong className="block text-[#D71920]">Physical Location:</strong>
                     <span>{initialSiteSettings.address}</span>
-                    <span className="block text-xs text-[#777B75] mt-0.5">
+                    <span className="block text-xs text-[#6B7280] mt-0.5">
                       (N-70 National Highway Dining Milestone)
                     </span>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-3">
-                  <Clock className="w-5 h-5 text-[#B69A62] shrink-0 mt-0.5" />
+                  <Clock className="w-5 h-5 text-[#F4C542] shrink-0 mt-0.5" />
                   <div>
-                    <strong className="block text-[#12372D]">Operating Hours:</strong>
+                    <strong className="block text-[#D71920]">Operating Hours:</strong>
                     <span>{initialSiteSettings.operatingHours}</span>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-3">
-                  <Phone className="w-5 h-5 text-[#B69A62] shrink-0 mt-0.5" />
+                  <Phone className="w-5 h-5 text-[#F4C542] shrink-0 mt-0.5" />
                   <div>
-                    <strong className="block text-[#12372D]">Direct Phone Line:</strong>
+                    <strong className="block text-[#D71920]">Direct Phone Line:</strong>
                     <a
                       href="tel:+923026777908"
-                      className="text-[#12372D] font-bold hover:underline"
+                      className="text-[#D71920] font-bold hover:underline"
                     >
                       {initialSiteSettings.phone}
                     </a>
@@ -116,9 +116,9 @@ export const ContactPage: React.FC = () => {
                 </div>
 
                 <div className="flex items-start gap-3">
-                  <MessageSquare className="w-5 h-5 text-[#B69A62] shrink-0 mt-0.5" />
+                  <MessageSquare className="w-5 h-5 text-[#F4C542] shrink-0 mt-0.5" />
                   <div>
-                    <strong className="block text-[#12372D]">WhatsApp Inquiries:</strong>
+                    <strong className="block text-[#D71920]">WhatsApp Inquiries:</strong>
                     <a
                       href="https://wa.me/923026777908"
                       target="_blank"
@@ -132,31 +132,31 @@ export const ContactPage: React.FC = () => {
                 </div>
 
                 <div className="flex items-start gap-3">
-                  <Mail className="w-5 h-5 text-[#B69A62] shrink-0 mt-0.5" />
+                  <Mail className="w-5 h-5 text-[#F4C542] shrink-0 mt-0.5" />
                   <div>
-                    <strong className="block text-[#12372D]">Official Email:</strong>
+                    <strong className="block text-[#D71920]">Official Email:</strong>
                     <span>{initialSiteSettings.email}</span>
                   </div>
                 </div>
               </div>
 
               {/* Direct Maps Action */}
-              <div className="pt-4 border-t border-[#EDE5D7]">
+              <div className="pt-4 border-t border-[#F4F4F4]">
                 <a
                   href="https://maps.google.com/?q=Ghazi+Ghat+Toll+Plaza+Dera+Ghazi+Khan"
                   target="_blank"
                   rel="noreferrer"
-                  className="w-full py-3 bg-[#12372D] hover:bg-[#0B241E] text-white font-semibold text-xs rounded-lg transition-colors flex items-center justify-center gap-2 shadow-sm"
+                  className="w-full py-3 bg-[#D71920] hover:bg-[#171717] text-white font-semibold text-xs rounded-lg transition-colors flex items-center justify-center gap-2 shadow-sm"
                 >
-                  <MapPin className="w-4 h-4 text-[#B69A62]" />
+                  <MapPin className="w-4 h-4 text-[#F4C542]" />
                   <span>Navigate with Google Maps</span>
                 </a>
               </div>
             </div>
 
             {/* Owner Pre-Launch verification banner */}
-            <div className="p-4 rounded-xl bg-[#EDE5D7]/60 border border-[#EDE5D7] text-xs text-[#777B75] space-y-1">
-              <strong className="text-[#12372D] block">Pre-Launch Calibration:</strong>
+            <div className="p-4 rounded-xl bg-[#F4F4F4]/60 border border-[#F4F4F4] text-xs text-[#6B7280] space-y-1">
+              <strong className="text-[#D71920] block">Pre-Launch Calibration:</strong>
               <p>
                 Phone numbers and location coordinates are stored in dynamic system settings for seamless updates via the future Admin application.
               </p>
@@ -164,12 +164,12 @@ export const ContactPage: React.FC = () => {
           </div>
 
           {/* Right: Working Contact Form */}
-          <div className="lg:col-span-7 bg-white p-6 sm:p-10 rounded-xl border border-[#EDE5D7] shadow-sm space-y-6">
+          <div className="lg:col-span-7 bg-white p-6 sm:p-10 rounded-xl border border-[#F4F4F4] shadow-sm space-y-6">
             <div>
-              <h2 className="font-display font-bold text-2xl text-[#12372D]">
+              <h2 className="font-display font-bold text-2xl text-[#D71920]">
                 Send an Inquiry or Feedback
               </h2>
-              <p className="text-xs text-[#777B75] mt-1">
+              <p className="text-xs text-[#6B7280] mt-1">
                 Whether organizing a highway bus convoy stop, asking about catering, or sharing a dining experience.
               </p>
             </div>
@@ -191,7 +191,7 @@ export const ContactPage: React.FC = () => {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold uppercase text-[#12372D] mb-1">
+                  <label className="block text-xs font-semibold uppercase text-[#D71920] mb-1">
                     Your Full Name *
                   </label>
                   <input
@@ -200,12 +200,12 @@ export const ContactPage: React.FC = () => {
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
                     placeholder="e.g. Sharjeel Khan"
-                    className="w-full text-sm p-3 rounded-lg border border-[#EDE5D7] bg-[#F7F3EA]/30 focus:outline-none focus:ring-1 focus:ring-[#B69A62]"
+                    className="w-full text-sm p-3 rounded-lg border border-[#F4F4F4] bg-[#FFFFFF]/30 focus:outline-none focus:ring-1 focus:ring-[#F4C542]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold uppercase text-[#12372D] mb-1">
+                  <label className="block text-xs font-semibold uppercase text-[#D71920] mb-1">
                     Mobile Phone *
                   </label>
                   <input
@@ -214,14 +214,14 @@ export const ContactPage: React.FC = () => {
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder="e.g. 0302 6777908"
-                    className="w-full text-sm p-3 rounded-lg border border-[#EDE5D7] bg-[#F7F3EA]/30 focus:outline-none focus:ring-1 focus:ring-[#B69A62]"
+                    className="w-full text-sm p-3 rounded-lg border border-[#F4F4F4] bg-[#FFFFFF]/30 focus:outline-none focus:ring-1 focus:ring-[#F4C542]"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold uppercase text-[#12372D] mb-1">
+                  <label className="block text-xs font-semibold uppercase text-[#D71920] mb-1">
                     Email Address (Optional)
                   </label>
                   <input
@@ -229,18 +229,18 @@ export const ContactPage: React.FC = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="name@example.pk"
-                    className="w-full text-sm p-3 rounded-lg border border-[#EDE5D7] bg-[#F7F3EA]/30 focus:outline-none focus:ring-1 focus:ring-[#B69A62]"
+                    className="w-full text-sm p-3 rounded-lg border border-[#F4F4F4] bg-[#FFFFFF]/30 focus:outline-none focus:ring-1 focus:ring-[#F4C542]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold uppercase text-[#12372D] mb-1">
+                  <label className="block text-xs font-semibold uppercase text-[#D71920] mb-1">
                     Subject / Topic
                   </label>
                   <select
                     value={subject}
                     onChange={(e) => setSubject(e.target.value)}
-                    className="w-full text-sm p-3 rounded-lg border border-[#EDE5D7] bg-white focus:outline-none focus:ring-1 focus:ring-[#B69A62]"
+                    className="w-full text-sm p-3 rounded-lg border border-[#F4F4F4] bg-white focus:outline-none focus:ring-1 focus:ring-[#F4C542]"
                   >
                     <option value="General Dining Inquiry">General Dining Inquiry</option>
                     <option value="Large Highway Group / Convoy">Large Highway Group / Convoy Booking</option>
@@ -251,7 +251,7 @@ export const ContactPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase text-[#12372D] mb-1">
+                <label className="block text-xs font-semibold uppercase text-[#D71920] mb-1">
                   Your Message or Special Request *
                 </label>
                 <textarea
@@ -260,14 +260,14 @@ export const ContactPage: React.FC = () => {
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder="How can our hospitality team assist you?"
-                  className="w-full text-sm p-3 rounded-lg border border-[#EDE5D7] bg-[#F7F3EA]/30 focus:outline-none focus:ring-1 focus:ring-[#B69A62]"
+                  className="w-full text-sm p-3 rounded-lg border border-[#F4F4F4] bg-[#FFFFFF]/30 focus:outline-none focus:ring-1 focus:ring-[#F4C542]"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full py-3.5 bg-[#12372D] hover:bg-[#0B241E] text-white font-semibold text-xs uppercase tracking-wider rounded-lg shadow-sm transition-colors disabled:opacity-50"
+                className="w-full py-3.5 bg-[#D71920] hover:bg-[#171717] text-white font-semibold text-xs uppercase tracking-wider rounded-lg shadow-sm transition-colors disabled:opacity-50"
               >
                 {isSubmitting ? 'Sending Message...' : 'Send Message'}
               </button>
