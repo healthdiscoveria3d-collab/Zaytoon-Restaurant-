@@ -296,7 +296,7 @@ export const AdminPage: React.FC = () => {
                   preparationTime: 'Preparation Time', spiciness: 'Spice Level', tags: 'Tags / Search Keywords',
                   isDemoItem: 'Demo Content', isFeatured: 'Featured on Website',
                   isAvailable: 'Available for Ordering', categoryName: 'Menu Category',
-                  categoryId: 'Category Reference', id: 'Record ID', logoUrl: 'Restaurant Logo URL',
+                  categoryId: 'Category Reference', id: 'Record ID', logoUrl: 'Restaurant Logo URL', reservationTimeSlots: 'Reservation Time Slots', reservationMaxTablesPerSlot: 'Tables Available Per Time Slot', reservationMaxGuests: 'Maximum Guests Per Booking', reservationSeatingOptions: 'Available Seating Areas',
                 };
                 const fieldHelp: Record<string, string> = {
                   name: 'Customer ko website par yehi product name nazar aayega. Example: Chicken Malai Handi.',
