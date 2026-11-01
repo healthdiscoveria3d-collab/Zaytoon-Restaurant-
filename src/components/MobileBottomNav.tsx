@@ -16,13 +16,13 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ currentPath, n
   };
 
   return (
-    <div className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-[#0B241E] border-t border-[#12372D] px-2 py-1.5 shadow-2xl">
-      <div className="grid grid-cols-5 items-center justify-around text-[10px] font-medium text-[#EDE5D7]/75">
+    <div className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-[#171717] border-t border-[#D71920] px-2 py-1.5 shadow-2xl">
+      <div className="grid grid-cols-5 items-center justify-around text-[10px] font-medium text-[#F4F4F4]/75">
         {/* Home */}
         <button
           onClick={() => handleNav('/')}
           className={`flex flex-col items-center py-1 transition-colors ${
-            currentPath === '/' ? 'text-[#B69A62] font-semibold' : 'hover:text-white'
+            currentPath === '/' ? 'text-[#F4C542] font-semibold' : 'hover:text-white'
           }`}
         >
           <Home className="w-4 h-4 mb-0.5" />
@@ -33,7 +33,7 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ currentPath, n
         <button
           onClick={() => handleNav('/menu')}
           className={`flex flex-col items-center py-1 transition-colors ${
-            currentPath.startsWith('/menu') ? 'text-[#B69A62] font-semibold' : 'hover:text-white'
+            currentPath.startsWith('/menu') ? 'text-[#F4C542] font-semibold' : 'hover:text-white'
           }`}
         >
           <UtensilsCrossed className="w-4 h-4 mb-0.5" />
@@ -44,7 +44,7 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ currentPath, n
         <button
           onClick={() => handleNav('/deals')}
           className={`flex flex-col items-center py-1 transition-colors ${
-            currentPath.startsWith('/deals') ? 'text-[#B69A62] font-semibold' : 'hover:text-white'
+            currentPath.startsWith('/deals') ? 'text-[#F4C542] font-semibold' : 'hover:text-white'
           }`}
         >
           <Tag className="w-4 h-4 mb-0.5" />
@@ -54,12 +54,12 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ currentPath, n
         {/* Cart with Drawer Trigger */}
         <button
           onClick={openCart}
-          className="relative flex flex-col items-center py-1 text-[#EDE5D7] hover:text-white transition-colors"
+          className="relative flex flex-col items-center py-1 text-[#F4F4F4] hover:text-white transition-colors"
         >
           <div className="relative">
             <ShoppingBag className="w-4 h-4 mb-0.5" />
             {totalItems > 0 && (
-              <span className="absolute -top-1.5 -right-2 bg-[#B69A62] text-[#0B241E] text-[9px] font-bold rounded-full w-4 h-4 flex items-center justify-center tabular-nums">
+              <span className="absolute -top-1.5 -right-2 bg-[#F4C542] text-[#171717] text-[9px] font-bold rounded-full w-4 h-4 flex items-center justify-center tabular-nums">
                 {totalItems}
               </span>
             )}
@@ -71,7 +71,7 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ currentPath, n
         <button
           onClick={() => handleNav('/track-order')}
           className={`flex flex-col items-center py-1 transition-colors ${
-            currentPath.startsWith('/track-order') ? 'text-[#B69A62] font-semibold' : 'hover:text-white'
+            currentPath.startsWith('/track-order') ? 'text-[#F4C542] font-semibold' : 'hover:text-white'
           }`}
         >
           <Clock className="w-4 h-4 mb-0.5" />
