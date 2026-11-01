@@ -6,18 +6,18 @@ import interiorPhoto from '../assets/images/restaurant_ambiance_interior_1793524
 
 export const initialSiteSettings: SiteSettings = {
   brandName: 'Zaytoon Restaurant',
-  tagline: 'Waterside Culinary Heritage on the Indus River',
+  tagline: 'Pakistani favourites, BBQ and family meals',
   locationName: 'Near Ghazi Ghat Toll Plaza, Dera Ghazi Khan, Pakistan',
-  address: 'Indus River Bank, National Highway N-70, Near Ghazi Ghat Toll Plaza, Dera Ghazi Khan, Punjab',
-  highwayRef: 'N-70 National Highway Dining Milestone',
+  address: 'Near Ghazi Ghat Toll Plaza, Dera Ghazi Khan, Punjab, Pakistan',
+  highwayRef: 'Near Ghazi Ghat Toll Plaza',
   phone: '+92 302 6777908',
   whatsapp: '+923026777908',
   email: 'info@zaytoonrestaurant.pk',
-  operatingHours: 'Open 24/7 (Round-the-clock dining & travelers rest stop)',
+  operatingHours: 'Please contact the restaurant to confirm current opening hours.',
   currency: 'PKR',
-  verifiedNotice: 'Pending Owner Pre-Launch Review: Operating contact numbers and live daily rates are stored in editable configuration.',
-  legalDisclaimer: 'Disclaimer: Menu item prices are indexed against local market rates for livestock and seasonal items, and are subject to operational modifications. Please confirm final rates directly with our billing agent when placing an order or reservation.',
-  aboutHistory: `Zaytoon Restaurant is one of Dera Ghazi Khan's oldest and largest premium culinary landmarks. Elegantly situated directly on the picturesque banks of the Sindh (Indus) River near the Ghazi Ghat Toll Plaza, it provides a unique waterside fine dining experience. Operating round-the-clock (24/7), Zaytoon is celebrated for its unmatched food quality, timely service, and absolute staff trustworthiness—making it the ultimate dining station for local families and N-70 national highway travelers alike.`,
+  verifiedNotice: 'Please confirm menu items, prices, contact details and opening hours with the restaurant before publishing.',
+  legalDisclaimer: 'Menu items, descriptions and prices on this website are sample information and must be confirmed with the restaurant before an order is accepted.',
+  aboutHistory: `Zaytoon Restaurant is located near Ghazi Ghat Toll Plaza in Dera Ghazi Khan. Explore the menu, browse available deals, and contact the restaurant to confirm current items, prices and service details.`,
   deliveryNotice: 'Local delivery service is currently restricted to verified Dera Ghazi Khan zones and highway rest points. Minimum order PKR 1,500.',
 };
 
