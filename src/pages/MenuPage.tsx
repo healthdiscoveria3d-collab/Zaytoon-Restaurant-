@@ -98,14 +98,6 @@ export const MenuPage: React.FC<MenuPageProps> = ({ initialCategorySlug, navigat
 
       {/* Main Menu Grid Container */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-        {/* Livestock Indexing Notice */}
-        <div className="p-3.5 bg-[#F4F4F4]/50 rounded-xl border border-[#F4F4F4] text-xs text-[#6B7280] flex items-center gap-2.5">
-          <Info className="w-4 h-4 text-[#F4C542] shrink-0" />
-          <span>
-            <strong>Market Rate Notice: </strong> Fresh livestock cuts (mutton/chicken) are indexed daily against market rates and confirmed with billing agent. Sealed drinking water bottles and soft drinks follow official <strong>Retail MRP</strong>.
-          </span>
-        </div>
-
         {/* Current Category Title */}
         <div className="flex items-center justify-between border-b border-[#F4F4F4] pb-3">
           <div>
