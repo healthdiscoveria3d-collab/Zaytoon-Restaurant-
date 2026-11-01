@@ -1,5 +1,6 @@
 import React from 'react';
 import { initialSiteSettings } from '../data/initialData.ts';
+import heroImage from '../assets/images/hero_zaytoon_riverside_dining_1793524768913.jpg';
 import { ArrowRight, Clock, Award, Shield, Users, MapPin } from 'lucide-react';
 
 interface AboutPageProps {
@@ -13,7 +14,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ navigate }) => {
       <section className="bg-[#D71920] text-white py-20 relative overflow-hidden">
         <div className="absolute inset-0 opacity-20">
           <img
-            src="/src/assets/images/hero_zaytoon_riverside_dining_1793524768913.jpg"
+            src={heroImage}
             alt="Zaytoon Riverside"
             referrerPolicy="no-referrer"
             className="w-full h-full object-cover"
@@ -21,10 +22,10 @@ export const AboutPage: React.FC<AboutPageProps> = ({ navigate }) => {
         </div>
         <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
           <span className="text-xs font-semibold uppercase tracking-widest text-[#F4C542]">
-            Our Story & Waterside Landmark
+            Our Story
           </span>
           <h1 className="text-4xl sm:text-5xl font-display font-bold text-[#FFFFFF] leading-tight text-balance">
-            Rooted by the Sindh River, Serving Generations with Trust.
+            A place to enjoy good food together.
           </h1>
           <p className="text-base sm:text-lg text-[#F4F4F4]/85 max-w-2xl mx-auto">
             Near Ghazi Ghat Toll Plaza, Dera Ghazi Khan, Punjab, Pakistan.
@@ -37,7 +38,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ navigate }) => {
         <div className="bg-white rounded-xl p-8 sm:p-12 border border-[#F4F4F4] shadow-sm space-y-8">
           <div className="border-l-4 border-[#F4C542] pl-6 py-2">
             <h2 className="text-2xl sm:text-3xl font-display font-bold text-[#D71920] mb-4">
-              A Legacy of Hospitality in Dera Ghazi Khan
+              Welcome to Zaytoon Restaurant
             </h2>
             <p className="text-base sm:text-lg text-[#171717] leading-relaxed italic">
               &ldquo;{initialSiteSettings.aboutHistory}&rdquo;
