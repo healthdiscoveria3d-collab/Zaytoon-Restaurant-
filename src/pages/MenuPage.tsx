@@ -84,13 +84,13 @@ export const MenuPage: React.FC<MenuPageProps> = ({ initialCategorySlug, navigat
 
           {/* Quick Search */}
           <div className="relative w-full sm:w-64 shrink-0">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6B7280]" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6B7280] pointer-events-none" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search handi, BBQ, naan..."
-              className="w-full pl-9 pr-3 py-1.5 text-xs rounded-lg border border-[#F4F4F4] bg-white focus:outline-none focus:ring-1 focus:ring-[#F4C542]"
+              className="w-full pl-11 pr-3 py-2 text-xs rounded-lg border border-[#F4F4F4] bg-white focus:outline-none focus:ring-1 focus:ring-[#F4C542]"
             />
           </div>
         </div>
