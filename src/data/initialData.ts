@@ -375,7 +375,7 @@ export const initialDeals: Deal[] = [
     slug: 'highway-express-platter',
     shortDescription: 'Quick turnaround hot meal for highway drivers and transit passengers on N-70.',
     fullDescription: 'Designed for fast, satisfying transit stops near Ghazi Ghat Toll Plaza. Prepared within 15 minutes of confirmation. Features sizzling chicken boti, fragrant pulao rice, 2 hot rotis, raita, and hot Karak Chai.',
-    image: malaiBotiPhoto,
+    image: 'https://kolachikitchen.com/pluto-images/funnel/images/9d54b918-11ba-4d78-b28d-a6430510b21e?fit=cover',
     originalPrice: 1950,
     offerPrice: 1650,
     discountPercentage: 15,
