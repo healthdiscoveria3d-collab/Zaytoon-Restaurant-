@@ -111,6 +111,10 @@ export interface GalleryItem {
 
 export interface SiteSettings {
   logoUrl?: string;
+  reservationTimeSlots?: string[];
+  reservationMaxTablesPerSlot?: number;
+  reservationMaxGuests?: number;
+  reservationSeatingOptions?: string[];
   brandName: string;
   tagline: string;
   locationName: string;
