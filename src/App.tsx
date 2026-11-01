@@ -133,7 +133,7 @@ export default function App() {
 
   return (
     <CartProvider>
-      <div className="min-h-screen flex flex-col bg-[#F7F3EA] text-[#242824] antialiased">
+      <div className="min-h-screen flex flex-col bg-white text-[#171717] antialiased">
         <AnnouncementBar />
         <Header currentPath={currentPath} navigate={navigate} />
         <main className="flex-1 pb-14 md:pb-0">{renderRoute()}</main>
