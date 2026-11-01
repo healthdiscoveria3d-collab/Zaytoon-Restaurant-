@@ -39,6 +39,7 @@ export const AdminPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [openRowMenu, setOpenRowMenu] = useState<string | null>(null);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
 
   const contentCollections: Partial<Record<Tab, string>> = {
     menu: 'menu_items', categories: 'categories', deals: 'deals', gallery: 'gallery', settings: 'site_settings',
@@ -102,6 +103,7 @@ export const AdminPage: React.FC = () => {
     const id = tab === 'settings' ? 'main' : String(row.id);
     setContentSelection(id);
     setContentJson(JSON.stringify(row, null, 2));
+    setEditModalOpen(true);
   };
 
   const createContent = () => {
@@ -115,6 +117,7 @@ export const AdminPage: React.FC = () => {
     if (!template) return;
     setContentSelection('__new__');
     setContentJson(JSON.stringify(template, null, 2));
+    setEditModalOpen(true);
   };
 
   const saveContent = async () => {
@@ -132,6 +135,7 @@ export const AdminPage: React.FC = () => {
       setContentRows(result.data || []);
       setContentSelection(id);
       setContentJson(JSON.stringify(tab === 'settings' ? result.data?.[0] : result.data.find((item: any) => item.id === id), null, 2));
+      setEditModalOpen(false);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Invalid JSON or save failed.');
     }
@@ -148,6 +152,7 @@ export const AdminPage: React.FC = () => {
       const first = result.data?.[0];
       setContentSelection(first?.id || '');
       setContentJson(first ? JSON.stringify(first, null, 2) : '');
+      setEditModalOpen(false);
     } catch (err) { setError(err instanceof Error ? err.message : 'Delete failed.'); }
   };
 
@@ -256,7 +261,7 @@ export const AdminPage: React.FC = () => {
         {tab==='orders' && <section className="space-y-3"><input value={searchQuery} onChange={e=>setSearchQuery(e.target.value)} placeholder="Search by order ID, customer or phone…" className="w-full rounded-xl border border-[#e8e5dd] bg-white px-4 py-3 text-xs outline-none focus:border-[#9a8050] sm:max-w-sm"/>{filteredOrders.length ? filteredOrders.map(order=><article key={order.reference} className="rounded-2xl border border-[#e8e5dd] bg-white shadow-[0_8px_30px_rgba(35,39,31,0.04)] p-4 sm:p-5"><div className="flex flex-wrap items-start justify-between gap-3"><div><p className="text-sm font-black">{order.reference} · {order.customerName}</p><p className="mt-1 text-[10px] text-gray-500">{order.customerPhone} · {dateTime(order.createdAt)}</p></div><p className="text-lg font-black">PKR {order.total.toLocaleString()}</p></div><div className="mt-3 grid gap-2 text-xs text-gray-600 sm:grid-cols-2"><p><strong>Type:</strong> {pretty(order.fulfilmentMethod)}</p><p><strong>Payment:</strong> {pretty(order.paymentMethod)}</p>{order.deliveryAddress && <p className="sm:col-span-2"><strong>Address:</strong> {order.deliveryAddress}</p>}<p className="sm:col-span-2"><strong>Items:</strong> {order.items.map(item=>item.quantity+' × '+item.itemName).join(', ')}</p>{order.instructions && <p className="sm:col-span-2"><strong>Notes:</strong> {order.instructions}</p>}</div><div className="mt-4 flex flex-wrap items-center gap-2"><label className="text-[10px] font-bold uppercase text-gray-500">Order status</label><select value={order.status} onChange={e=>updateOrder(order.reference,e.target.value)} className="max-w-56 rounded-xl border border-[#e8e5dd] bg-[#fbfaf7] px-3 py-2 text-xs font-bold">{orderStatuses.map(status=><option key={status} value={status}>{pretty(status)}</option>)}</select></div></article>) : <div className="rounded-2xl border border-[#e8e5dd] bg-white shadow-[0_8px_30px_rgba(35,39,31,0.04)] p-8 text-center text-sm text-gray-500">No orders yet.</div>}</section>}
         {tab==='reservations' && <section className="space-y-3"><input value={searchQuery} onChange={e=>setSearchQuery(e.target.value)} placeholder="Search by guest, booking ID or phone…" className="w-full rounded-xl border border-[#e8e5dd] bg-white px-4 py-3 text-xs outline-none focus:border-[#9a8050] sm:max-w-sm"/>{filteredReservations.length ? filteredReservations.map(item=><article key={item.reference} className="rounded-2xl border border-[#e8e5dd] bg-white shadow-[0_8px_30px_rgba(35,39,31,0.04)] p-4 sm:p-5"><div className="flex flex-wrap items-start justify-between gap-3"><div><p className="text-sm font-black">{item.fullName} · {item.reference}</p><p className="mt-1 text-[10px] text-gray-500">{item.phone}{item.email?' · '+item.email:''}</p></div><p className="text-sm font-black">{item.date} · {item.timeSlot}</p></div><div className="mt-3 grid gap-2 text-xs text-gray-600 sm:grid-cols-2"><p><strong>Guests:</strong> {item.guests}</p><p><strong>Seating:</strong> {pretty(item.seatingPreference)}</p>{item.specialRequest && <p className="sm:col-span-2"><strong>Request:</strong> {item.specialRequest}</p>}</div><div className="mt-4 flex flex-wrap items-center gap-2"><label className="text-[10px] font-bold uppercase text-gray-500">Status</label><select value={item.status} onChange={e=>updateReservation(item.reference,e.target.value)} className="max-w-56 rounded-xl border border-[#e8e5dd] bg-[#fbfaf7] px-3 py-2 text-xs font-bold">{reservationStatuses.map(status=><option key={status} value={status}>{pretty(status)}</option>)}</select></div></article>) : <div className="rounded-2xl border border-[#e8e5dd] bg-white shadow-[0_8px_30px_rgba(35,39,31,0.04)] p-8 text-center text-sm text-gray-500">No reservations yet.</div>}</section>}
         {tab==='messages' && <section className="space-y-3"><input value={searchQuery} onChange={e=>setSearchQuery(e.target.value)} placeholder="Search customer messages…" className="w-full rounded-xl border border-[#e8e5dd] bg-white px-4 py-3 text-xs outline-none focus:border-[#9a8050] sm:max-w-sm"/>{filteredMessages.length ? filteredMessages.map(item=><article key={item.id} className="rounded-2xl border border-[#e8e5dd] bg-white shadow-[0_8px_30px_rgba(35,39,31,0.04)] p-4 sm:p-5"><div className="flex flex-wrap justify-between gap-2"><div><p className="text-sm font-black">{item.fullName}</p><p className="mt-1 text-[10px] text-gray-500">{item.phone}{item.email?' · '+item.email:''}</p></div><p className="text-[10px] text-gray-400">{dateTime(item.createdAt)}</p></div><p className="mt-3 text-xs font-bold">{item.subject}</p><p className="mt-1 whitespace-pre-wrap text-sm leading-6 text-gray-700">{item.message}</p></article>) : <div className="rounded-2xl border border-[#e8e5dd] bg-white shadow-[0_8px_30px_rgba(35,39,31,0.04)] p-8 text-center text-sm text-gray-500">No messages yet.</div>}</section>}
-        {contentCollections[tab] && <section className="grid gap-4 xl:grid-cols-[minmax(240px,0.8fr)_minmax(0,1.4fr)]">
+        {contentCollections[tab] && <section className="max-w-3xl">
           <div className="rounded-2xl border border-[#e8e5dd] bg-white shadow-[0_8px_30px_rgba(35,39,31,0.04)] p-4">
             <div className="mb-3 flex items-center justify-between gap-2"><h2 className="font-black">{contentTitles[tab]}</h2>{tab !== 'settings' && <button onClick={createContent} className="flex items-center gap-1 rounded-lg bg-[#315744] px-3 py-2 text-[10px] font-black text-white"><Plus size={13}/> New</button>}</div>
             <div className="max-h-[65vh] space-y-2 overflow-y-auto">
@@ -265,8 +270,8 @@ export const AdminPage: React.FC = () => {
               {!contentRows.length && tab !== 'settings' && <p className="py-5 text-center text-xs text-gray-500">No records yet. Press New to add one.</p>}
             </div>
           </div>
-          <div className="rounded-2xl border border-[#e8e5dd] bg-white shadow-[0_8px_30px_rgba(35,39,31,0.04)] p-4">
-            <div className="mb-3 flex flex-wrap items-center justify-between gap-2"><div><h2 className="font-black">{tab === 'settings' ? 'Edit Website Settings' : contentSelection === '__new__' ? 'Create Record' : 'Edit Record'}</h2><p className="mt-1 text-[10px] text-gray-500">Edit the JSON fields, then save. Changes update the live website data after deployment.</p></div><div className="flex gap-2"><button onClick={saveContent} disabled={!contentJson.trim() || busy} className="flex items-center gap-2 rounded-xl bg-[#203e31] px-4 py-2 text-[10px] font-black text-white disabled:opacity-40"><Save size={14}/> Save</button>{tab !== 'settings' && contentSelection !== '__new__' && <button onClick={deleteContent} className="flex items-center gap-2 rounded-lg border border-red-200 px-3 py-2 text-[10px] font-bold text-red-600"><Trash2 size={14}/> Delete</button>}</div></div>
+          {editModalOpen && <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/55 p-3 sm:p-6"><div className="max-h-[94vh] w-full max-w-4xl overflow-y-auto rounded-2xl border border-[#e8e5dd] bg-white p-4 shadow-2xl sm:p-6">
+            <div className="mb-4 flex flex-wrap items-center justify-between gap-3"><div><h2 className="font-black">{tab === 'settings' ? 'Edit Website Settings' : contentSelection === '__new__' ? 'Create Record' : 'Edit Record'}</h2><p className="mt-1 text-[10px] text-gray-500">Edit all fields here, then save your changes.</p></div><div className="flex items-center gap-2"><button onClick={saveContent} disabled={!contentJson.trim() || busy} className="flex items-center gap-2 rounded-xl bg-[#203e31] px-4 py-2.5 text-[10px] font-black text-white disabled:opacity-40"><Save size={14}/> Save</button>{tab !== 'settings' && contentSelection !== '__new__' && <button onClick={deleteContent} className="flex items-center gap-2 rounded-lg border border-red-200 px-3 py-2.5 text-[10px] font-bold text-red-600"><Trash2 size={14}/> Delete</button>}<button onClick={()=>setEditModalOpen(false)} aria-label="Close editor" className="grid h-9 w-9 place-items-center rounded-lg border border-gray-200 text-gray-500 hover:bg-gray-100"><X size={17}/></button></div></div>
             {contentJson && Object.keys(parsedContentDraft).length > 0 ? <div className="grid gap-4 sm:grid-cols-2">
               {Object.entries(parsedContentDraft).map(([key, value]) => <label key={key} className="block min-w-0 text-[10px] font-bold uppercase tracking-wide text-gray-500">
                 {pretty(key)}
@@ -280,7 +285,7 @@ export const AdminPage: React.FC = () => {
             </div> : <p className="rounded-lg bg-gray-50 p-6 text-center text-xs text-gray-500">Select a record or press New to start editing.</p>}
             <details className="mt-4"><summary className="cursor-pointer text-[10px] font-bold text-gray-500">Advanced: view / edit raw JSON</summary><textarea value={contentJson} onChange={(e)=>setContentJson(e.target.value)} spellCheck={false} className="mt-2 min-h-48 w-full rounded-lg border border-gray-200 bg-[#fafafa] p-3 font-mono text-[10px] leading-5 outline-none focus:border-[#D71920]"/></details>
             <p className="mt-2 text-[10px] text-gray-400">List fields: enter one item per line. Image fields accept existing image paths or full image URLs.</p>
-          </div>
+          </div></div>}
         </section>}
         {busy && <p className="mt-5 text-center text-[10px] font-bold uppercase tracking-wider text-gray-400">Refreshing data…</p>}
       </main>
