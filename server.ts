@@ -145,6 +145,22 @@ async function hydrateDatabase() {
     await saveRecord('site_settings', 'main', siteSettings);
   }
 
+  // One-time targeted image repair for Murgh Makhni Handi; preserve all other saved menu edits.
+  const makhniImageMigrated = Boolean((siteSettings as typeof siteSettings & { murghMakhniImageMigratedV1?: boolean }).murghMakhniImageMigratedV1);
+  if (!makhniImageMigrated) {
+    const repairedItem = menuItems.find((item) => item.id === 'item-white-makhni-handi');
+    if (repairedItem) {
+      const seededItem = initialMenuItems.find((item) => item.id === 'item-white-makhni-handi');
+      if (seededItem) {
+        const updatedItem = { ...repairedItem, image: seededItem.image };
+        menuItems = menuItems.map((item) => item.id === updatedItem.id ? updatedItem : item);
+        await saveRecord('menu_items', updatedItem.id, updatedItem);
+      }
+    }
+    siteSettings = { ...siteSettings, murghMakhniImageMigratedV1: true };
+    await saveRecord('site_settings', 'main', siteSettings);
+  }
+
   const savedGallery = await listRecords<typeof gallery[number]>('gallery');
   if (savedGallery.length) gallery = savedGallery;
   else for (const item of gallery) await saveRecord('gallery', item.id, item);
