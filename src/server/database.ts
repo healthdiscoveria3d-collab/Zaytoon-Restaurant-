@@ -1,10 +1,8 @@
-import pg from 'pg';
-
-const { Pool } = pg;
+import { Pool } from 'pg';
 const databaseUrl = process.env.DATABASE_URL;
 export const databaseEnabled = Boolean(databaseUrl);
 
-let pool: pg.Pool | null = null;
+let pool: Pool | null = null;
 
 export async function initializeDatabase() {
   if (!databaseUrl) {
