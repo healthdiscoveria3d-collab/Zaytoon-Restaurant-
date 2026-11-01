@@ -90,7 +90,7 @@ export const MenuPage: React.FC<MenuPageProps> = ({ initialCategorySlug, navigat
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search handi, BBQ, naan..."
-              className="min-w-0 w-full border-0 bg-transparent p-0 text-xs text-[#171717] placeholder:text-[#6B7280] focus:outline-none focus:ring-0"
+              className="menu-search-input min-w-0 w-full border-0 bg-transparent p-0 text-xs text-[#171717] placeholder:text-[#6B7280] focus:outline-none focus:ring-0"
             />
           </div>
         </div>
