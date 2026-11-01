@@ -342,9 +342,18 @@ app.patch('/api/admin/orders/:reference/status', requireAdmin, async (req: Reque
   }
 });
 
-app.get('/api/admin/reservations', requireAdmin, (_req: Request, res: Response) => {
-  const data = Array.from(reservations.values()).sort((a, b) => (a.date + a.timeSlot).localeCompare(b.date + b.timeSlot));
-  res.json({ success: true, data });
+app.get('/api/admin/reservations', requireAdmin, async (_req: Request, res: Response) => {
+  try {
+    if (databaseEnabled) {
+      const stored = await listRecords<Reservation>('reservations');
+      reservations.clear();
+      for (const item of stored) reservations.set(item.reference, item);
+    }
+    const data = Array.from(reservations.values()).sort((a, b) => (a.date + a.timeSlot).localeCompare(b.date + b.timeSlot));
+    res.json({ success: true, data });
+  } catch {
+    res.status(500).json({ success: false, message: 'Could not load reservations from database.' });
+  }
 });
 
 app.patch('/api/admin/reservations/:reference/status', requireAdmin, async (req: Request, res: Response) => {
