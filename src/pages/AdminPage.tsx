@@ -289,18 +289,38 @@ export const AdminPage: React.FC = () => {
           {editModalOpen && <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/55 p-3 sm:p-6"><div className="max-h-[94vh] w-full max-w-4xl overflow-y-auto rounded-2xl border border-[#dce5ef] bg-white p-4 shadow-2xl sm:p-6">
             <div className="mb-4 flex flex-wrap items-center justify-between gap-3"><div><h2 className="font-black">{tab === 'settings' ? 'Edit Website Settings' : contentSelection === '__new__' ? 'Create Record' : 'Edit Record'}</h2><p className="mt-1 text-[10px] text-gray-500">Edit all fields here, then save your changes.</p></div><div className="flex items-center gap-2"><button onClick={saveContent} disabled={!contentJson.trim() || busy} className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#203f58] to-[#287b72] px-4 py-2.5 text-[10px] font-black text-white disabled:opacity-40"><Save size={14}/> Save</button>{tab !== 'settings' && contentSelection !== '__new__' && <button onClick={deleteContent} className="flex items-center gap-2 rounded-lg border border-red-200 px-3 py-2.5 text-[10px] font-bold text-red-600"><Trash2 size={14}/> Delete</button>}<button onClick={()=>setEditModalOpen(false)} aria-label="Close editor" className="grid h-9 w-9 place-items-center rounded-lg border border-gray-200 text-gray-500 hover:bg-gray-100"><X size={17}/></button></div></div>
             {contentJson && Object.keys(parsedContentDraft).length > 0 ? <div className="grid gap-4 sm:grid-cols-2">
-              {Object.entries(parsedContentDraft).map(([key, value]) => {
+              {Object.entries(parsedContentDraft).filter(([key]) => !(tab === 'menu' && key === 'categoryId')).map(([key, value]) => {
                 const fieldLabels: Record<string, string> = {
+                  name: 'Product Name', title: 'Title', slug: 'Website URL Slug',
+                  description: 'Product Description', price: 'Price (PKR)', image: 'Product Image URL',
+                  preparationTime: 'Preparation Time', spiciness: 'Spice Level', tags: 'Tags / Search Keywords',
                   isDemoItem: 'Demo Content', isFeatured: 'Featured on Website',
-                  isAvailable: 'Item Availability', categoryName: 'Menu Category',
+                  isAvailable: 'Available for Ordering', categoryName: 'Menu Category',
                   categoryId: 'Category Reference', id: 'Record ID', logoUrl: 'Restaurant Logo URL',
                 };
                 const fieldHelp: Record<string, string> = {
-                  isDemoItem: 'Use for sample or demonstration items only.',
-                  isFeatured: 'Highlight this item in featured sections of the website.',
-                  isAvailable: 'Control whether customers can order this item.',
-                  categoryName: 'Choose the category where this menu item belongs.',
+                  name: 'Customer ko website par yehi product name nazar aayega. Example: Chicken Malai Handi.',
+                  slug: 'Website link ka short naam. Example: chicken-malai-handi. Spaces ki jagah hyphens use karein.',
+                  description: 'Dish mein kya hai aur kaise banti hai? 1–2 simple lines likhein.',
+                  price: 'Sirf number likhein, currency PKR automatically show hoti hai. Example: 1850.',
+                  image: 'Food photo ka direct public image URL paste karein. Example: https://example.com/food.jpg',
+                  preparationTime: 'Order tayyar hone ka estimated time. Example: 25 mins.',
+                  spiciness: 'mild, medium ya hot select karein.',
+                  tags: 'Har keyword alag line mein likhein. Example: Boneless, Popular, BBQ.',
+                  isDemoItem: 'Sample/demo product ho to ON rakhein; real menu item ke liye OFF.',
+                  isFeatured: 'ON karne se product website ke featured section mein highlight ho sakta hai.',
+                  isAvailable: 'ON = customer order kar sakta hai. OFF = product unavailable hoga.',
+                  categoryName: 'Woh menu section choose karein jahan product show hona chahiye.',
+                  id: 'System record ID. Isay change na karein.',
                   logoUrl: 'Paste a direct image URL here. Save to update the website header, footer and admin sidebar.',
+                };
+                const fieldPlaceholders: Record<string, string> = {
+                  name: 'e.g. Chicken Malai Handi',
+                  slug: 'e.g. chicken-malai-handi',
+                  description: 'Describe the dish in 1–2 lines…',
+                  price: 'e.g. 1850',
+                  image: 'https://example.com/food-photo.jpg',
+                  preparationTime: 'e.g. 25 mins',
                 };
                 const isMenuSwitch = ['isDemoItem', 'isFeatured', 'isAvailable'].includes(key);
                 return <label key={key} className="block min-w-0 text-[10px] font-bold uppercase tracking-wide text-gray-500">
@@ -317,9 +337,9 @@ export const AdminPage: React.FC = () => {
                   </select> :
                   typeof value === 'boolean' ? <span className="mt-2 flex items-center gap-2 rounded-lg border border-gray-200 p-3 text-xs font-semibold normal-case text-gray-700"><input type="checkbox" checked={value} onChange={(e)=>updateDraftField(key,e.target.checked)} disabled={key==='id'}/> {value ? 'Enabled' : 'Disabled'}</span> :
                   Array.isArray(value) ? <textarea value={value.join('\n')} onChange={(e)=>updateDraftField(key,e.target.value.split('\n').map((v)=>v.trim()).filter(Boolean))} rows={4} className="mt-2 w-full rounded-lg border border-gray-200 bg-[#fafafa] p-3 text-xs font-normal normal-case text-gray-800 outline-none focus:border-[#9a8050]"/> :
-                  typeof value === 'number' ? <input type="number" value={value} onChange={(e)=>updateDraftField(key,Number(e.target.value))} className="mt-2 w-full rounded-lg border border-gray-200 bg-[#fafafa] p-3 text-xs font-normal normal-case text-gray-800 outline-none focus:border-[#9a8050]"/> :
+                  typeof value === 'number' ? <input type="number" min="0" value={value} onChange={(e)=>updateDraftField(key,Number(e.target.value))} placeholder={fieldPlaceholders[key] || ''} className="mt-2 w-full rounded-lg border border-gray-200 bg-[#fafafa] p-3 text-xs font-normal normal-case text-gray-800 outline-none focus:border-[#9a8050]"/> :
                   (String(value).length > 110 || /description|caption|notice|history|address|message/i.test(key)) ? <textarea value={String(value ?? '')} onChange={(e)=>updateDraftField(key,e.target.value)} rows={4} disabled={key==='id' && contentSelection!=='__new__'} className="mt-2 w-full rounded-lg border border-gray-200 bg-[#fafafa] p-3 text-xs font-normal normal-case text-gray-800 outline-none focus:border-[#9a8050]"/> :
-                  <input value={String(value ?? '')} onChange={(e)=>updateDraftField(key,e.target.value)} disabled={key==='id' && contentSelection!=='__new__'} className="mt-2 w-full rounded-lg border border-gray-200 bg-[#fafafa] p-3 text-xs font-normal normal-case text-gray-800 outline-none focus:border-[#9a8050]"/>
+                  <input value={String(value ?? '')} onChange={(e)=>updateDraftField(key,e.target.value)} disabled={key==='id'} placeholder={fieldPlaceholders[key] || ''} className="mt-2 w-full rounded-lg border border-gray-200 bg-[#fafafa] p-3 text-xs font-normal normal-case text-gray-800 outline-none focus:border-[#9a8050]"/>
                   }
                 </label>;
               })}
