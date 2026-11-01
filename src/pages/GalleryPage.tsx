@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { initialGallery } from '../data/initialData.ts';
 import { GalleryItem } from '../types/index.ts';
 import { X, ZoomIn, Eye } from 'lucide-react';
@@ -8,6 +8,8 @@ interface GalleryPageProps {
 }
 
 export const GalleryPage: React.FC<GalleryPageProps> = () => {
+  const [galleryItems, setGalleryItems] = useState(initialGallery);
+  useEffect(() => { fetch('/api/v1/gallery').then(r => r.json()).then(result => { if (result.success && Array.isArray(result.data)) setGalleryItems(result.data); }).catch(() => {}); }, []);
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [activeLightbox, setActiveLightbox] = useState<GalleryItem | null>(null);
 
@@ -20,8 +22,8 @@ export const GalleryPage: React.FC<GalleryPageProps> = () => {
   ];
 
   const filteredGallery = activeCategory === 'all'
-    ? initialGallery
-    : initialGallery.filter((item) => item.category === activeCategory);
+    ? galleryItems
+    : galleryItems.filter((item) => item.category === activeCategory);
 
   return (
     <div className="space-y-12 pb-24">
