@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { initialDeals, initialMenuItems } from '../data/initialData.ts';
 import { Deal } from '../types/index.ts';
 import { Users, Tag, Check, Calendar, ArrowRight, ShoppingBag, ShieldCheck, Flame } from 'lucide-react';
@@ -11,12 +11,21 @@ interface DealsPageProps {
 
 export const DealsPage: React.FC<DealsPageProps> = ({ selectedDealSlug, navigate }) => {
   const { addToCart } = useCart();
+  const [deals, setDeals] = useState(initialDeals);
+  const [menuItems, setMenuItems] = useState(initialMenuItems);
+  useEffect(() => {
+    Promise.all([fetch('/api/v1/deals/active').then(r => r.json()), fetch('/api/v1/menu/items').then(r => r.json())])
+      .then(([dealResult, itemResult]) => {
+        if (dealResult.success && Array.isArray(dealResult.data)) setDeals(dealResult.data);
+        if (itemResult.success && Array.isArray(itemResult.data)) setMenuItems(itemResult.data);
+      }).catch(() => {});
+  }, []);
   const currentSingleDeal = selectedDealSlug
-    ? initialDeals.find((d) => d.slug === selectedDealSlug)
+    ? deals.find((d) => d.slug === selectedDealSlug)
     : null;
 
   const handleAddDealToOrder = (deal: Deal) => {
-    const representativeItem = initialMenuItems[0];
+    const representativeItem = menuItems[0] || initialMenuItems[0];
     const dealCartItem = {
       ...representativeItem,
       id: `deal-${deal.id}`,
@@ -167,7 +176,7 @@ export const DealsPage: React.FC<DealsPageProps> = ({ selectedDealSlug, navigate
       {/* Deals Cards Grid */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {initialDeals.map((deal) => (
+          {deals.map((deal) => (
             <div
               key={deal.id}
               className="bg-white rounded-2xl overflow-hidden border border-[#F4F4F4] hover:border-[#F4C542] hover:shadow-xl transition-all flex flex-col justify-between"
