@@ -20,6 +20,10 @@ const interiorPhoto = '/images/restaurant_interior.jpg';
 
 export const initialSiteSettings: SiteSettings = {
   logoUrl: '',
+  reservationTimeSlots: ['13:00', '14:00', '15:00', '17:00', '18:30', '19:30', '20:30', '21:30', '22:30', '23:30', '01:00'],
+  reservationMaxTablesPerSlot: 5,
+  reservationMaxGuests: 40,
+  reservationSeatingOptions: ['indoor_family_hall', 'outdoor_riverside', 'executive_lounge', 'any'],
   brandName: 'Zaytoon Restaurant',
   tagline: 'Pakistani favourites, BBQ and family meals',
   locationName: 'Near Ghazi Ghat Toll Plaza, Dera Ghazi Khan, Pakistan',
