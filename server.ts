@@ -386,25 +386,50 @@ app.get('/api/admin/me', requireAdmin, (_req: Request, res: Response) => {
   res.json({ success: true, username: process.env.ADMIN_USERNAME });
 });
 
-app.get('/api/admin/dashboard', requireAdmin, (_req: Request, res: Response) => {
-  const orderList = Array.from(orders.values());
-  const reservationList = Array.from(reservations.values());
-  res.json({
-    success: true,
-    data: {
-      totalOrders: orderList.length,
-      pendingOrders: orderList.filter((item) => item.status === 'pending').length,
-      activeReservations: reservationList.filter((item) => item.status === 'received' || item.status === 'confirmed').length,
-      unreadMessages: inquiries.length,
-      recentOrders: orderList.sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, 5),
-      recentReservations: reservationList.sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, 5),
-    },
-  });
+app.get('/api/admin/dashboard', requireAdmin, async (_req: Request, res: Response) => {
+  try {
+    if (databaseEnabled) {
+      const [storedOrders, storedReservations, storedInquiries] = await Promise.all([
+        listRecords<Order>('orders'),
+        listRecords<Reservation>('reservations'),
+        listRecords<ContactInquiry>('inquiries'),
+      ]);
+      orders.clear();
+      for (const item of storedOrders) orders.set(item.reference, item);
+      reservations.clear();
+      for (const item of storedReservations) reservations.set(item.reference, item);
+      inquiries.splice(0, inquiries.length, ...storedInquiries);
+    }
+    const orderList = Array.from(orders.values());
+    const reservationList = Array.from(reservations.values());
+    res.json({
+      success: true,
+      data: {
+        totalOrders: orderList.length,
+        pendingOrders: orderList.filter((item) => item.status === 'pending').length,
+        activeReservations: reservationList.filter((item) => item.status === 'received' || item.status === 'confirmed').length,
+        unreadMessages: inquiries.length,
+        recentOrders: orderList.sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, 5),
+        recentReservations: reservationList.sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, 5),
+      },
+    });
+  } catch {
+    res.status(500).json({ success: false, message: 'Could not load dashboard data from database.' });
+  }
 });
 
-app.get('/api/admin/orders', requireAdmin, (_req: Request, res: Response) => {
-  const data = Array.from(orders.values()).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
-  res.json({ success: true, data });
+app.get('/api/admin/orders', requireAdmin, async (_req: Request, res: Response) => {
+  try {
+    if (databaseEnabled) {
+      const stored = await listRecords<Order>('orders');
+      orders.clear();
+      for (const item of stored) orders.set(item.reference, item);
+    }
+    const data = Array.from(orders.values()).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+    res.json({ success: true, data });
+  } catch {
+    res.status(500).json({ success: false, message: 'Could not load orders from database.' });
+  }
 });
 
 app.patch('/api/admin/orders/:reference/status', requireAdmin, async (req: Request, res: Response) => {
