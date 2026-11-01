@@ -4,6 +4,7 @@ const muttonKarahiPhoto = 'https://www.foodofpakistan.com/uploads/recipe/1640676
 const makhniHandiPhoto = 'https://assets.indolj.io/upload/1739015169-CHICKEN+MAKHNI+HANDI.webp?q=10';
 const kabuliPulaoPhoto = 'https://images.deliveryhero.io/image/talabat/MenuItems/Afghan_Pulao_with_Meat638931020387917025.jpg';
 const mineralWaterPhoto = 'https://tapcom-live.ams3.cdn.digitaloceanspaces.com/media/caf-cafe/products/1140228-eva_water5718.jpg';
+const smallWaterPhoto = 'https://i.pinimg.com/736x/45/7e/e1/457ee121f4f4a338a78fb734fd03fa76.jpg';
 const softDrinkPhoto = 'https://images.squarespace-cdn.com/content/v1/681364555c755d73241d3e50/679f4ecd-c4fd-401e-8f1c-01a497023e62/Coke%2BFanta%2BSprite.jpg';
 const garlicNaanPhoto = 'https://www.midamarhalal.com/cdn/shop/files/GarlicNaan_635d9283-15a8-4df2-9894-cd20bcaad918.jpg?v=1740159148';
 const bbqPhoto = 'https://images.squarespace-cdn.com/content/v1/612d4825ee7c3b7ba3e215b7/1757986614639-ZLNUPUWWEVATPTST579L/kabab.png';
@@ -42,7 +43,7 @@ export const initialCategories: MenuCategory[] = [
     slug: 'karahi-handi',
     description: 'Traditional slow-cooked clay handis and wok-fried shinwari karahis prepared fresh per order with pure butter or desi ghee.',
     displayOrder: 1,
-    image: muttonKarahiPhoto,
+    image: karahiPhoto,
     badge: 'Popular',
   },
   {
@@ -244,7 +245,7 @@ export const initialMenuItems: MenuItem[] = [
     description: 'Convenient 500ml sealed drinking water bottle.',
     price: 80,
     priceNote: 'Retail MRP',
-    image: mineralWaterPhoto,
+    image: smallWaterPhoto,
     isAvailable: true,
     isFeatured: false,
     isDemoItem: false,
