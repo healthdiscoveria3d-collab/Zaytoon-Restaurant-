@@ -63,7 +63,7 @@ main .border-\[\#D71920\]{border-color:#d71920}
   .md\\:hidden.fixed.bottom-0 button { min-height: 46px; }
 }
 @media (max-width: 380px) {
-  html { font-size: 13px; }
+  html { font-size: 16px; }
   header > div:last-of-type { gap: 5px; }
   header .text-xl { font-size: 15px; }
   main .px-5 { padding-left: 14px; padding-right: 14px; }
