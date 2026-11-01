@@ -1,6 +1,11 @@
 import { SiteSettings, MenuCategory, MenuItem, Deal, GalleryItem } from '../types/index.ts';
-const karahiPhoto = 'https://images.deliveryhero.io/image/fd-pk/Products/12662364.jpg';
-const muttonKarahiPhoto = 'https://static.tossdown.com/images/bea46b94-c2d0-4080-80aa-7588b7511f37.jpg';
+const karahiPhoto = 'https://images.deliveryhero.io/image/fd-pk/Products/55932882.jpg?width=%25s';
+const muttonKarahiPhoto = 'https://www.foodofpakistan.com/uploads/recipe/1640676976112955150.jpg';
+const makhniHandiPhoto = 'https://assets.indolj.io/upload/1739015169-CHICKEN+MAKHNI+HANDI.webp?q=10';
+const kabuliPulaoPhoto = 'https://images.deliveryhero.io/image/talabat/MenuItems/Afghan_Pulao_with_Meat638931020387917025.jpg';
+const mineralWaterPhoto = 'https://tapcom-live.ams3.cdn.digitaloceanspaces.com/media/caf-cafe/products/1140228-eva_water5718.jpg';
+const softDrinkPhoto = 'https://images.squarespace-cdn.com/content/v1/681364555c755d73241d3e50/679f4ecd-c4fd-401e-8f1c-01a497023e62/Coke%2BFanta%2BSprite.jpg';
+const garlicNaanPhoto = 'https://www.midamarhalal.com/cdn/shop/files/GarlicNaan_635d9283-15a8-4df2-9894-cd20bcaad918.jpg?v=1740159148';
 const bbqPhoto = 'https://images.squarespace-cdn.com/content/v1/612d4825ee7c3b7ba3e215b7/1757986614639-ZLNUPUWWEVATPTST579L/kabab.png';
 const malaiBotiPhoto = 'https://www.pakistanrecipes.com/cdn/recipes/malai_boti_optimized.jpg';
 const biryaniPhoto = 'https://images.deliveryhero.io/image/fd-pk/Products/98313288.jpg';
@@ -64,7 +69,7 @@ export const initialCategories: MenuCategory[] = [
     slug: 'cold-drinks-water',
     description: 'Carbonated beverages and sealed drinking water bottles.',
     displayOrder: 4,
-    image: drinksPhoto,
+    image: softDrinkPhoto,
     badge: 'Retail MRP',
   },
   {
@@ -132,7 +137,7 @@ export const initialMenuItems: MenuItem[] = [
     description: 'Creamy yogurt, almond paste, and subtle green cardamom gravy with velvety char-grilled boneless chicken chunks.',
     price: 1850,
     priceNote: 'Demo rate',
-    image: muttonKarahiPhoto,
+    image: makhniHandiPhoto,
     isAvailable: true,
     isFeatured: false,
     isDemoItem: true,
@@ -204,7 +209,7 @@ export const initialMenuItems: MenuItem[] = [
     description: 'Subtly sweet seasoned rice topped with caramelized julienne carrots, golden raisins, and fall-apart beef shank.',
     price: 1450,
     priceNote: 'Demo rate',
-    image: biryaniPhoto,
+    image: kabuliPulaoPhoto,
     isAvailable: true,
     isFeatured: false,
     isDemoItem: true,
@@ -223,7 +228,7 @@ export const initialMenuItems: MenuItem[] = [
     description: 'Purified sealed premium mineral drinking water bottle with factory cap seal.',
     price: 140,
     priceNote: 'Retail MRP',
-    image: drinksPhoto,
+    image: mineralWaterPhoto,
     isAvailable: true,
     isFeatured: false,
     isDemoItem: false,
@@ -239,7 +244,7 @@ export const initialMenuItems: MenuItem[] = [
     description: 'Convenient 500ml sealed drinking water bottle.',
     price: 80,
     priceNote: 'Retail MRP',
-    image: drinksPhoto,
+    image: mineralWaterPhoto,
     isAvailable: true,
     isFeatured: false,
     isDemoItem: false,
@@ -255,7 +260,7 @@ export const initialMenuItems: MenuItem[] = [
     description: 'Choice of chilled Coca-Cola, Sprite, or Fanta in factory-sealed bottles.',
     price: 220,
     priceNote: 'Retail MRP',
-    image: drinksPhoto,
+    image: softDrinkPhoto,
     isAvailable: true,
     isFeatured: false,
     isDemoItem: false,
@@ -323,7 +328,7 @@ export const initialMenuItems: MenuItem[] = [
     description: 'Tandoori flatbread topped with minced roasted garlic, fresh coriander leaves, and clarified butter.',
     price: 140,
     priceNote: 'Demo rate',
-    image: naanPhoto,
+    image: garlicNaanPhoto,
     isAvailable: true,
     isFeatured: false,
     isDemoItem: true,
