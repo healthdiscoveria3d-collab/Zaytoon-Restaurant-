@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { LayoutDashboard, ClipboardList, CalendarDays, MessageSquare, LogOut, ShieldCheck, RefreshCw, Utensils, LockKeyhole, BookOpen, Tags, Percent, Images, Settings, Plus, Save, Trash2 } from 'lucide-react';
+import { LayoutDashboard, ClipboardList, CalendarDays, MessageSquare, LogOut, ShieldCheck, RefreshCw, Utensils, LockKeyhole, BookOpen, Tags, Percent, Images, Settings, Plus, Save, Trash2, MoreVertical, Pencil } from 'lucide-react';
 
 type Tab = 'dashboard' | 'orders' | 'reservations' | 'messages' | 'menu' | 'categories' | 'deals' | 'gallery' | 'settings';
 type Order = {
@@ -37,6 +37,7 @@ export const AdminPage: React.FC = () => {
   const [contentJson, setContentJson] = useState('');
   const [busy, setBusy] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [openRowMenu, setOpenRowMenu] = useState<string | null>(null);
 
   const contentCollections: Partial<Record<Tab, string>> = {
     menu: 'menu_items', categories: 'categories', deals: 'deals', gallery: 'gallery', settings: 'site_settings',
@@ -258,7 +259,7 @@ export const AdminPage: React.FC = () => {
             <div className="mb-3 flex items-center justify-between gap-2"><h2 className="font-black">{contentTitles[tab]}</h2>{tab !== 'settings' && <button onClick={createContent} className="flex items-center gap-1 rounded-lg bg-[#315744] px-3 py-2 text-[10px] font-black text-white"><Plus size={13}/> New</button>}</div>
             <div className="max-h-[65vh] space-y-2 overflow-y-auto">
               {tab === 'settings' ? <button onClick={() => chooseContent(contentRows[0] || {})} className="w-full rounded-lg bg-gray-100 px-3 py-3 text-left text-xs font-bold">Main Website Settings</button> :
-                contentRows.map((row) => <button key={row.id} onClick={() => chooseContent(row)} className={'w-full rounded-lg px-3 py-3 text-left text-xs font-bold '+(contentSelection===row.id?'bg-red-50 text-[#9a8050]':'bg-gray-50 hover:bg-gray-100')}>{row.name || row.title || row.id}<span className="mt-1 block truncate text-[10px] font-normal text-gray-500">{row.id}</span></button>)}
+                contentRows.map((row) => <div key={row.id} className={'relative flex items-center gap-1 rounded-xl px-2 py-2 '+(contentSelection===row.id?'bg-[#edf3ed] ring-1 ring-[#cbd9ce]':'bg-gray-50 hover:bg-gray-100')}><button onClick={() => { chooseContent(row); setOpenRowMenu(null); }} className="min-w-0 flex-1 px-1 py-1 text-left text-xs font-bold text-[#263b30]">{row.name || row.title || row.id}<span className="mt-1 block truncate text-[10px] font-normal text-gray-500">{row.id}</span></button><button type="button" aria-label={'More actions for '+(row.name || row.title || row.id)} onClick={(event) => { event.stopPropagation(); setOpenRowMenu(openRowMenu===String(row.id)?null:String(row.id)); }} className="grid h-9 w-9 shrink-0 place-items-center rounded-lg text-gray-500 hover:bg-white hover:text-[#19382d]"><MoreVertical size={17}/></button>{openRowMenu===String(row.id) && <div className="absolute right-2 top-12 z-30 w-40 rounded-xl border border-[#e8e5dd] bg-white p-1.5 shadow-xl"><button onClick={() => { chooseContent(row); setOpenRowMenu(null); }} className="flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-left text-xs font-semibold text-[#263b30] hover:bg-[#edf3ed]"><Pencil size={14}/> Edit record</button><button onClick={() => { chooseContent(row); setOpenRowMenu(null); void deleteContent(); }} className="flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-left text-xs font-semibold text-red-600 hover:bg-red-50"><Trash2 size={14}/> Delete record</button></div>}</div>)}
               {!contentRows.length && tab !== 'settings' && <p className="py-5 text-center text-xs text-gray-500">No records yet. Press New to add one.</p>}
             </div>
           </div>
