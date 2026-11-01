@@ -8,6 +8,7 @@ import { MobileBottomNav } from './components/MobileBottomNav.tsx';
 
 // Pages
 import { HomePage } from './pages/HomePage.tsx';
+import { AccountPage } from './pages/AccountPage.tsx';
 import { AboutPage } from './pages/AboutPage.tsx';
 import { MenuPage } from './pages/MenuPage.tsx';
 import { DealsPage } from './pages/DealsPage.tsx';
@@ -23,14 +24,8 @@ import { LegalPage } from './pages/LegalPage.tsx';
 import { NotFoundPage } from './pages/NotFoundPage.tsx';
 
 export default function App() {
-  // Always start on the home page after a full browser refresh.
-  const [currentPath, setCurrentPath] = useState<string>('/');
-
-  useEffect(() => {
-    if (window.location.pathname !== '/') {
-      window.history.replaceState({}, '', '/');
-    }
-  }, []);
+  // Preserve the active route on refresh so customer pages remain directly accessible.
+  const [currentPath, setCurrentPath] = useState<string>(window.location.pathname || '/');
 
   useEffect(() => {
     const handlePopState = () => {
@@ -53,6 +48,11 @@ export default function App() {
     // 1. Home
     if (currentPath === '/' || currentPath === '') {
       return <HomePage navigate={navigate} />;
+    }
+
+    // Customer account hub
+    if (currentPath === '/account') {
+      return <AccountPage navigate={navigate} />;
     }
 
     // 2. About
