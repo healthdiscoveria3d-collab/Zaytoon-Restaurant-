@@ -1,0 +1,6 @@
+{
+  "name": "Zaytoon Restaurant | Dera Ghazi Khan",
+  "description": "Premium culinary landmark on the picturesque banks of the Indus River near Ghazi Ghat Toll Plaza, Dera Ghazi Khan. Fine dining, 24/7 service, authentic online ordering, and table reservations.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
