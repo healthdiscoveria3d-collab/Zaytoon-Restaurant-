@@ -22,6 +22,7 @@ import { GalleryPage } from './pages/GalleryPage.tsx';
 import { ContactPage } from './pages/ContactPage.tsx';
 import { LegalPage } from './pages/LegalPage.tsx';
 import { NotFoundPage } from './pages/NotFoundPage.tsx';
+import { AdminPage } from './pages/AdminPage.tsx';
 
 export default function App() {
   // Preserve the active route on refresh so customer pages remain directly accessible.
@@ -137,6 +138,10 @@ export default function App() {
     // Fallback: 404
     return <NotFoundPage navigate={navigate} />;
   };
+
+  if (currentPath === '/admin' || currentPath.startsWith('/admin/')) {
+    return <AdminPage />;
+  }
 
   return (
     <CartProvider>
