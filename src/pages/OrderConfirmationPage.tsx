@@ -39,7 +39,7 @@ export const OrderConfirmationPage: React.FC<OrderConfirmationPageProps> = ({
             {orderReference}
           </span>
           <span className="text-[11px] text-[#6B7280] mt-1 block">
-            Save or screenshot this reference for live order tracking.
+            Save this reference to check your order inside My Account.
           </span>
         </div>
 
@@ -58,7 +58,7 @@ export const OrderConfirmationPage: React.FC<OrderConfirmationPageProps> = ({
             <div className="p-3.5 bg-[#F4F4F4]/40 rounded-lg space-y-1">
               <span className="font-semibold text-[#D71920] block">2. Status Updates</span>
               <p className="text-[#6B7280]">
-                Use your reference code in our tracker to watch preparation and readiness live.
+                Open My Account and use this reference to check preparation and readiness.
               </p>
             </div>
             <div className="p-3.5 bg-[#F4F4F4]/40 rounded-lg space-y-1">
@@ -73,10 +73,10 @@ export const OrderConfirmationPage: React.FC<OrderConfirmationPageProps> = ({
         {/* Action Buttons */}
         <div className="pt-6 border-t border-[#F4F4F4] flex flex-col sm:flex-row items-center justify-center gap-4">
           <button
-            onClick={() => navigate(`/track-order?ref=${orderReference}`)}
+            onClick={() => navigate(`/account?ref=${orderReference}`)}
             className="w-full sm:w-auto px-6 py-3 bg-[#D71920] hover:bg-[#171717] text-white text-xs font-semibold rounded-lg shadow-sm transition-colors flex items-center justify-center gap-2"
           >
-            <span>Track This Order Live</span>
+            <span>View & Track in My Account</span>
             <ArrowRight className="w-4 h-4" />
           </button>
 
