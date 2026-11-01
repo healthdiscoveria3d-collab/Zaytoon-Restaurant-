@@ -140,7 +140,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ navigate }) => {
                   required
                   value={customerName}
                   onChange={(e) => setCustomerName(e.target.value)}
-                  placeholder="e.g. Sharjeel Khan"
+                  placeholder="Enter your full name"
                   className="w-full text-sm p-3 rounded-lg border border-[#F4F4F4] bg-[#FFFFFF]/30 focus:outline-none focus:ring-1 focus:ring-[#F4C542]"
                 />
               </div>
