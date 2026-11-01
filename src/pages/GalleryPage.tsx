@@ -13,7 +13,7 @@ export const GalleryPage: React.FC<GalleryPageProps> = () => {
 
   const categories = [
     { label: 'All Photographs', value: 'all' },
-    { label: 'Riverside & Terrace', value: 'riverside' },
+    { label: 'Restaurant', value: 'ambiance' },
     { label: 'Culinary Handis & BBQ', value: 'culinary' },
     { label: 'Dining Hall Ambiance', value: 'ambiance' },
     { label: 'Family Banquets', value: 'family' },
@@ -32,10 +32,10 @@ export const GalleryPage: React.FC<GalleryPageProps> = () => {
             Visual Moments
           </span>
           <h1 className="text-4xl sm:text-5xl font-display font-bold text-[#FFFFFF]">
-            The Zaytoon Experience Gallery
+            A Taste of Zaytoon
           </h1>
           <p className="text-sm sm:text-base text-[#F4F4F4]/85 max-w-2xl mx-auto">
-            Glimpses of our scenic Indus river terraces, live charcoal cooking, and family dining pavilions.
+            Explore food and restaurant photographs from Zaytoon.
           </p>
         </div>
       </section>
