@@ -30,43 +30,37 @@ main .shadow-xl,main .shadow-2xl{box-shadow:0 12px 35px #17171712}
 main .border-\[\#F4F4F4\]{border-color:#e9e9e9}
 main .bg-\[\#F4F4F4\]\/50{background:#f7f7f7}
 main .text-\[\#6B7280\]{color:#686868}
-main .space-y-12>section:first-child,main .space-y-20>section:first-child{background:#171717;color:#fff}
-main .space-y-12>section:first-child h1,main .space-y-20>section:first-child h1{color:#fff}
-main .space-y-12>section:first-child p,main .space-y-20>section:first-child p{color:#ffffffc9}
-main .space-y-12>section:first-child span,main .space-y-20>section:first-child span{color:#f4c542}
-main .space-y-12>section:first-child,main .space-y-20>section:first-child{position:relative}
-main .space-y-12>section:first-child:after,main .space-y-20>section:first-child:after{content:"";position:absolute;bottom:0;left:0;width:100%;height:5px;background:#d71920}
 main .bg-\[\#D71920\]{background-color:#d71920}
 main .hover\:bg-\[\#171717\]:hover{background-color:#171717}
 main .text-\[\#D71920\]{color:#d71920}
 main .border-\[\#D71920\]{border-color:#d71920}
-@media(max-width:640px){html{scroll-padding-top:80px}main .space-y-12>section:first-child,main .space-y-20>section:first-child{padding-top:42px;padding-bottom:42px}main h1{line-height:1.05}main .max-w-7xl,main .max-w-5xl{max-width:100%}}
+@media(max-width:640px){html{scroll-padding-top:80px}main h1{line-height:1.08}main .max-w-7xl,main .max-w-5xl{max-width:100%}}
 
 
-/* Compact, touch-friendly mobile layout */
+/* Comfortable, readable mobile layout */
 @media (max-width: 640px) {
-  html { font-size: 14px; scroll-padding-top: 68px; }
+  html { scroll-padding-top: 76px; }
   body { overflow-x: hidden; }
   #root, #root > div { min-width: 0; width: 100%; }
   main { overflow-x: clip; }
-  main h1 { font-size: clamp(1.85rem, 8vw, 2.65rem); line-height: 1.02; }
-  main h2 { font-size: clamp(1.35rem, 6vw, 1.85rem); line-height: 1.12; }
+  main h1 { font-size: clamp(2rem, 8vw, 2.8rem); line-height: 1.08; }
+  main h2 { font-size: clamp(1.55rem, 6vw, 2rem); line-height: 1.16; }
   main h3 { line-height: 1.2; }
   main section { min-width: 0; }
   main button, main a { -webkit-tap-highlight-color: transparent; }
   main button:not([aria-label]) { max-width: 100%; }
   main input, main select, main textarea { min-height: 42px; padding: 9px 11px; font-size: 14px; }
   main form button[type=submit] { min-height: 42px; }
-  header > div:last-of-type { height: 64px !important; padding-left: 12px; padding-right: 12px; gap: 8px; }
+  header > div:last-of-type { height: 68px !important; padding-left: 12px; padding-right: 12px; gap: 8px; }
   header button[aria-label="Toggle menu"] { padding: 7px; }
   header .h-11.w-11 { width: 36px; height: 36px; font-size: 19px; }
   header .text-xl { font-size: 17px; }
   header .tracking-tight { letter-spacing: -.03em; }
   footer .grid { gap: 26px; }
   footer { padding-bottom: 4px; }
-  #root > div > main { padding-bottom: 54px; }
-  .md\\:hidden.fixed.bottom-0 { padding: 5px 8px; }
-  .md\\:hidden.fixed.bottom-0 button { min-height: 38px; }
+  .md\\:hidden.fixed.bottom-0 { min-height: 64px; padding: 7px 10px; }
+  #root > div > main { padding-bottom: 64px; }
+  .md\\:hidden.fixed.bottom-0 button { min-height: 46px; }
 }
 @media (max-width: 380px) {
   html { font-size: 13px; }
