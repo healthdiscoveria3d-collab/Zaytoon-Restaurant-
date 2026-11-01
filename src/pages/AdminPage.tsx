@@ -148,6 +148,17 @@ export const AdminPage: React.FC = () => {
     } catch (err) { setError(err instanceof Error ? err.message : 'Delete failed.'); }
   };
 
+  const updateDraftField = (key: string, value: any) => {
+    try {
+      const draft = JSON.parse(contentJson || '{}');
+      draft[key] = value;
+      setContentJson(JSON.stringify(draft, null, 2));
+    } catch { setError('Draft JSON is invalid. Re-select the record to reset it.'); }
+  };
+
+  let parsedContentDraft: Record<string, any> = {};
+  try { parsedContentDraft = JSON.parse(contentJson || '{}'); } catch { parsedContentDraft = {}; }
+
   const login = async (event: React.FormEvent) => {
     event.preventDefault(); setError(''); setBusy(true);
     try {
@@ -243,8 +254,19 @@ export const AdminPage: React.FC = () => {
           </div>
           <div className="rounded-xl border border-gray-200 bg-white p-4">
             <div className="mb-3 flex flex-wrap items-center justify-between gap-2"><div><h2 className="font-black">{tab === 'settings' ? 'Edit Website Settings' : contentSelection === '__new__' ? 'Create Record' : 'Edit Record'}</h2><p className="mt-1 text-[10px] text-gray-500">Edit the JSON fields, then save. Changes update the live website data after deployment.</p></div><div className="flex gap-2"><button onClick={saveContent} disabled={!contentJson.trim() || busy} className="flex items-center gap-2 rounded-lg bg-[#171717] px-4 py-2 text-[10px] font-black text-white disabled:opacity-40"><Save size={14}/> Save</button>{tab !== 'settings' && contentSelection !== '__new__' && <button onClick={deleteContent} className="flex items-center gap-2 rounded-lg border border-red-200 px-3 py-2 text-[10px] font-bold text-red-600"><Trash2 size={14}/> Delete</button>}</div></div>
-            <textarea value={contentJson} onChange={(e)=>setContentJson(e.target.value)} spellCheck={false} className="min-h-[55vh] w-full rounded-lg border border-gray-200 bg-[#fafafa] p-4 font-mono text-xs leading-6 outline-none focus:border-[#D71920]" placeholder="Select a record or create a new one…"/>
-            <p className="mt-2 text-[10px] text-gray-400">Tip: Keep JSON commas, quotes and brackets intact. Image fields accept existing image paths or full image URLs.</p>
+            {contentJson && Object.keys(parsedContentDraft).length > 0 ? <div className="grid gap-4 sm:grid-cols-2">
+              {Object.entries(parsedContentDraft).map(([key, value]) => <label key={key} className="block min-w-0 text-[10px] font-bold uppercase tracking-wide text-gray-500">
+                {pretty(key)}
+                {typeof value === 'boolean' ? <span className="mt-2 flex items-center gap-2 rounded-lg border border-gray-200 p-3 text-xs font-semibold normal-case text-gray-700"><input type="checkbox" checked={value} onChange={(e)=>updateDraftField(key,e.target.checked)} disabled={key==='id'}/> {value ? 'Enabled' : 'Disabled'}</span> :
+                  Array.isArray(value) ? <textarea value={value.join('\n')} onChange={(e)=>updateDraftField(key,e.target.value.split('\n').map((v)=>v.trim()).filter(Boolean))} rows={4} className="mt-2 w-full rounded-lg border border-gray-200 bg-[#fafafa] p-3 text-xs font-normal normal-case text-gray-800 outline-none focus:border-[#D71920]"/> :
+                  typeof value === 'number' ? <input type="number" value={value} onChange={(e)=>updateDraftField(key,Number(e.target.value))} className="mt-2 w-full rounded-lg border border-gray-200 bg-[#fafafa] p-3 text-xs font-normal normal-case text-gray-800 outline-none focus:border-[#D71920]"/> :
+                  (String(value).length > 110 || /description|caption|notice|history|address|message/i.test(key)) ? <textarea value={String(value ?? '')} onChange={(e)=>updateDraftField(key,e.target.value)} rows={4} disabled={key==='id' && contentSelection!=='__new__'} className="mt-2 w-full rounded-lg border border-gray-200 bg-[#fafafa] p-3 text-xs font-normal normal-case text-gray-800 outline-none focus:border-[#D71920]"/> :
+                  <input value={String(value ?? '')} onChange={(e)=>updateDraftField(key,e.target.value)} disabled={key==='id' && contentSelection!=='__new__'} className="mt-2 w-full rounded-lg border border-gray-200 bg-[#fafafa] p-3 text-xs font-normal normal-case text-gray-800 outline-none focus:border-[#D71920]"/>
+                }
+              </label>)}
+            </div> : <p className="rounded-lg bg-gray-50 p-6 text-center text-xs text-gray-500">Select a record or press New to start editing.</p>}
+            <details className="mt-4"><summary className="cursor-pointer text-[10px] font-bold text-gray-500">Advanced: view / edit raw JSON</summary><textarea value={contentJson} onChange={(e)=>setContentJson(e.target.value)} spellCheck={false} className="mt-2 min-h-48 w-full rounded-lg border border-gray-200 bg-[#fafafa] p-3 font-mono text-[10px] leading-5 outline-none focus:border-[#D71920]"/></details>
+            <p className="mt-2 text-[10px] text-gray-400">List fields: enter one item per line. Image fields accept existing image paths or full image URLs.</p>
           </div>
         </section>}
         {busy && <p className="mt-5 text-center text-[10px] font-bold uppercase tracking-wider text-gray-400">Refreshing data…</p>}
