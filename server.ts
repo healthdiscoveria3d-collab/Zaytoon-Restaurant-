@@ -20,6 +20,11 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(express.json());
+app.use('/api', (_req: Request, res: Response, next: () => void) => {
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  next();
+});
 
 // In-memory persistent database stores
 let siteSettings = { ...initialSiteSettings };
