@@ -13,13 +13,16 @@ export const AccountPage: React.FC<AccountPageProps> = ({ navigate, initialRef }
           <button onClick={() => navigate('/')} className="hover:text-[#D71920]">Home</button>
           <span>/</span><span className="text-[#D71920]">My Account</span>
         </div>
-        <section className="rounded-3xl bg-[#171717] px-6 py-8 text-white sm:px-10 sm:py-10">
-          <div className="flex items-center gap-3">
-            <span className="grid h-12 w-12 place-items-center rounded-2xl bg-[#D71920]"><UserRound size={23}/></span>
-            <div><p className="text-[9px] font-black uppercase tracking-[.22em] text-[#F4C542]">Zaytoon customer portal</p><p className="mt-1 text-xs text-white/60">One place for your account and orders</p></div>
+        <section className="relative isolate overflow-hidden rounded-[28px] border border-[#eadfce] bg-gradient-to-br from-[#fffdf8] via-[#fff8ed] to-[#f8eee0] px-6 py-8 shadow-[0_18px_45px_rgba(91,63,35,0.08)] sm:px-10 sm:py-10">
+          <div className="pointer-events-none absolute -right-12 -top-20 h-64 w-64 rounded-full border-[34px] border-[#D71920]/[0.045]"/>
+          <div className="pointer-events-none absolute -bottom-24 right-24 h-48 w-48 rounded-full bg-[#F4C542]/[0.12] blur-2xl"/>
+          <div className="relative flex items-center gap-3">
+            <span className="grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br from-[#D71920] to-[#a90f18] text-white shadow-lg shadow-red-900/15"><UserRound size={22}/></span>
+            <div><p className="text-[9px] font-black uppercase tracking-[.24em] text-[#b18a43]">Zaytoon customer portal</p><p className="mt-1 text-xs font-medium text-[#777064]">One place for your account and orders</p></div>
           </div>
-          <h1 className="mt-6 text-3xl font-black uppercase tracking-tight sm:text-5xl">My Account<span className="text-[#F4C542]">.</span></h1>
-          <p className="mt-3 max-w-xl text-sm leading-6 text-white/65">Sign in or create an account, then manage and track your Zaytoon orders here.</p>
+          <h1 className="relative mt-6 text-3xl font-black uppercase tracking-tight text-[#20372d] sm:text-5xl">My Account<span className="text-[#D71920]">.</span></h1>
+          <p className="relative mt-3 max-w-xl text-sm leading-6 text-[#746f65]">Sign in or create an account, then manage and track your Zaytoon orders here.</p>
+          <div className="relative mt-6 h-1 w-16 rounded-full bg-gradient-to-r from-[#D71920] to-[#F4C542]"/>
         </section>
 
         <section className="mx-auto mt-7 max-w-xl overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
