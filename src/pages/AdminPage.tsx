@@ -312,6 +312,10 @@ export const AdminPage: React.FC = () => {
                   isAvailable: 'ON = customer order kar sakta hai. OFF = product unavailable hoga.',
                   categoryName: 'Woh menu section choose karein jahan product show hona chahiye.',
                   id: 'System record ID. Isay change na karein.',
+                  reservationTimeSlots: 'Har time alag line par HH:MM format mein likhein. Example: 18:30',
+                  reservationMaxTablesPerSlot: 'Har time slot par maximum kitni table bookings accept hongi.',
+                  reservationMaxGuests: 'Ek reservation mein maximum guests ki tadaad.',
+                  reservationSeatingOptions: 'Har seating option alag line par. IDs: indoor_family_hall, outdoor_riverside, executive_lounge, any.',
                   logoUrl: 'Paste a direct image URL here. Save to update the website header, footer and admin sidebar.',
                 };
                 const fieldPlaceholders: Record<string, string> = {
