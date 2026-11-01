@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { LayoutDashboard, ClipboardList, CalendarDays, MessageSquare, LogOut, ShieldCheck, RefreshCw, Utensils, LockKeyhole } from 'lucide-react';
+import { LayoutDashboard, ClipboardList, CalendarDays, MessageSquare, LogOut, ShieldCheck, RefreshCw, Utensils, LockKeyhole, BookOpen, Tags, Percent, Images, Settings, Plus, Save, Trash2 } from 'lucide-react';
 
-type Tab = 'dashboard' | 'orders' | 'reservations' | 'messages';
+type Tab = 'dashboard' | 'orders' | 'reservations' | 'messages' | 'menu' | 'categories' | 'deals' | 'gallery' | 'settings';
 type Order = {
   reference: string; customerName: string; customerPhone: string; customerEmail?: string;
   fulfilmentMethod: string; deliveryAddress?: string; pickupTime?: string;
@@ -32,7 +32,17 @@ export const AdminPage: React.FC = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [messages, setMessages] = useState<Inquiry[]>([]);
+  const [contentRows, setContentRows] = useState<any[]>([]);
+  const [contentSelection, setContentSelection] = useState('main');
+  const [contentJson, setContentJson] = useState('');
   const [busy, setBusy] = useState(false);
+
+  const contentCollections: Partial<Record<Tab, string>> = {
+    menu: 'menu_items', categories: 'categories', deals: 'deals', gallery: 'gallery', settings: 'site_settings',
+  };
+  const contentTitles: Partial<Record<Tab, string>> = {
+    menu: 'Menu Items', categories: 'Menu Categories', deals: 'Deals & Promotions', gallery: 'Gallery', settings: 'Site Settings',
+  };
 
   const request = async (path: string, init: RequestInit = {}) => {
     const response = await fetch(API + path, {
@@ -64,6 +74,79 @@ export const AdminPage: React.FC = () => {
   }, []);
 
   useEffect(() => { if (authenticated) loadData(); }, [authenticated]);
+
+  useEffect(() => {
+    const collection = contentCollections[tab];
+    if (!authenticated || !collection) return;
+    setBusy(true);
+    request('/content/' + collection)
+      .then((result) => {
+        setContentRows(result.data || []);
+        if (tab === 'settings') {
+          setContentSelection('main');
+          setContentJson(JSON.stringify(result.data?.[0] || {}, null, 2));
+        } else {
+          const first = result.data?.[0];
+          setContentSelection(first?.id || '');
+          setContentJson(first ? JSON.stringify(first, null, 2) : '');
+        }
+      })
+      .catch((err) => setError(err instanceof Error ? err.message : 'Could not load content.'))
+      .finally(() => setBusy(false));
+  }, [authenticated, tab]);
+
+  const chooseContent = (row: any) => {
+    const id = tab === 'settings' ? 'main' : String(row.id);
+    setContentSelection(id);
+    setContentJson(JSON.stringify(row, null, 2));
+  };
+
+  const createContent = () => {
+    const templates: Partial<Record<Tab, any>> = {
+      menu: { id: 'item-new', name: 'New Menu Item', slug: 'new-menu-item', categoryId: 'cat-karahi', categoryName: 'Karahi & Handi', description: '', price: 0, image: '/images/food_pakistani_karahi_bbq.jpg', isAvailable: true, isFeatured: false, isDemoItem: false, preparationTime: '20 mins', spiciness: 'medium', tags: [] },
+      categories: { id: 'cat-new', name: 'New Category', slug: 'new-category', description: '', displayOrder: contentRows.length + 1, image: '/images/food_pakistani_karahi_bbq.jpg', badge: '' },
+      deals: { id: 'deal-new', title: 'New Deal', slug: 'new-deal', shortDescription: '', fullDescription: '', image: '/images/deal_special_family_platter.jpg', originalPrice: 0, offerPrice: 0, discountPercentage: 0, promoCode: '', includedItems: [], serves: '2 Persons', validUntil: '2026-12-31', isFeatured: false, isActive: true, terms: [], badge: '' },
+      gallery: { id: 'gal-new', title: 'New Gallery Image', category: 'culinary', image: '/images/food_pakistani_karahi_bbq.jpg', caption: '' },
+    };
+    const template = templates[tab];
+    if (!template) return;
+    setContentSelection('__new__');
+    setContentJson(JSON.stringify(template, null, 2));
+  };
+
+  const saveContent = async () => {
+    const collection = contentCollections[tab];
+    if (!collection) return;
+    try {
+      const data = JSON.parse(contentJson);
+      const id = tab === 'settings' ? 'main' : String(data.id || '').trim();
+      if (!id) throw new Error('Record ke andar id zaroor likhein.');
+      await request('/content/' + collection + '/' + encodeURIComponent(id), {
+        method: 'PUT', body: JSON.stringify({ data }),
+      });
+      setError('');
+      const result = await request('/content/' + collection);
+      setContentRows(result.data || []);
+      setContentSelection(id);
+      setContentJson(JSON.stringify(tab === 'settings' ? result.data?.[0] : result.data.find((item: any) => item.id === id), null, 2));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Invalid JSON or save failed.');
+    }
+  };
+
+  const deleteContent = async () => {
+    const collection = contentCollections[tab];
+    if (!collection || tab === 'settings' || !contentSelection || contentSelection === '__new__') return;
+    if (!window.confirm('Delete this record permanently?')) return;
+    try {
+      await request('/content/' + collection + '/' + encodeURIComponent(contentSelection), { method: 'DELETE' });
+      const result = await request('/content/' + collection);
+      setContentRows(result.data || []);
+      const first = result.data?.[0];
+      setContentSelection(first?.id || '');
+      setContentJson(first ? JSON.stringify(first, null, 2) : '');
+    } catch (err) { setError(err instanceof Error ? err.message : 'Delete failed.'); }
+  };
 
   const login = async (event: React.FormEvent) => {
     event.preventDefault(); setError(''); setBusy(true);
@@ -115,6 +198,11 @@ export const AdminPage: React.FC = () => {
     { id: 'orders', label: 'Orders', icon: <ClipboardList size={17}/> },
     { id: 'reservations', label: 'Reservations', icon: <CalendarDays size={17}/> },
     { id: 'messages', label: 'Messages', icon: <MessageSquare size={17}/> },
+    { id: 'menu', label: 'Menu Items', icon: <BookOpen size={17}/> },
+    { id: 'categories', label: 'Categories', icon: <Tags size={17}/> },
+    { id: 'deals', label: 'Deals', icon: <Percent size={17}/> },
+    { id: 'gallery', label: 'Gallery', icon: <Images size={17}/> },
+    { id: 'settings', label: 'Site Settings', icon: <Settings size={17}/> },
   ];
 
   return (
@@ -144,6 +232,21 @@ export const AdminPage: React.FC = () => {
         {tab==='orders' && <section className="space-y-3">{orders.length ? orders.map(order=><article key={order.reference} className="rounded-xl border border-gray-200 bg-white p-4 sm:p-5"><div className="flex flex-wrap items-start justify-between gap-3"><div><p className="text-sm font-black">{order.reference} · {order.customerName}</p><p className="mt-1 text-[10px] text-gray-500">{order.customerPhone} · {dateTime(order.createdAt)}</p></div><p className="text-lg font-black">PKR {order.total.toLocaleString()}</p></div><div className="mt-3 grid gap-2 text-xs text-gray-600 sm:grid-cols-2"><p><strong>Type:</strong> {pretty(order.fulfilmentMethod)}</p><p><strong>Payment:</strong> {pretty(order.paymentMethod)}</p>{order.deliveryAddress && <p className="sm:col-span-2"><strong>Address:</strong> {order.deliveryAddress}</p>}<p className="sm:col-span-2"><strong>Items:</strong> {order.items.map(item=>item.quantity+' × '+item.itemName).join(', ')}</p>{order.instructions && <p className="sm:col-span-2"><strong>Notes:</strong> {order.instructions}</p>}</div><div className="mt-4 flex flex-wrap items-center gap-2"><label className="text-[10px] font-bold uppercase text-gray-500">Order status</label><select value={order.status} onChange={e=>updateOrder(order.reference,e.target.value)} className="max-w-56 rounded-lg border border-gray-200 bg-white px-3 py-2 text-xs font-bold">{orderStatuses.map(status=><option key={status} value={status}>{pretty(status)}</option>)}</select></div></article>) : <div className="rounded-xl border border-gray-200 bg-white p-8 text-center text-sm text-gray-500">No orders yet.</div>}</section>}
         {tab==='reservations' && <section className="space-y-3">{reservations.length ? reservations.map(item=><article key={item.reference} className="rounded-xl border border-gray-200 bg-white p-4 sm:p-5"><div className="flex flex-wrap items-start justify-between gap-3"><div><p className="text-sm font-black">{item.fullName} · {item.reference}</p><p className="mt-1 text-[10px] text-gray-500">{item.phone}{item.email?' · '+item.email:''}</p></div><p className="text-sm font-black">{item.date} · {item.timeSlot}</p></div><div className="mt-3 grid gap-2 text-xs text-gray-600 sm:grid-cols-2"><p><strong>Guests:</strong> {item.guests}</p><p><strong>Seating:</strong> {pretty(item.seatingPreference)}</p>{item.specialRequest && <p className="sm:col-span-2"><strong>Request:</strong> {item.specialRequest}</p>}</div><div className="mt-4 flex flex-wrap items-center gap-2"><label className="text-[10px] font-bold uppercase text-gray-500">Status</label><select value={item.status} onChange={e=>updateReservation(item.reference,e.target.value)} className="max-w-56 rounded-lg border border-gray-200 bg-white px-3 py-2 text-xs font-bold">{reservationStatuses.map(status=><option key={status} value={status}>{pretty(status)}</option>)}</select></div></article>) : <div className="rounded-xl border border-gray-200 bg-white p-8 text-center text-sm text-gray-500">No reservations yet.</div>}</section>}
         {tab==='messages' && <section className="space-y-3">{messages.length ? messages.map(item=><article key={item.id} className="rounded-xl border border-gray-200 bg-white p-4 sm:p-5"><div className="flex flex-wrap justify-between gap-2"><div><p className="text-sm font-black">{item.fullName}</p><p className="mt-1 text-[10px] text-gray-500">{item.phone}{item.email?' · '+item.email:''}</p></div><p className="text-[10px] text-gray-400">{dateTime(item.createdAt)}</p></div><p className="mt-3 text-xs font-bold">{item.subject}</p><p className="mt-1 whitespace-pre-wrap text-sm leading-6 text-gray-700">{item.message}</p></article>) : <div className="rounded-xl border border-gray-200 bg-white p-8 text-center text-sm text-gray-500">No messages yet.</div>}</section>}
+        {contentCollections[tab] && <section className="grid gap-4 xl:grid-cols-[minmax(240px,0.8fr)_minmax(0,1.4fr)]">
+          <div className="rounded-xl border border-gray-200 bg-white p-4">
+            <div className="mb-3 flex items-center justify-between gap-2"><h2 className="font-black">{contentTitles[tab]}</h2>{tab !== 'settings' && <button onClick={createContent} className="flex items-center gap-1 rounded-lg bg-[#D71920] px-3 py-2 text-[10px] font-black text-white"><Plus size={13}/> New</button>}</div>
+            <div className="max-h-[65vh] space-y-2 overflow-y-auto">
+              {tab === 'settings' ? <button onClick={() => chooseContent(contentRows[0] || {})} className="w-full rounded-lg bg-gray-100 px-3 py-3 text-left text-xs font-bold">Main Website Settings</button> :
+                contentRows.map((row) => <button key={row.id} onClick={() => chooseContent(row)} className={'w-full rounded-lg px-3 py-3 text-left text-xs font-bold '+(contentSelection===row.id?'bg-red-50 text-[#D71920]':'bg-gray-50 hover:bg-gray-100')}>{row.name || row.title || row.id}<span className="mt-1 block truncate text-[10px] font-normal text-gray-500">{row.id}</span></button>)}
+              {!contentRows.length && tab !== 'settings' && <p className="py-5 text-center text-xs text-gray-500">No records yet. Press New to add one.</p>}
+            </div>
+          </div>
+          <div className="rounded-xl border border-gray-200 bg-white p-4">
+            <div className="mb-3 flex flex-wrap items-center justify-between gap-2"><div><h2 className="font-black">{tab === 'settings' ? 'Edit Website Settings' : contentSelection === '__new__' ? 'Create Record' : 'Edit Record'}</h2><p className="mt-1 text-[10px] text-gray-500">Edit the JSON fields, then save. Changes update the live website data after deployment.</p></div><div className="flex gap-2"><button onClick={saveContent} disabled={!contentJson.trim() || busy} className="flex items-center gap-2 rounded-lg bg-[#171717] px-4 py-2 text-[10px] font-black text-white disabled:opacity-40"><Save size={14}/> Save</button>{tab !== 'settings' && contentSelection !== '__new__' && <button onClick={deleteContent} className="flex items-center gap-2 rounded-lg border border-red-200 px-3 py-2 text-[10px] font-bold text-red-600"><Trash2 size={14}/> Delete</button>}</div></div>
+            <textarea value={contentJson} onChange={(e)=>setContentJson(e.target.value)} spellCheck={false} className="min-h-[55vh] w-full rounded-lg border border-gray-200 bg-[#fafafa] p-4 font-mono text-xs leading-6 outline-none focus:border-[#D71920]" placeholder="Select a record or create a new one…"/>
+            <p className="mt-2 text-[10px] text-gray-400">Tip: Keep JSON commas, quotes and brackets intact. Image fields accept existing image paths or full image URLs.</p>
+          </div>
+        </section>}
         {busy && <p className="mt-5 text-center text-[10px] font-bold uppercase tracking-wider text-gray-400">Refreshing data…</p>}
       </main>
     </div>
