@@ -1,0 +1,76 @@
+name: Extract website ZIP
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Extract uploaded website ZIP
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+          import shutil
+          import tempfile
+
+          root = Path.cwd()
+          archives = [p for p in root.glob("*.zip") if p.is_file()]
+          if not archives:
+              raise SystemExit("No ZIP file found in the repository root. Upload the ZIP to the main repository page first.")
+          if len(archives) > 1:
+              raise SystemExit("More than one ZIP found in the repository root: " + ", ".join(p.name for p in archives) + ". Keep only the website ZIP.")
+
+          archive = archives[0]
+          with tempfile.TemporaryDirectory() as tmp:
+              tmp_path = Path(tmp)
+              with ZipFile(archive) as zf:
+                  for info in zf.infolist():
+                      target = (tmp_path / info.filename).resolve()
+                      if not str(target).startswith(str(tmp_path.resolve()) + "/") and target != tmp_path.resolve():
+                          raise SystemExit("Unsafe path detected in ZIP: " + info.filename)
+                  zf.extractall(tmp_path)
+
+              entries = [p for p in tmp_path.iterdir() if p.name not in ("__MACOSX",)]
+              if len(entries) == 1 and entries[0].is_dir():
+                  source = entries[0]
+              else:
+                  source = tmp_path
+
+              for item in source.iterdir():
+                  if item.name in (".git", "node_modules", "__MACOSX"):
+                      continue
+                  destination = root / item.name
+                  if destination.exists() and destination.is_dir() and item.is_dir():
+                      shutil.copytree(item, destination, dirs_exist_ok=True)
+                  elif destination.exists() and destination.is_dir():
+                      shutil.rmtree(destination)
+                      shutil.copy2(item, destination)
+                  elif item.is_dir():
+                      shutil.copytree(item, destination, dirs_exist_ok=True)
+                  else:
+                      shutil.copy2(item, destination)
+
+          archive.unlink()
+          print("ZIP extracted successfully and archive removed.")
+          PY
+
+      - name: Commit extracted website files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No extracted changes to commit."
+          else
+            git commit -m "Extract website ZIP"
+            git push
+          fi
