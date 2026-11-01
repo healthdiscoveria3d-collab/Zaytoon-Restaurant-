@@ -108,7 +108,7 @@ async function hydrateDatabase() {
   if (!databaseEnabled) return;
 
   const savedSettings = await getRecord<typeof siteSettings>('site_settings', 'main');
-  if (savedSettings) siteSettings = savedSettings;
+  if (savedSettings) siteSettings = { ...siteSettings, ...savedSettings };
   else await saveRecord('site_settings', 'main', siteSettings);
 
   const savedCategories = await listRecords<typeof categories[number]>('categories');
