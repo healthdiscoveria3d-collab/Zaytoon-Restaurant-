@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, Flame, MapPin, ShoppingBag, Truck, Utensils, Clock3, Star, Plus, Tag, ChefHat } from 'lucide-react';
+import { ArrowRight, Flame, MapPin, ShoppingBag, Utensils, Clock3, Star, Plus, Tag, ChefHat } from 'lucide-react';
 import { initialCategories, initialMenuItems, initialDeals } from '../data/initialData.ts';
 import { useCart } from '../context/CartContext.tsx';
 
