@@ -13,14 +13,15 @@ export const AboutPage: React.FC<AboutPageProps> = ({ navigate }) => {
     <div className="space-y-24 pb-28">
       {/* Editorial Header */}
       <section className="bg-[#D71920] text-white py-24 sm:py-28 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-20">
+        <div className="absolute inset-0">
           <img
             src={heroImage}
             alt="Zaytoon Riverside"
             referrerPolicy="no-referrer"
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover object-center"
           />
         </div>
+        <div className="absolute inset-0 bg-gradient-to-r from-[#171717]/75 via-[#171717]/45 to-[#171717]/25" />
         <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
           <span className="text-sm font-semibold uppercase tracking-[0.2em] text-[#F4C542]">
             Our Story
