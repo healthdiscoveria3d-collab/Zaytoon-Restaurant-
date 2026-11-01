@@ -161,6 +161,20 @@ async function hydrateDatabase() {
     await saveRecord('site_settings', 'main', siteSettings);
   }
 
+  // One-time targeted image repair for the N-70 Highway Express Platter.
+  const highwayPlatterImageMigrated = Boolean((siteSettings as typeof siteSettings & { highwayPlatterImageMigratedV1?: boolean }).highwayPlatterImageMigratedV1);
+  if (!highwayPlatterImageMigrated) {
+    const savedDeal = deals.find((item) => item.id === 'deal-highway-traveler-platter');
+    const seededDeal = initialDeals.find((item) => item.id === 'deal-highway-traveler-platter');
+    if (savedDeal && seededDeal) {
+      const updatedDeal = { ...savedDeal, image: seededDeal.image };
+      deals = deals.map((item) => item.id === updatedDeal.id ? updatedDeal : item);
+      await saveRecord('deals', updatedDeal.id, updatedDeal);
+    }
+    siteSettings = { ...siteSettings, highwayPlatterImageMigratedV1: true };
+    await saveRecord('site_settings', 'main', siteSettings);
+  }
+
   const savedGallery = await listRecords<typeof gallery[number]>('gallery');
   if (savedGallery.length) gallery = savedGallery;
   else for (const item of gallery) await saveRecord('gallery', item.id, item);
