@@ -23,9 +23,14 @@ import { LegalPage } from './pages/LegalPage.tsx';
 import { NotFoundPage } from './pages/NotFoundPage.tsx';
 
 export default function App() {
-  const [currentPath, setCurrentPath] = useState<string>(() => {
-    return window.location.pathname || '/';
-  });
+  // Always start on the home page after a full browser refresh.
+  const [currentPath, setCurrentPath] = useState<string>('/');
+
+  useEffect(() => {
+    if (window.location.pathname !== '/') {
+      window.history.replaceState({}, '', '/');
+    }
+  }, []);
 
   useEffect(() => {
     const handlePopState = () => {
