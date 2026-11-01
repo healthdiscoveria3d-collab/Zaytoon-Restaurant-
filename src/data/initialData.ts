@@ -5,6 +5,7 @@ const heroPhoto = '/images/hero_zaytoon_dining.jpg';
 const interiorPhoto = '/images/restaurant_interior.jpg';
 
 export const initialSiteSettings: SiteSettings = {
+  logoUrl: '',
   brandName: 'Zaytoon Restaurant',
   tagline: 'Pakistani favourites, BBQ and family meals',
   locationName: 'Near Ghazi Ghat Toll Plaza, Dera Ghazi Khan, Pakistan',
