@@ -14,7 +14,7 @@ export const ReservationPage: React.FC<ReservationPageProps> = ({ navigate }) =>
   const [date, setDate] = useState(tomorrow);
   const [timeSlot, setTimeSlot] = useState('20:30');
   const [guests, setGuests] = useState('4');
-  const [seatingPreference, setSeatingPreference] = useState('outdoor_riverside');
+  const [seatingPreference, setSeatingPreference] = useState('indoor');
   const [specialRequest, setSpecialRequest] = useState('');
 
   const [availableSlots, setAvailableSlots] = useState<{ slot: string; available: boolean; remainingTables: number }[]>([]);
@@ -145,7 +145,7 @@ export const ReservationPage: React.FC<ReservationPageProps> = ({ navigate }) =>
                     <option value="14:00">2:00 PM (Lunch)</option>
                     <option value="15:00">3:00 PM (Late Lunch)</option>
                     <option value="17:00">5:00 PM (High Tea & Sunset)</option>
-                    <option value="18:30">6:30 PM (Dusk Riverside)</option>
+                    <option value="18:30">6:30 PM (Dusk Standard)</option>
                     <option value="19:30">7:30 PM (Dinner)</option>
                     <option value="20:30">8:30 PM (Dinner Prime)</option>
                     <option value="21:30">9:30 PM (Dinner)</option>
@@ -202,7 +202,7 @@ export const ReservationPage: React.FC<ReservationPageProps> = ({ navigate }) =>
                     onChange={(e) => setSeatingPreference(e.target.value)}
                     className="w-full text-sm p-3 rounded-lg border border-[#F4F4F4] bg-white focus:outline-none focus:ring-1 focus:ring-[#F4C542]"
                   >
-                    <option value="outdoor_riverside">Outdoor Riverside Terrace (Indus View)</option>
+                    <option value="indoor">Outdoor Standard Terrace (Indus View)</option>
                     <option value="indoor_family_hall">Air-Conditioned Indoor Family Hall</option>
                     <option value="executive_lounge">Executive / Travelers Lounge</option>
                     <option value="any">First Available Best Table</option>
