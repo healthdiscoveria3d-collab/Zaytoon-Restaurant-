@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, Users, Clock, MapPin, CheckCircle, AlertCircle, Sparkles } from 'lucide-react';
+import { initialSiteSettings } from '../data/initialData.ts';
 
 interface ReservationPageProps {
   navigate: (path: string) => void;
@@ -13,6 +14,7 @@ export const ReservationPage: React.FC<ReservationPageProps> = ({ navigate }) =>
   const [email, setEmail] = useState('');
   const [date, setDate] = useState(tomorrow);
   const [timeSlot, setTimeSlot] = useState('20:30');
+  const [bookingSettings, setBookingSettings] = useState(initialSiteSettings);
   const [guests, setGuests] = useState('4');
   const [seatingPreference, setSeatingPreference] = useState('indoor');
   const [specialRequest, setSpecialRequest] = useState('');
@@ -21,6 +23,8 @@ export const ReservationPage: React.FC<ReservationPageProps> = ({ navigate }) =>
   const [isLoadingSlots, setIsLoadingSlots] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+
+  useEffect(() => { fetch('/api/v1/site-settings/public').then(r => r.json()).then(result => { if (result.success && result.data) setBookingSettings({ ...initialSiteSettings, ...result.data }); }).catch(() => {}); }, []);
 
   // Fetch slot availability whenever date changes
   useEffect(() => {
@@ -31,6 +35,7 @@ export const ReservationPage: React.FC<ReservationPageProps> = ({ navigate }) =>
         const data = await res.json();
         if (data.success && Array.isArray(data.data)) {
           setAvailableSlots(data.data);
+          if (!data.data.some((slot: any) => slot.slot === timeSlot && slot.available)) { const firstAvailable = data.data.find((slot: any) => slot.available); if (firstAvailable) setTimeSlot(firstAvailable.slot); }
         }
       } catch (err) {
         console.error('Failed to load slots', err);
@@ -136,22 +141,8 @@ export const ReservationPage: React.FC<ReservationPageProps> = ({ navigate }) =>
                   <label className="block text-xs font-semibold uppercase text-[#D71920] mb-1">
                     Preferred Time Slot *
                   </label>
-                  <select
-                    value={timeSlot}
-                    onChange={(e) => setTimeSlot(e.target.value)}
-                    className="w-full text-sm p-3 rounded-lg border border-[#F4F4F4] bg-white focus:outline-none focus:ring-1 focus:ring-[#F4C542]"
-                  >
-                    <option value="13:00">1:00 PM (Lunch)</option>
-                    <option value="14:00">2:00 PM (Lunch)</option>
-                    <option value="15:00">3:00 PM (Late Lunch)</option>
-                    <option value="17:00">5:00 PM (High Tea & Sunset)</option>
-                    <option value="18:30">6:30 PM (Dusk Standard)</option>
-                    <option value="19:30">7:30 PM (Dinner)</option>
-                    <option value="20:30">8:30 PM (Dinner Prime)</option>
-                    <option value="21:30">9:30 PM (Dinner)</option>
-                    <option value="22:30">10:30 PM (Late Dining)</option>
-                    <option value="23:30">11:30 PM (Midnight Feast)</option>
-                    <option value="01:00">1:00 AM (24/7 Night Travel Stop)</option>
+                  <select value={timeSlot} onChange={(e) => setTimeSlot(e.target.value)} className="w-full text-sm p-3 rounded-lg border border-[#F4F4F4] bg-white focus:outline-none focus:ring-1 focus:ring-[#F4C542]" disabled={isLoadingSlots}>
+                    {availableSlots.map((slot) => <option key={slot.slot} value={slot.slot} disabled={!slot.available}>{new Date('2000-01-01T' + slot.slot + ':00').toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })} {slot.available ? '(' + slot.remainingTables + ' tables left)' : '(Fully booked)'}</option>)}
                   </select>
                 </div>
               </div>
@@ -163,7 +154,7 @@ export const ReservationPage: React.FC<ReservationPageProps> = ({ navigate }) =>
                 </span>
                 <span className="font-semibold text-emerald-800 flex items-center gap-1.5">
                   <CheckCircle className="w-3.5 h-3.5" />
-                  <span>Tables Currently Available</span>
+                  <span>{availableSlots.find((slot) => slot.slot === timeSlot)?.available ? `Available · ${availableSlots.find((slot) => slot.slot === timeSlot)?.remainingTables} tables left` : isLoadingSlots ? "Checking availability…" : "Fully booked"}</span>
                 </span>
               </div>
             </div>
@@ -185,7 +176,7 @@ export const ReservationPage: React.FC<ReservationPageProps> = ({ navigate }) =>
                     onChange={(e) => setGuests(e.target.value)}
                     className="w-full text-sm p-3 rounded-lg border border-[#F4F4F4] bg-white focus:outline-none focus:ring-1 focus:ring-[#F4C542]"
                   >
-                    {[1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 15, 20, 25, 30].map((num) => (
+                    {Array.from({ length: Number(bookingSettings.reservationMaxGuests) || 40 }, (_, index) => index + 1).map((num) => (
                       <option key={num} value={num}>
                         {num} {num === 1 ? 'Guest' : 'Guests'}
                       </option>
@@ -202,7 +193,7 @@ export const ReservationPage: React.FC<ReservationPageProps> = ({ navigate }) =>
                     onChange={(e) => setSeatingPreference(e.target.value)}
                     className="w-full text-sm p-3 rounded-lg border border-[#F4F4F4] bg-white focus:outline-none focus:ring-1 focus:ring-[#F4C542]"
                   >
-                    <option value="indoor">Outdoor Standard Terrace (Indus View)</option>
+                    <option value="outdoor_riverside">Outdoor Standard Terrace (Indus View)</option>
                     <option value="indoor_family_hall">Air-Conditioned Indoor Family Hall</option>
                     <option value="executive_lounge">Executive / Travelers Lounge</option>
                     <option value="any">First Available Best Table</option>
