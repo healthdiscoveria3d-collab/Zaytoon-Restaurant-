@@ -1,6 +1,7 @@
 import React from 'react';
 import { initialSiteSettings } from '../data/initialData.ts';
 import heroImage from '../assets/images/hero_zaytoon_riverside_dining_1793524768913.jpg';
+import ambianceImage from '../assets/images/restaurant_ambiance_interior_1793524770716.jpg';
 import { ArrowRight, Clock, Award, Shield, Users, MapPin } from 'lucide-react';
 
 interface AboutPageProps {
@@ -134,7 +135,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ navigate }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="rounded-xl overflow-hidden shadow-lg h-80 bg-[#F4F4F4]">
             <img
-              src="/src/assets/images/restaurant_ambiance_interior_1793524770716.jpg"
+              src={ambianceImage}
               alt="Family Dining Hall"
               referrerPolicy="no-referrer"
               className="w-full h-full object-cover"
@@ -142,7 +143,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ navigate }) => {
           </div>
           <div className="rounded-xl overflow-hidden shadow-lg h-80 bg-[#F4F4F4]">
             <img
-              src="/src/assets/images/hero_zaytoon_riverside_dining_1793524768913.jpg"
+              src={heroImage}
               alt="Riverside Dusk"
               referrerPolicy="no-referrer"
               className="w-full h-full object-cover"
@@ -162,20 +163,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ navigate }) => {
               We welcome you any hour of the day or night on the banks of the Indus.
             </p>
           </div>
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => navigate('/menu')}
-              className="px-5 py-2.5 bg-[#D71920] text-white text-xs font-semibold rounded hover:bg-[#171717] transition-colors"
-            >
-              Explore Menu
-            </button>
-            <button
-              onClick={() => navigate('/reservation')}
-              className="px-5 py-2.5 border border-[#D71920] text-[#D71920] text-xs font-semibold rounded hover:bg-white transition-colors"
-            >
-              Book a Table
-            </button>
-          </div>
+
         </div>
       </section>
     </div>
