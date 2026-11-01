@@ -51,8 +51,10 @@ export default function App() {
     }
 
     // Customer account hub
-    if (currentPath === '/account') {
-      return <AccountPage navigate={navigate} />;
+    if (currentPath === '/account' || currentPath.startsWith('/account?')) {
+      const urlParams = new URLSearchParams(window.location.search);
+      const refParam = urlParams.get('ref') || undefined;
+      return <AccountPage initialRef={refParam} navigate={navigate} />;
     }
 
     // 2. About
@@ -94,11 +96,11 @@ export default function App() {
       return <OrderConfirmationPage orderReference={orderRef} navigate={navigate} />;
     }
 
-    // 8. Track Order
+    // Legacy tracking URLs now open the combined My Account page.
     if (currentPath === '/track-order' || currentPath.startsWith('/track-order')) {
       const urlParams = new URLSearchParams(window.location.search);
       const refParam = urlParams.get('ref') || undefined;
-      return <TrackOrderPage initialRef={refParam} navigate={navigate} />;
+      return <AccountPage initialRef={refParam} navigate={navigate} />;
     }
 
     // 9. Reservation
