@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { initialSiteSettings } from '../data/initialData.ts';
 import { MapPin, Phone, MessageSquare, Clock, Mail, CheckCircle2, AlertCircle, ExternalLink } from 'lucide-react';
 
 export const ContactPage: React.FC = () => {
+  const [settings, setSettings] = useState(initialSiteSettings);
+  useEffect(() => { fetch('/api/v1/site-settings/public').then(r => r.json()).then(result => { if (result.success && result.data) setSettings({ ...initialSiteSettings, ...result.data }); }).catch(() => {}); }, []);
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
@@ -87,7 +89,7 @@ export const ContactPage: React.FC = () => {
                   <MapPin className="w-5 h-5 text-[#F4C542] shrink-0 mt-0.5" />
                   <div>
                     <strong className="block text-[#D71920]">Physical Location:</strong>
-                    <span>{initialSiteSettings.address}</span>
+                    <span>{settings.address}</span>
                     <span className="block text-xs text-[#6B7280] mt-0.5">
                       (N-70 National Highway Dining Milestone)
                     </span>
@@ -98,7 +100,7 @@ export const ContactPage: React.FC = () => {
                   <Clock className="w-5 h-5 text-[#F4C542] shrink-0 mt-0.5" />
                   <div>
                     <strong className="block text-[#D71920]">Operating Hours:</strong>
-                    <span>{initialSiteSettings.operatingHours}</span>
+                    <span>{settings.operatingHours}</span>
                   </div>
                 </div>
 
@@ -110,7 +112,7 @@ export const ContactPage: React.FC = () => {
                       href="tel:+923026777908"
                       className="text-[#D71920] font-bold hover:underline"
                     >
-                      {initialSiteSettings.phone}
+                      {settings.phone}
                     </a>
                   </div>
                 </div>
@@ -135,7 +137,7 @@ export const ContactPage: React.FC = () => {
                   <Mail className="w-5 h-5 text-[#F4C542] shrink-0 mt-0.5" />
                   <div>
                     <strong className="block text-[#D71920]">Official Email:</strong>
-                    <span>{initialSiteSettings.email}</span>
+                    <span>{settings.email}</span>
                   </div>
                 </div>
               </div>
