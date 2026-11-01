@@ -1,7 +1,7 @@
 import { SiteSettings, MenuCategory, MenuItem, Deal, GalleryItem } from '../types/index.ts';
 const karahiPhoto = 'https://images.deliveryhero.io/image/fd-pk/Products/55932882.jpg?width=%25s';
 const muttonKarahiPhoto = 'https://www.foodofpakistan.com/uploads/recipe/1640676976112955150.jpg';
-const makhniHandiPhoto = 'https://assets.indolj.io/upload/1739015169-CHICKEN+MAKHNI+HANDI.webp?q=10';
+const makhniHandiPhoto = 'https://upload.wikimedia.org/wikipedia/commons/b/b1/Chicken_Handi.JPG';
 const kabuliPulaoPhoto = 'https://images.deliveryhero.io/image/talabat/MenuItems/Afghan_Pulao_with_Meat638931020387917025.jpg';
 const mineralWaterPhoto = 'https://tapcom-live.ams3.cdn.digitaloceanspaces.com/media/caf-cafe/products/1140228-eva_water5718.jpg';
 const smallWaterPhoto = 'https://i.pinimg.com/736x/45/7e/e1/457ee121f4f4a338a78fb734fd03fa76.jpg';
