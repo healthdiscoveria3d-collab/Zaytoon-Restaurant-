@@ -1,8 +1,8 @@
 import { SiteSettings, MenuCategory, MenuItem, Deal, GalleryItem } from '../types/index.ts';
-import karahiPhoto from '../assets/images/food_pakistani_karahi_bbq_1793524769923.jpg';
-import familyPhoto from '../assets/images/deal_special_family_platter_1793524770272.jpg';
-import heroPhoto from '../assets/images/hero_zaytoon_riverside_dining_1793524768913.jpg';
-import interiorPhoto from '../assets/images/restaurant_ambiance_interior_1793524770716.jpg';
+const karahiPhoto = '/images/food_pakistani_karahi_bbq.jpg';
+const familyPhoto = '/images/deal_special_family_platter.jpg';
+const heroPhoto = '/images/hero_zaytoon_dining.jpg';
+const interiorPhoto = '/images/restaurant_interior.jpg';
 
 export const initialSiteSettings: SiteSettings = {
   brandName: 'Zaytoon Restaurant',
