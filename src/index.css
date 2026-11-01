@@ -1,24 +1,43 @@
 @import "tailwindcss";
 
-@layer base {
-  :root {
-    --color-forest: #D71920;
-    --color-evergreen: #171717;
-    --color-ivory: #FFFFFF;
-    --color-cream: #F4F4F4;
-    --color-brass: #F4C542;
-    --color-charcoal: #171717;
-    --color-muted: #6B7280;
-  }
-  * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-  body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: #fff; color: #171717; }
-  button, input, select, textarea { font: inherit; }
-  button { cursor: pointer; }
-  h1, h2, h3, .font-serif-display { font-family: Arial, Helvetica, sans-serif; }
-}
-.font-display { font-family: Arial, Helvetica, sans-serif; }
-.font-body { font-family: Arial, Helvetica, sans-serif; }
-::-webkit-scrollbar { width: 7px; height: 7px; }
-::-webkit-scrollbar-track { background: #f4f4f4; }
-::-webkit-scrollbar-thumb { background: #D71920; border-radius: 8px; }
+:root{font-family:Arial,Helvetica,sans-serif;color:#171717;background:#fff;font-synthesis:none;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:110px}
+body{margin:0;min-width:320px;background:#fff;color:#171717;font-family:Arial,Helvetica,sans-serif}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #f4c542;outline-offset:3px}
+img{display:block;max-width:100%}
+.font-display,.font-body,h1,h2,h3{font-family:Arial,Helvetica,sans-serif}
+.font-display{letter-spacing:-.025em}
+::selection{background:#d71920;color:#fff}
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-track{background:#f3f3f3}
+::-webkit-scrollbar-thumb{background:#d71920;border-radius:8px}
+#root{min-height:100vh}
+#root>div{min-height:100vh}
+main{width:100%;overflow:clip}
+main>div{width:100%}
+main h1{letter-spacing:-.035em}
+main button,a{transition:background-color .18s ease,color .18s ease,border-color .18s ease,transform .18s ease}
+main input,main select,main textarea{width:100%;max-width:100%;border:1px solid #dedede;border-radius:5px;background:#fff;color:#171717;padding:12px 14px}
+main input:focus,main select:focus,main textarea:focus{border-color:#d71920;outline:2px solid #d7192020}
+main label{font-size:12px;font-weight:800;color:#333}
+main form{min-width:0}
+main form button[type=submit]{min-height:46px}
+main .rounded-2xl,main .rounded-xl{border-radius:9px}
+main .shadow-xl,main .shadow-2xl{box-shadow:0 12px 35px #17171712}
+main .border-\[\#F4F4F4\]{border-color:#e9e9e9}
+main .bg-\[\#F4F4F4\]\/50{background:#f7f7f7}
+main .text-\[\#6B7280\]{color:#686868}
+main .space-y-12>section:first-child,main .space-y-20>section:first-child{background:#171717;color:#fff}
+main .space-y-12>section:first-child h1,main .space-y-20>section:first-child h1{color:#fff}
+main .space-y-12>section:first-child p,main .space-y-20>section:first-child p{color:#ffffffc9}
+main .space-y-12>section:first-child span,main .space-y-20>section:first-child span{color:#f4c542}
+main .space-y-12>section:first-child,main .space-y-20>section:first-child{position:relative}
+main .space-y-12>section:first-child:after,main .space-y-20>section:first-child:after{content:"";position:absolute;bottom:0;left:0;width:100%;height:5px;background:#d71920}
+main .bg-\[\#D71920\]{background-color:#d71920}
+main .hover\:bg-\[\#171717\]:hover{background-color:#171717}
+main .text-\[\#D71920\]{color:#d71920}
+main .border-\[\#D71920\]{border-color:#d71920}
+@media(max-width:640px){html{scroll-padding-top:80px}main .space-y-12>section:first-child,main .space-y-20>section:first-child{padding-top:42px;padding-bottom:42px}main h1{line-height:1.05}main .max-w-7xl,main .max-w-5xl{max-width:100%}}
