@@ -225,7 +225,7 @@ export const AdminPage: React.FC = () => {
     <div className="min-h-screen bg-[#f6f5f0] text-[#171717] lg:flex">
       <aside className="bg-[#19382d] p-4 text-white lg:sticky lg:top-0 lg:h-screen lg:w-64 lg:shrink-0 lg:p-5">
         <div className="flex items-center gap-3"><span className="grid h-11 w-11 place-items-center rounded-2xl bg-[#d5bd8b] text-lg font-black text-[#19382d] shadow-lg">Z</span><div><p className="text-sm font-black uppercase tracking-[.14em]">Zaytoon</p><p className="text-[9px] font-bold uppercase tracking-[.2em] text-[#d5bd8b]">Restaurant · Admin</p></div></div>
-        <nav className="mt-6 flex gap-2 overflow-x-auto lg:flex-col">
+        <nav className="mt-6 flex flex-col gap-1">
           {nav.map(item=><button key={item.id} onClick={()=>{setTab(item.id);setSearchQuery('');setError('');}} className={'flex shrink-0 items-center gap-3 rounded-xl px-3 py-3.5 text-left text-xs font-semibold transition '+(tab===item.id?'bg-[#d5bd8b] text-[#19382d] shadow-md':'text-white/65 hover:bg-white/10 hover:text-white')}>{item.icon}{item.label}</button>)}
         </nav>
         <div className="mt-5 flex gap-2 lg:absolute lg:bottom-5 lg:left-5 lg:right-5">
