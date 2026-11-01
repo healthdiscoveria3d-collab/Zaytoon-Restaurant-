@@ -276,7 +276,7 @@ app.post('/api/v1/customer/signup', async (req: Request, res: Response) => {
     const fullName = String(req.body?.fullName || '').trim();
     const email = String(req.body?.email || '').trim().toLowerCase();
     const password = String(req.body?.password || '');
-    if (fullName.length < 2 || !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email) || password.length < 8) {
+    if (fullName.length < 2 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || password.length < 8) {
       res.status(400).json({ success: false, message: 'Enter your name, valid email and password of at least 8 characters.' }); return;
     }
     if (await getRecord<CustomerRecord>('customers', email)) {
