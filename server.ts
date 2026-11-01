@@ -184,6 +184,19 @@ function requireAdmin(req: Request, res: Response, next: () => void) {
   next();
 }
 
+app.get('/api/admin/config-status', (_req: Request, res: Response) => {
+  const usernameConfigured = Boolean(process.env.ADMIN_USERNAME);
+  const passwordConfigured = Boolean(process.env.ADMIN_PASSWORD);
+  const sessionSecretLength = (process.env.ADMIN_SESSION_SECRET || '').length;
+  res.json({
+    usernameConfigured,
+    passwordConfigured,
+    sessionSecretConfigured: sessionSecretLength > 0,
+    sessionSecretValid: sessionSecretLength >= 32,
+    ready: usernameConfigured && passwordConfigured && sessionSecretLength >= 32,
+  });
+});
+
 app.post('/api/admin/login', (req: Request, res: Response) => {
   const username = String(req.body?.username || '');
   const password = String(req.body?.password || '');
