@@ -53,7 +53,7 @@ export const MenuPage: React.FC<MenuPageProps> = ({ initialCategorySlug, navigat
   return (
     <div className="space-y-10 pb-24">
       {/* Sticky Top Category Navigation & Search Bar (KFC-Style Menu Rail) */}
-      <div className="sticky top-20 z-30 bg-[#FFFFFF]/95 backdrop-blur-md border-b border-[#F4F4F4] shadow-xs py-3 px-4">
+      <div className="sticky top-[76px] sm:top-[104px] z-30 bg-[#FFFFFF]/95 backdrop-blur-md border-b border-[#F4F4F4] shadow-xs py-3 px-4">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
           {/* Horizontal Category Switcher */}
           <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
