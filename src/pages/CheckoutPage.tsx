@@ -28,11 +28,11 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ navigate }) => {
   if (cart.length === 0) {
     return (
       <div className="max-w-xl mx-auto px-4 py-20 text-center space-y-4">
-        <h2 className="text-2xl font-display font-bold text-[#12372D]">Your cart is empty</h2>
-        <p className="text-sm text-[#777B75]">Add items to cart before proceeding to checkout.</p>
+        <h2 className="text-2xl font-display font-bold text-[#D71920]">Your cart is empty</h2>
+        <p className="text-sm text-[#6B7280]">Add items to cart before proceeding to checkout.</p>
         <button
           onClick={() => navigate('/menu')}
-          className="px-6 py-2.5 bg-[#12372D] text-white text-xs font-semibold rounded"
+          className="px-6 py-2.5 bg-[#D71920] text-white text-xs font-semibold rounded"
         >
           Explore Menu
         </button>
@@ -100,17 +100,17 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ navigate }) => {
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-8">
       <button
         onClick={() => navigate('/order')}
-        className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#12372D] hover:underline"
+        className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#D71920] hover:underline"
       >
         <ArrowLeft className="w-4 h-4" />
         <span>Return to Cart</span>
       </button>
 
-      <div className="border-b border-[#EDE5D7] pb-4">
-        <h1 className="text-3xl font-display font-bold text-[#12372D]">
+      <div className="border-b border-[#F4F4F4] pb-4">
+        <h1 className="text-3xl font-display font-bold text-[#D71920]">
           Complete Your Order
         </h1>
-        <p className="text-xs text-[#777B75] mt-1">
+        <p className="text-xs text-[#6B7280] mt-1">
           Provide your contact details. Your order will be confirmed by our kitchen upon review.
         </p>
       </div>
@@ -125,14 +125,14 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ navigate }) => {
       <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-12 gap-10">
         {/* Left Form */}
         <div className="lg:col-span-7 space-y-6">
-          <div className="bg-white p-6 rounded-xl border border-[#EDE5D7] shadow-sm space-y-4">
-            <h2 className="font-display font-bold text-lg text-[#12372D]">
+          <div className="bg-white p-6 rounded-xl border border-[#F4F4F4] shadow-sm space-y-4">
+            <h2 className="font-display font-bold text-lg text-[#D71920]">
               Customer Information
             </h2>
 
             <div className="space-y-3">
               <div>
-                <label className="block text-xs font-semibold uppercase text-[#12372D] mb-1">
+                <label className="block text-xs font-semibold uppercase text-[#D71920] mb-1">
                   Full Name *
                 </label>
                 <input
@@ -141,12 +141,12 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ navigate }) => {
                   value={customerName}
                   onChange={(e) => setCustomerName(e.target.value)}
                   placeholder="e.g. Sharjeel Khan"
-                  className="w-full text-sm p-3 rounded-lg border border-[#EDE5D7] bg-[#F7F3EA]/30 focus:outline-none focus:ring-1 focus:ring-[#B69A62]"
+                  className="w-full text-sm p-3 rounded-lg border border-[#F4F4F4] bg-[#FFFFFF]/30 focus:outline-none focus:ring-1 focus:ring-[#F4C542]"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase text-[#12372D] mb-1">
+                <label className="block text-xs font-semibold uppercase text-[#D71920] mb-1">
                   Mobile Phone Number (WhatsApp Enabled) *
                 </label>
                 <input
@@ -155,15 +155,15 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ navigate }) => {
                   value={customerPhone}
                   onChange={(e) => setCustomerPhone(e.target.value)}
                   placeholder="e.g. 0302 6777908 or +92 300 1234567"
-                  className="w-full text-sm p-3 rounded-lg border border-[#EDE5D7] bg-[#F7F3EA]/30 focus:outline-none focus:ring-1 focus:ring-[#B69A62]"
+                  className="w-full text-sm p-3 rounded-lg border border-[#F4F4F4] bg-[#FFFFFF]/30 focus:outline-none focus:ring-1 focus:ring-[#F4C542]"
                 />
-                <p className="text-[11px] text-[#777B75] mt-1">
+                <p className="text-[11px] text-[#6B7280] mt-1">
                   Used for order verification and real-time status tracking.
                 </p>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase text-[#12372D] mb-1">
+                <label className="block text-xs font-semibold uppercase text-[#D71920] mb-1">
                   Email Address (Optional)
                 </label>
                 <input
@@ -171,19 +171,19 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ navigate }) => {
                   value={customerEmail}
                   onChange={(e) => setCustomerEmail(e.target.value)}
                   placeholder="name@example.pk"
-                  className="w-full text-sm p-3 rounded-lg border border-[#EDE5D7] bg-[#F7F3EA]/30 focus:outline-none focus:ring-1 focus:ring-[#B69A62]"
+                  className="w-full text-sm p-3 rounded-lg border border-[#F4F4F4] bg-[#FFFFFF]/30 focus:outline-none focus:ring-1 focus:ring-[#F4C542]"
                 />
               </div>
             </div>
           </div>
 
           {/* Fulfilment Details */}
-          <div className="bg-white p-6 rounded-xl border border-[#EDE5D7] shadow-sm space-y-4">
-            <h2 className="font-display font-bold text-lg text-[#12372D]">
+          <div className="bg-white p-6 rounded-xl border border-[#F4F4F4] shadow-sm space-y-4">
+            <h2 className="font-display font-bold text-lg text-[#D71920]">
               Fulfilment & Timing
             </h2>
 
-            <div className="grid grid-cols-2 gap-2 p-1 bg-[#F7F3EA] rounded-lg border border-[#EDE5D7]">
+            <div className="grid grid-cols-2 gap-2 p-1 bg-[#FFFFFF] rounded-lg border border-[#F4F4F4]">
               <button
                 type="button"
                 onClick={() => {
@@ -192,8 +192,8 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ navigate }) => {
                 }}
                 className={`py-2 text-xs font-semibold rounded-md transition-all ${
                   fulfilmentMethod === 'pickup'
-                    ? 'bg-[#12372D] text-white shadow-sm'
-                    : 'text-[#242824] hover:bg-[#EDE5D7]/50'
+                    ? 'bg-[#D71920] text-white shadow-sm'
+                    : 'text-[#171717] hover:bg-[#F4F4F4]/50'
                 }`}
               >
                 Restaurant Pickup (Free)
@@ -206,8 +206,8 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ navigate }) => {
                 }}
                 className={`py-2 text-xs font-semibold rounded-md transition-all ${
                   fulfilmentMethod === 'delivery'
-                    ? 'bg-[#12372D] text-white shadow-sm'
-                    : 'text-[#242824] hover:bg-[#EDE5D7]/50'
+                    ? 'bg-[#D71920] text-white shadow-sm'
+                    : 'text-[#171717] hover:bg-[#F4F4F4]/50'
                 }`}
               >
                 Local / Highway Delivery (+ PKR 200)
@@ -216,33 +216,33 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ navigate }) => {
 
             {fulfilmentMethod === 'pickup' ? (
               <div>
-                <label className="block text-xs font-semibold uppercase text-[#12372D] mb-1">
+                <label className="block text-xs font-semibold uppercase text-[#D71920] mb-1">
                   Estimated Pickup Timing
                 </label>
                 <select
                   value={pickupTime}
                   onChange={(e) => setPickupTime(e.target.value)}
-                  className="w-full text-sm p-3 rounded-lg border border-[#EDE5D7] bg-white focus:outline-none focus:ring-1 focus:ring-[#B69A62]"
+                  className="w-full text-sm p-3 rounded-lg border border-[#F4F4F4] bg-white focus:outline-none focus:ring-1 focus:ring-[#F4C542]"
                 >
                   <option value="20-25 minutes">Ready in 20-25 minutes (Fastest)</option>
                   <option value="35-45 minutes">Ready in 35-45 minutes</option>
                   <option value="1 hour">Ready in 1 hour</option>
                   <option value="Highway transit arriving shortly">Highway transit arriving shortly</option>
                 </select>
-                <p className="text-[11px] text-[#777B75] mt-1">
+                <p className="text-[11px] text-[#6B7280] mt-1">
                   Pickup location: Zaytoon Restaurant Counter, Near Ghazi Ghat Toll Plaza.
                 </p>
               </div>
             ) : (
               <div className="space-y-3">
                 <div>
-                  <label className="block text-xs font-semibold uppercase text-[#12372D] mb-1">
+                  <label className="block text-xs font-semibold uppercase text-[#D71920] mb-1">
                     Delivery Area
                   </label>
                   <select
                     value={deliveryArea}
                     onChange={(e) => setDeliveryArea(e.target.value)}
-                    className="w-full text-sm p-3 rounded-lg border border-[#EDE5D7] bg-white focus:outline-none focus:ring-1 focus:ring-[#B69A62]"
+                    className="w-full text-sm p-3 rounded-lg border border-[#F4F4F4] bg-white focus:outline-none focus:ring-1 focus:ring-[#F4C542]"
                   >
                     <option value="Ghazi Ghat Toll Plaza Area">Ghazi Ghat Toll Plaza & Rest Area</option>
                     <option value="Indus River Boating Points">Indus River Boating & Ghat Banks</option>
@@ -252,7 +252,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ navigate }) => {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold uppercase text-[#12372D] mb-1">
+                  <label className="block text-xs font-semibold uppercase text-[#D71920] mb-1">
                     Specific Delivery Address / Vehicle Details *
                   </label>
                   <textarea
@@ -261,14 +261,14 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ navigate }) => {
                     value={deliveryAddress}
                     onChange={(e) => setDeliveryAddress(e.target.value)}
                     placeholder="e.g. Near Ghazi Ghat police post / Car make & color if waiting on highway"
-                    className="w-full text-sm p-3 rounded-lg border border-[#EDE5D7] bg-white focus:outline-none focus:ring-1 focus:ring-[#B69A62]"
+                    className="w-full text-sm p-3 rounded-lg border border-[#F4F4F4] bg-white focus:outline-none focus:ring-1 focus:ring-[#F4C542]"
                   />
                 </div>
               </div>
             )}
 
             <div>
-              <label className="block text-xs font-semibold uppercase text-[#12372D] mb-1">
+              <label className="block text-xs font-semibold uppercase text-[#D71920] mb-1">
                 Order Notes / Packaging Instructions (Optional)
               </label>
               <textarea
@@ -276,7 +276,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ navigate }) => {
                 value={instructions}
                 onChange={(e) => setInstructions(e.target.value)}
                 placeholder="e.g. Separate packaging for naans, extra spoons, or spicy"
-                className="w-full text-sm p-3 rounded-lg border border-[#EDE5D7] bg-white focus:outline-none focus:ring-1 focus:ring-[#B69A62]"
+                className="w-full text-sm p-3 rounded-lg border border-[#F4F4F4] bg-white focus:outline-none focus:ring-1 focus:ring-[#F4C542]"
               />
             </div>
           </div>
@@ -284,8 +284,8 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ navigate }) => {
 
         {/* Right Order Review & Submission */}
         <div className="lg:col-span-5 space-y-6">
-          <div className="bg-white p-6 rounded-xl border border-[#EDE5D7] shadow-sm space-y-5">
-            <h2 className="font-display font-bold text-lg text-[#12372D] border-b border-[#EDE5D7] pb-3">
+          <div className="bg-white p-6 rounded-xl border border-[#F4F4F4] shadow-sm space-y-5">
+            <h2 className="font-display font-bold text-lg text-[#D71920] border-b border-[#F4F4F4] pb-3">
               Order Breakdown
             </h2>
 
@@ -293,30 +293,30 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ navigate }) => {
               {cart.map(({ item, quantity }) => (
                 <div key={item.id} className="flex justify-between items-center text-xs">
                   <div className="truncate max-w-[200px]">
-                    <span className="font-semibold text-[#12372D]">{quantity}x </span>
+                    <span className="font-semibold text-[#D71920]">{quantity}x </span>
                     <span>{item.name}</span>
                   </div>
-                  <span className="font-semibold tabular-nums text-[#12372D]">
+                  <span className="font-semibold tabular-nums text-[#D71920]">
                     PKR {(item.price * quantity).toLocaleString()}
                   </span>
                 </div>
               ))}
             </div>
 
-            <div className="pt-3 border-t border-[#EDE5D7] space-y-2 text-xs">
-              <div className="flex justify-between text-[#777B75]">
+            <div className="pt-3 border-t border-[#F4F4F4] space-y-2 text-xs">
+              <div className="flex justify-between text-[#6B7280]">
                 <span>Items Subtotal</span>
-                <span className="tabular-nums font-semibold text-[#12372D]">
+                <span className="tabular-nums font-semibold text-[#D71920]">
                   PKR {subtotal.toLocaleString()}
                 </span>
               </div>
-              <div className="flex justify-between text-[#777B75]">
+              <div className="flex justify-between text-[#6B7280]">
                 <span>Fulfilment ({fulfilmentMethod})</span>
-                <span className="tabular-nums font-semibold text-[#12372D]">
+                <span className="tabular-nums font-semibold text-[#D71920]">
                   {deliveryFee === 0 ? 'FREE' : `PKR ${deliveryFee}`}
                 </span>
               </div>
-              <div className="flex justify-between text-base font-bold text-[#12372D] pt-2 border-t border-[#EDE5D7]">
+              <div className="flex justify-between text-base font-bold text-[#D71920] pt-2 border-t border-[#F4F4F4]">
                 <span>Total Amount</span>
                 <span className="font-display text-xl tabular-nums">
                   PKR {total.toLocaleString()}
@@ -325,8 +325,8 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ navigate }) => {
             </div>
 
             {/* Payment Method Notice */}
-            <div className="p-3.5 bg-[#EDE5D7]/50 border border-[#EDE5D7] rounded-lg space-y-1">
-              <div className="flex items-center gap-1.5 text-xs font-semibold text-[#12372D]">
+            <div className="p-3.5 bg-[#F4F4F4]/50 border border-[#F4F4F4] rounded-lg space-y-1">
+              <div className="flex items-center gap-1.5 text-xs font-semibold text-[#D71920]">
                 <ShieldCheck className="w-4 h-4 text-emerald-700" />
                 <span>
                   {fulfilmentMethod === 'delivery'
@@ -334,7 +334,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ navigate }) => {
                     : 'Payment: Cash / Card at Restaurant Counter'}
                 </span>
               </div>
-              <p className="text-[11px] text-[#777B75]">
+              <p className="text-[11px] text-[#6B7280]">
                 Payment is settled safely upon physical handover. No upfront online card charge is collected.
               </p>
             </div>
@@ -342,7 +342,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ navigate }) => {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full py-4 bg-[#12372D] hover:bg-[#0B241E] text-white font-semibold text-sm rounded shadow-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+              className="w-full py-4 bg-[#D71920] hover:bg-[#171717] text-white font-semibold text-sm rounded shadow-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
             >
               {isSubmitting ? (
                 <span>Placing Order with Kitchen...</span>
