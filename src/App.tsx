@@ -25,8 +25,15 @@ import { NotFoundPage } from './pages/NotFoundPage.tsx';
 import { AdminPage } from './pages/AdminPage.tsx';
 
 export default function App() {
-  // Preserve the active route on refresh so customer pages remain directly accessible.
-  const [currentPath, setCurrentPath] = useState<string>(window.location.pathname || '/');
+  // Customer website refreshes always return to Home; keep the admin route intact.
+  const [currentPath, setCurrentPath] = useState<string>(() => window.location.pathname === '/admin' || window.location.pathname.startsWith('/admin/') ? window.location.pathname : '/');
+
+  useEffect(() => {
+    const path = window.location.pathname;
+    if (path !== '/' && path !== '/admin' && !path.startsWith('/admin/')) {
+      window.history.replaceState({}, '', '/');
+    }
+  }, []);
 
   useEffect(() => {
     const handlePopState = () => {
