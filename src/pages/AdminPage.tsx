@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { LayoutDashboard, ClipboardList, CalendarDays, MessageSquare, LogOut, ShieldCheck, RefreshCw, Utensils, LockKeyhole, BookOpen, Tags, Percent, Images, Settings, Plus, Save, Trash2, MoreVertical, Pencil } from 'lucide-react';
+import { LayoutDashboard, ClipboardList, CalendarDays, MessageSquare, LogOut, ShieldCheck, RefreshCw, Utensils, LockKeyhole, BookOpen, Tags, Percent, Images, Settings, Plus, Save, Trash2, MoreVertical, Pencil, Menu, X } from 'lucide-react';
 
 type Tab = 'dashboard' | 'orders' | 'reservations' | 'messages' | 'menu' | 'categories' | 'deals' | 'gallery' | 'settings';
 type Order = {
@@ -38,6 +38,7 @@ export const AdminPage: React.FC = () => {
   const [busy, setBusy] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [openRowMenu, setOpenRowMenu] = useState<string | null>(null);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   const contentCollections: Partial<Record<Tab, string>> = {
     menu: 'menu_items', categories: 'categories', deals: 'deals', gallery: 'gallery', settings: 'site_settings',
@@ -224,18 +225,19 @@ export const AdminPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#f6f5f0] text-[#171717] lg:flex">
-      <aside className="bg-[#19382d] p-4 text-white lg:sticky lg:top-0 lg:h-screen lg:w-64 lg:shrink-0 lg:p-5">
+      <aside className="hidden bg-[#19382d] p-4 text-white lg:sticky lg:top-0 lg:block lg:h-screen lg:w-64 lg:shrink-0 lg:p-5">
         <div className="flex items-center gap-3"><span className="grid h-11 w-11 place-items-center rounded-2xl bg-[#d5bd8b] text-lg font-black text-[#19382d] shadow-lg">Z</span><div><p className="text-sm font-black uppercase tracking-[.14em]">Zaytoon</p><p className="text-[9px] font-bold uppercase tracking-[.2em] text-[#d5bd8b]">Restaurant · Admin</p></div></div>
         <nav className="mt-6 flex flex-col gap-1">
-          {nav.map(item=><button key={item.id} onClick={()=>{setTab(item.id);setSearchQuery('');setError('');}} className={'flex shrink-0 items-center gap-3 rounded-xl px-3 py-3.5 text-left text-xs font-semibold transition '+(tab===item.id?'bg-[#d5bd8b] text-[#19382d] shadow-md':'text-white/65 hover:bg-white/10 hover:text-white')}>{item.icon}{item.label}</button>)}
+          {nav.map(item=><button key={item.id} onClick={()=>{setTab(item.id);setSearchQuery('');setError('');setMobileNavOpen(false);}} className={'flex shrink-0 items-center gap-3 rounded-xl px-3 py-3.5 text-left text-xs font-semibold transition '+(tab===item.id?'bg-[#d5bd8b] text-[#19382d] shadow-md':'text-white/65 hover:bg-white/10 hover:text-white')}>{item.icon}{item.label}</button>)}
         </nav>
         <div className="mt-5 flex gap-2 lg:absolute lg:bottom-5 lg:left-5 lg:right-5">
           <button onClick={loadData} className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-white/15 px-3 py-3 text-[10px] font-bold uppercase text-white/70"><RefreshCw size={14}/> Refresh</button>
           <button onClick={logout} className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-white/15 px-3 py-3 text-[10px] font-bold uppercase text-white/70"><LogOut size={14}/> Logout</button>
         </div>
       </aside>
+      {mobileNavOpen && <div className="fixed inset-0 z-50 lg:hidden"><button aria-label="Close navigation" onClick={()=>setMobileNavOpen(false)} className="absolute inset-0 bg-black/50"/><div className="absolute inset-y-0 left-0 flex w-[ min(82vw,300px)] flex-col bg-[#19382d] p-5 text-white shadow-2xl"><div className="mb-6 flex items-center justify-between"><div className="flex items-center gap-3"><span className="grid h-10 w-10 place-items-center rounded-xl bg-[#d5bd8b] font-black text-[#19382d]">Z</span><div><p className="text-sm font-black uppercase tracking-wider">Zaytoon</p><p className="text-[9px] uppercase tracking-widest text-[#d5bd8b]">Restaurant · Admin</p></div></div><button onClick={()=>setMobileNavOpen(false)} aria-label="Close menu" className="grid h-9 w-9 place-items-center rounded-lg hover:bg-white/10"><X size={19}/></button></div><nav className="flex flex-1 flex-col gap-1">{nav.map(item=><button key={item.id} onClick={()=>{setTab(item.id);setSearchQuery('');setError('');setMobileNavOpen(false);}} className={'flex items-center gap-3 rounded-xl px-3 py-3.5 text-left text-xs font-semibold '+(tab===item.id?'bg-[#d5bd8b] text-[#19382d]':'text-white/70 hover:bg-white/10')}>{item.icon}{item.label}</button>)}</nav><div className="mt-4 flex gap-2"><button onClick={()=>{setMobileNavOpen(false);loadData();}} className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-white/15 px-3 py-3 text-[10px] font-bold uppercase"><RefreshCw size={14}/> Refresh</button><button onClick={logout} className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-white/15 px-3 py-3 text-[10px] font-bold uppercase"><LogOut size={14}/> Logout</button></div></div></div>}
       <main className="min-w-0 flex-1 px-4 py-6 pb-12 sm:px-7 lg:px-9 lg:py-8">
-        <div className="mb-7 flex flex-wrap items-end justify-between gap-3"><div><p className="text-[10px] font-black uppercase tracking-[.22em] text-[#9a8050]">Zaytoon · Management workspace</p><h1 className="mt-1 text-3xl font-semibold tracking-tight text-[#20372d]">{tab==='dashboard'?'Restaurant overview':nav.find(item=>item.id===tab)?.label}</h1><p className="mt-1 text-xs text-[#85877e]">Your restaurant operations, website content and customer activity.</p></div><span className="flex items-center gap-2 rounded-full border border-emerald-200 bg-white px-3 py-2 text-[10px] font-bold text-emerald-700 shadow-sm"><span className="h-2 w-2 rounded-full bg-emerald-500"/> Secure session active</span></div>
+        <div className="mb-7 flex flex-wrap items-center justify-between gap-3"><div className="flex min-w-0 items-center gap-3"><button onClick={()=>setMobileNavOpen(true)} aria-label="Open categories" className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-[#e8e5dd] bg-white text-[#19382d] shadow-sm lg:hidden"><Menu size={19}/></button><div><p className="text-[10px] font-black uppercase tracking-[.22em] text-[#9a8050]">Zaytoon · Management workspace</p><h1 className="mt-1 text-3xl font-semibold tracking-tight text-[#20372d]">{tab==='dashboard'?'Restaurant overview':nav.find(item=>item.id===tab)?.label}</h1><p className="mt-1 text-xs text-[#85877e]">Your restaurant operations, website content and customer activity.</p></div></div><span className="flex items-center gap-2 rounded-full border border-emerald-200 bg-white px-3 py-2 text-[10px] font-bold text-emerald-700 shadow-sm"><span className="h-2 w-2 rounded-full bg-emerald-500"/> Secure session active</span></div>
         {error && <div className="mb-5 flex items-center justify-between gap-3 rounded-lg border border-red-200 bg-red-50 p-3 text-xs text-red-700"><span>{error}</span><button onClick={()=>setError('')} className="font-black">×</button></div>}
         {tab==='dashboard' && <section>
           <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
