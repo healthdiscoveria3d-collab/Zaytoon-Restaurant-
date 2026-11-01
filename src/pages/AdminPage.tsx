@@ -33,6 +33,7 @@ export const AdminPage: React.FC = () => {
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [messages, setMessages] = useState<Inquiry[]>([]);
   const [contentRows, setContentRows] = useState<any[]>([]);
+  const [categoryOptions, setCategoryOptions] = useState<any[]>([]);
   const [contentSelection, setContentSelection] = useState('main');
   const [contentJson, setContentJson] = useState('');
   const [busy, setBusy] = useState(false);
@@ -78,6 +79,11 @@ export const AdminPage: React.FC = () => {
   }, []);
 
   useEffect(() => { if (authenticated) loadData(); }, [authenticated]);
+
+  useEffect(() => {
+    if (!authenticated || tab !== 'menu') return;
+    request('/content/categories').then((result) => setCategoryOptions(result.data || [])).catch(() => setCategoryOptions([]));
+  }, [authenticated, tab]);
 
   useEffect(() => {
     const collection = contentCollections[tab];
@@ -273,15 +279,38 @@ export const AdminPage: React.FC = () => {
           {editModalOpen && <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/55 p-3 sm:p-6"><div className="max-h-[94vh] w-full max-w-4xl overflow-y-auto rounded-2xl border border-[#e8e5dd] bg-white p-4 shadow-2xl sm:p-6">
             <div className="mb-4 flex flex-wrap items-center justify-between gap-3"><div><h2 className="font-black">{tab === 'settings' ? 'Edit Website Settings' : contentSelection === '__new__' ? 'Create Record' : 'Edit Record'}</h2><p className="mt-1 text-[10px] text-gray-500">Edit all fields here, then save your changes.</p></div><div className="flex items-center gap-2"><button onClick={saveContent} disabled={!contentJson.trim() || busy} className="flex items-center gap-2 rounded-xl bg-[#203e31] px-4 py-2.5 text-[10px] font-black text-white disabled:opacity-40"><Save size={14}/> Save</button>{tab !== 'settings' && contentSelection !== '__new__' && <button onClick={deleteContent} className="flex items-center gap-2 rounded-lg border border-red-200 px-3 py-2.5 text-[10px] font-bold text-red-600"><Trash2 size={14}/> Delete</button>}<button onClick={()=>setEditModalOpen(false)} aria-label="Close editor" className="grid h-9 w-9 place-items-center rounded-lg border border-gray-200 text-gray-500 hover:bg-gray-100"><X size={17}/></button></div></div>
             {contentJson && Object.keys(parsedContentDraft).length > 0 ? <div className="grid gap-4 sm:grid-cols-2">
-              {Object.entries(parsedContentDraft).map(([key, value]) => <label key={key} className="block min-w-0 text-[10px] font-bold uppercase tracking-wide text-gray-500">
-                {pretty(key)}
-                {typeof value === 'boolean' ? <span className="mt-2 flex items-center gap-2 rounded-lg border border-gray-200 p-3 text-xs font-semibold normal-case text-gray-700"><input type="checkbox" checked={value} onChange={(e)=>updateDraftField(key,e.target.checked)} disabled={key==='id'}/> {value ? 'Enabled' : 'Disabled'}</span> :
-                  Array.isArray(value) ? <textarea value={value.join('\n')} onChange={(e)=>updateDraftField(key,e.target.value.split('\n').map((v)=>v.trim()).filter(Boolean))} rows={4} className="mt-2 w-full rounded-lg border border-gray-200 bg-[#fafafa] p-3 text-xs font-normal normal-case text-gray-800 outline-none focus:border-[#D71920]"/> :
-                  typeof value === 'number' ? <input type="number" value={value} onChange={(e)=>updateDraftField(key,Number(e.target.value))} className="mt-2 w-full rounded-lg border border-gray-200 bg-[#fafafa] p-3 text-xs font-normal normal-case text-gray-800 outline-none focus:border-[#D71920]"/> :
-                  (String(value).length > 110 || /description|caption|notice|history|address|message/i.test(key)) ? <textarea value={String(value ?? '')} onChange={(e)=>updateDraftField(key,e.target.value)} rows={4} disabled={key==='id' && contentSelection!=='__new__'} className="mt-2 w-full rounded-lg border border-gray-200 bg-[#fafafa] p-3 text-xs font-normal normal-case text-gray-800 outline-none focus:border-[#D71920]"/> :
-                  <input value={String(value ?? '')} onChange={(e)=>updateDraftField(key,e.target.value)} disabled={key==='id' && contentSelection!=='__new__'} className="mt-2 w-full rounded-lg border border-gray-200 bg-[#fafafa] p-3 text-xs font-normal normal-case text-gray-800 outline-none focus:border-[#D71920]"/>
-                }
-              </label>)}
+              {Object.entries(parsedContentDraft).map(([key, value]) => {
+                const fieldLabels: Record<string, string> = {
+                  isDemoItem: 'Demo Content', isFeatured: 'Featured on Website',
+                  isAvailable: 'Item Availability', categoryName: 'Menu Category',
+                  categoryId: 'Category Reference', id: 'Record ID',
+                };
+                const fieldHelp: Record<string, string> = {
+                  isDemoItem: 'Use for sample or demonstration items only.',
+                  isFeatured: 'Highlight this item in featured sections of the website.',
+                  isAvailable: 'Control whether customers can order this item.',
+                  categoryName: 'Choose the category where this menu item belongs.',
+                };
+                const isMenuSwitch = ['isDemoItem', 'isFeatured', 'isAvailable'].includes(key);
+                return <label key={key} className="block min-w-0 text-[10px] font-bold uppercase tracking-wide text-gray-500">
+                  {fieldLabels[key] || pretty(key)}
+                  {fieldHelp[key] && <span className="mt-1 block text-[10px] font-normal normal-case tracking-normal text-gray-400">{fieldHelp[key]}</span>}
+                  {isMenuSwitch ? <button type="button" role="switch" aria-checked={Boolean(value)} onClick={()=>updateDraftField(key,!value)} className={'mt-2 flex w-full items-center justify-between rounded-xl border px-4 py-3 text-left normal-case transition '+(value?'border-[#c9d9ce] bg-[#edf4ef]':'border-gray-200 bg-[#fafafa]')}>
+                    <span><span className="block text-xs font-bold text-[#263b30]">{key==='isDemoItem'?(value?'Demo item':'Regular menu item'):key==='isFeatured'?(value?'Featured item':'Not featured'):value?'Available to order':'Currently unavailable'}</span><span className="mt-1 block text-[10px] font-normal text-gray-500">{key==='isDemoItem'?'Controls whether this is marked as sample content.':key==='isFeatured'?'Controls featured placement on the website.':'Controls customer ordering availability.'}</span></span>
+                    <span className={'relative h-6 w-11 shrink-0 rounded-full transition '+(value?'bg-[#315744]':'bg-gray-300')}><span className={'absolute top-1 h-4 w-4 rounded-full bg-white shadow transition '+(value?'left-6':'left-1')}/></span>
+                  </button> :
+                  key === 'categoryName' ? <select value={String(value ?? '')} onChange={(e)=>{const selected=categoryOptions.find((item:any)=>item.name===e.target.value);updateDraftField('categoryName',e.target.value);if(selected?.id)updateDraftField('categoryId',selected.id);}} className="mt-2 w-full rounded-xl border border-gray-200 bg-[#fafafa] px-3 py-3 text-xs font-semibold normal-case text-gray-800 outline-none focus:border-[#9a8050]">
+                    <option value="">Select a category</option>{categoryOptions.map((item:any)=><option key={item.id} value={item.name}>{item.name}</option>)}
+                    {!categoryOptions.some((item:any)=>item.name===value) && value ? <option value={String(value)}>{String(value)}</option> : null}
+                  </select> :
+                  typeof value === 'boolean' ? <span className="mt-2 flex items-center gap-2 rounded-lg border border-gray-200 p-3 text-xs font-semibold normal-case text-gray-700"><input type="checkbox" checked={value} onChange={(e)=>updateDraftField(key,e.target.checked)} disabled={key==='id'}/> {value ? 'Enabled' : 'Disabled'}</span> :
+                  Array.isArray(value) ? <textarea value={value.join('\n')} onChange={(e)=>updateDraftField(key,e.target.value.split('\n').map((v)=>v.trim()).filter(Boolean))} rows={4} className="mt-2 w-full rounded-lg border border-gray-200 bg-[#fafafa] p-3 text-xs font-normal normal-case text-gray-800 outline-none focus:border-[#9a8050]"/> :
+                  typeof value === 'number' ? <input type="number" value={value} onChange={(e)=>updateDraftField(key,Number(e.target.value))} className="mt-2 w-full rounded-lg border border-gray-200 bg-[#fafafa] p-3 text-xs font-normal normal-case text-gray-800 outline-none focus:border-[#9a8050]"/> :
+                  (String(value).length > 110 || /description|caption|notice|history|address|message/i.test(key)) ? <textarea value={String(value ?? '')} onChange={(e)=>updateDraftField(key,e.target.value)} rows={4} disabled={key==='id' && contentSelection!=='__new__'} className="mt-2 w-full rounded-lg border border-gray-200 bg-[#fafafa] p-3 text-xs font-normal normal-case text-gray-800 outline-none focus:border-[#9a8050]"/> :
+                  <input value={String(value ?? '')} onChange={(e)=>updateDraftField(key,e.target.value)} disabled={key==='id' && contentSelection!=='__new__'} className="mt-2 w-full rounded-lg border border-gray-200 bg-[#fafafa] p-3 text-xs font-normal normal-case text-gray-800 outline-none focus:border-[#9a8050]"/>
+                  }
+                </label>;
+              })}
             </div> : <p className="rounded-lg bg-gray-50 p-6 text-center text-xs text-gray-500">Select a record or press New to start editing.</p>}
             <details className="mt-4"><summary className="cursor-pointer text-[10px] font-bold text-gray-500">Advanced: view / edit raw JSON</summary><textarea value={contentJson} onChange={(e)=>setContentJson(e.target.value)} spellCheck={false} className="mt-2 min-h-48 w-full rounded-lg border border-gray-200 bg-[#fafafa] p-3 font-mono text-[10px] leading-5 outline-none focus:border-[#D71920]"/></details>
             <p className="mt-2 text-[10px] text-gray-400">List fields: enter one item per line. Image fields accept existing image paths or full image URLs.</p>
