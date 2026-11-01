@@ -109,7 +109,7 @@ export const ContactPage: React.FC = () => {
                   <div>
                     <strong className="block text-[#D71920]">Direct Phone Line:</strong>
                     <a
-                      href="tel:+923026777908"
+                      href={`tel:${settings.phone}`}
                       className="text-[#D71920] font-bold hover:underline"
                     >
                       {settings.phone}
@@ -122,7 +122,7 @@ export const ContactPage: React.FC = () => {
                   <div>
                     <strong className="block text-[#D71920]">WhatsApp Inquiries:</strong>
                     <a
-                      href="https://wa.me/923026777908"
+                      href={`https://wa.me/${settings.whatsapp.replace(/[^0-9]/g, "")}`}
                       target="_blank"
                       rel="noreferrer"
                       className="text-emerald-700 font-semibold hover:underline inline-flex items-center gap-1"
