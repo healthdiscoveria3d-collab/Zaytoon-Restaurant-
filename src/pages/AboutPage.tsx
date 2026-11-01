@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { initialSiteSettings } from '../data/initialData.ts';
 import heroImage from '../assets/images/hero_zaytoon_riverside_dining_1793524768913.jpg';
 import ambianceImage from '../assets/images/restaurant_ambiance_interior_1793524770716.jpg';
@@ -9,6 +9,8 @@ interface AboutPageProps {
 }
 
 export const AboutPage: React.FC<AboutPageProps> = ({ navigate }) => {
+  const [settings, setSettings] = useState(initialSiteSettings);
+  useEffect(() => { fetch('/api/v1/site-settings/public').then(r => r.json()).then(result => { if (result.success && result.data) setSettings({ ...initialSiteSettings, ...result.data }); }).catch(() => {}); }, []);
   return (
     <div className="space-y-24 pb-28">
       {/* Editorial Header */}
@@ -30,7 +32,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ navigate }) => {
             A place to enjoy good food together.
           </h1>
           <p className="text-lg sm:text-xl text-[#F4F4F4]/90 leading-relaxed max-w-2xl mx-auto">
-            Near Ghazi Ghat Toll Plaza, Dera Ghazi Khan, Punjab, Pakistan.
+            {settings.address}
           </p>
         </div>
       </section>
@@ -43,7 +45,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ navigate }) => {
               Welcome to Zaytoon Restaurant
             </h2>
             <p className="text-lg sm:text-xl text-[#171717] leading-loose italic">
-              &ldquo;{initialSiteSettings.aboutHistory}&rdquo;
+              &ldquo;{settings.aboutHistory}&rdquo;
             </p>
           </div>
 
