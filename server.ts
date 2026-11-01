@@ -11,7 +11,7 @@ import {
   initialGallery,
 } from './src/data/initialData.ts';
 import { Order, Reservation, OrderStatus } from './src/types/index.ts';
-import { databaseEnabled, initializeDatabase, listRecords, getRecord, saveRecord } from './src/server/database.ts';
+import { databaseEnabled, initializeDatabase, listRecords, getRecord, saveRecord, deleteRecord } from './src/server/database.ts';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -305,6 +305,96 @@ app.patch('/api/admin/reservations/:reference/status', requireAdmin, async (req:
 
 app.get('/api/admin/messages', requireAdmin, (_req: Request, res: Response) => {
   res.json({ success: true, data: [...inquiries].sort((a, b) => b.createdAt.localeCompare(a.createdAt)) });
+});
+
+// Admin content management: menu, categories, deals, gallery and site settings.
+const adminCollections = ['menu_items', 'categories', 'deals', 'gallery', 'site_settings'] as const;
+type AdminCollection = typeof adminCollections[number];
+
+function getAdminCollection(collection: AdminCollection): any[] {
+  if (collection === 'menu_items') return menuItems;
+  if (collection === 'categories') return categories;
+  if (collection === 'deals') return deals;
+  if (collection === 'gallery') return gallery;
+  return [siteSettings];
+}
+
+function setAdminCollection(collection: AdminCollection, data: any[]) {
+  if (collection === 'menu_items') menuItems = data;
+  else if (collection === 'categories') categories = data;
+  else if (collection === 'deals') deals = data;
+  else if (collection === 'gallery') gallery = data;
+  else if (data[0]) siteSettings = data[0];
+}
+
+app.get('/api/admin/content/:collection', requireAdmin, (req: Request, res: Response) => {
+  const collection = req.params.collection as AdminCollection;
+  if (!adminCollections.includes(collection)) {
+    res.status(404).json({ success: false, message: 'Unknown content section.' });
+    return;
+  }
+  res.json({ success: true, data: getAdminCollection(collection) });
+});
+
+app.put('/api/admin/content/:collection/:id', requireAdmin, async (req: Request, res: Response) => {
+  const collection = req.params.collection as AdminCollection;
+  const id = String(req.params.id || '');
+  const record = req.body?.data;
+  if (!adminCollections.includes(collection)) {
+    res.status(404).json({ success: false, message: 'Unknown content section.' });
+    return;
+  }
+  if (!record || typeof record !== 'object' || Array.isArray(record) || !id) {
+    res.status(400).json({ success: false, message: 'A valid content record is required.' });
+    return;
+  }
+  if (collection === 'site_settings' && id !== 'main') {
+    res.status(400).json({ success: false, message: 'Site settings use the main record.' });
+    return;
+  }
+  if (collection !== 'site_settings' && String(record.id || '') !== id) {
+    res.status(400).json({ success: false, message: 'Record ID must match the URL.' });
+    return;
+  }
+  try {
+    if (collection === 'site_settings') {
+      siteSettings = { ...siteSettings, ...record };
+      if (databaseEnabled) await saveRecord('site_settings', 'main', siteSettings);
+      res.json({ success: true, data: siteSettings });
+      return;
+    }
+    const current = getAdminCollection(collection);
+    const index = current.findIndex((item) => String(item.id) === id);
+    const updated = [...current];
+    if (index >= 0) updated[index] = record;
+    else updated.push(record);
+    setAdminCollection(collection, updated);
+    if (databaseEnabled) await saveRecord(collection, id, record);
+    res.json({ success: true, data: record });
+  } catch {
+    res.status(500).json({ success: false, message: 'Could not save content.' });
+  }
+});
+
+app.delete('/api/admin/content/:collection/:id', requireAdmin, async (req: Request, res: Response) => {
+  const collection = req.params.collection as AdminCollection;
+  const id = String(req.params.id || '');
+  if (!adminCollections.includes(collection)) {
+    res.status(404).json({ success: false, message: 'Unknown content section.' });
+    return;
+  }
+  if (collection === 'site_settings') {
+    res.status(400).json({ success: false, message: 'Site settings cannot be deleted.' });
+    return;
+  }
+  try {
+    const updated = getAdminCollection(collection).filter((item) => String(item.id) !== id);
+    setAdminCollection(collection, updated);
+    if (databaseEnabled) await deleteRecord(collection, id);
+    res.json({ success: true });
+  } catch {
+    res.status(500).json({ success: false, message: 'Could not delete content.' });
+  }
 });
 
 // ==========================================
