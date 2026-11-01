@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ArrowRight, Flame, MapPin, ShoppingBag, Utensils, Clock3, Star, Plus, Tag, ChefHat } from 'lucide-react';
 import { initialCategories, initialMenuItems, initialDeals } from '../data/initialData.ts';
 import { useCart } from '../context/CartContext.tsx';
@@ -7,8 +7,19 @@ interface HomePageProps { navigate: (path: string) => void; }
 
 export const HomePage: React.FC<HomePageProps> = ({ navigate }) => {
   const { addToCart } = useCart();
-  const featuredItems = initialMenuItems.filter((item) => item.isFeatured).slice(0, 4);
-  const featuredDeal = initialDeals[0];
+  const [categories, setCategories] = useState(initialCategories);
+  const [menuItems, setMenuItems] = useState(initialMenuItems);
+  const [deals, setDeals] = useState(initialDeals);
+  useEffect(() => {
+    Promise.all([fetch('/api/v1/menu/categories').then(r => r.json()), fetch('/api/v1/menu/items').then(r => r.json()), fetch('/api/v1/deals/active').then(r => r.json())])
+      .then(([categoryResult, itemResult, dealResult]) => {
+        if (categoryResult.success && Array.isArray(categoryResult.data)) setCategories(categoryResult.data);
+        if (itemResult.success && Array.isArray(itemResult.data)) setMenuItems(itemResult.data);
+        if (dealResult.success && Array.isArray(dealResult.data)) setDeals(dealResult.data);
+      }).catch(() => {});
+  }, []);
+  const featuredItems = menuItems.filter((item) => item.isFeatured).slice(0, 4);
+  const featuredDeal = deals[0];
 
   return (
     <div className="overflow-hidden bg-white text-[#171717]">
@@ -42,7 +53,7 @@ export const HomePage: React.FC<HomePageProps> = ({ navigate }) => {
       <section className="mx-auto max-w-7xl px-5 py-14 sm:px-8 lg:py-20">
         <div className="mb-8 flex items-end justify-between gap-4"><div><p className="mb-2 text-[10px] font-black uppercase tracking-[.22em] text-[#D71920]">Find your favourite</p><h2 className="text-3xl font-black uppercase tracking-tight sm:text-4xl">What are you craving?</h2></div><button onClick={() => navigate('/menu')} className="hidden items-center gap-2 text-[10px] font-black uppercase tracking-wide text-[#D71920] sm:flex">Full menu <ArrowRight size={16}/></button></div>
         <div className="grid grid-cols-3 gap-x-3 gap-y-6 sm:grid-cols-3 sm:gap-5 lg:grid-cols-6">
-          {initialCategories.map((category) => <button key={category.id} onClick={() => navigate('/menu/' + category.slug)} className="group flex flex-col items-center gap-3 rounded-2xl px-1 py-2 text-center transition hover:-translate-y-1"><div className="h-24 w-24 overflow-hidden rounded-full border-[5px] border-[#f5f5f5] shadow-md ring-1 ring-black/5 sm:h-32 sm:w-32"><img src={category.image} alt={category.name} className="h-full w-full rounded-full object-cover transition duration-500 group-hover:scale-110"/></div><span className="max-w-[110px] text-[10px] font-black uppercase leading-tight sm:max-w-none sm:text-xs">{category.name}</span></button>)}
+          {categories.map((category) => <button key={category.id} onClick={() => navigate('/menu/' + category.slug)} className="group flex flex-col items-center gap-3 rounded-2xl px-1 py-2 text-center transition hover:-translate-y-1"><div className="h-24 w-24 overflow-hidden rounded-full border-[5px] border-[#f5f5f5] shadow-md ring-1 ring-black/5 sm:h-32 sm:w-32"><img src={category.image} alt={category.name} className="h-full w-full rounded-full object-cover transition duration-500 group-hover:scale-110"/></div><span className="max-w-[110px] text-[10px] font-black uppercase leading-tight sm:max-w-none sm:text-xs">{category.name}</span></button>)}
         </div>
         <button onClick={() => navigate('/menu')} className="mt-5 flex w-full items-center justify-center gap-2 rounded-full border border-gray-200 py-3 text-[10px] font-black uppercase sm:hidden">View full menu <ArrowRight size={15}/></button>
       </section>
