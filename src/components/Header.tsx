@@ -9,7 +9,8 @@ export const Header: React.FC<HeaderProps> = ({ currentPath, navigate }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [logoUrl, setLogoUrl] = useState<string | null>(null);
-  useEffect(() => { fetch('/api/v1/site-settings/public').then(r => r.json()).then(result => setLogoUrl(String(result.data?.logoUrl || ''))).catch(() => setLogoUrl('')); }, []);
+  const [brandName, setBrandName] = useState('ZAYTOON');
+  useEffect(() => { fetch('/api/v1/site-settings/public').then(r => r.json()).then(result => { setLogoUrl(String(result.data?.logoUrl || '')); setBrandName(String(result.data?.brandName || 'ZAYTOON')); }).catch(() => setLogoUrl('')); }, []);
   useEffect(() => { const onScroll = () => setIsScrolled(window.scrollY > 8); window.addEventListener('scroll', onScroll, { passive: true }); return () => window.removeEventListener('scroll', onScroll); }, []);
   const links = [{label:'Home',path:'/'},{label:'Menu',path:'/menu'},{label:'Deals',path:'/deals'},{label:'About',path:'/about'},{label:'Gallery',path:'/gallery'},{label:'Contact',path:'/contact'}];
   const go = (path:string) => { navigate(path); setMobileMenuOpen(false); window.scrollTo({top:0,behavior:'smooth'}); };
@@ -18,7 +19,7 @@ export const Header: React.FC<HeaderProps> = ({ currentPath, navigate }) => {
     <div className="mx-auto flex h-[76px] max-w-7xl items-center justify-between gap-3 px-4 sm:px-8">
       <div className="flex min-w-0 shrink-0 items-center gap-2 sm:gap-3">
         <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="shrink-0 rounded-full p-2 text-[#D71920] hover:bg-red-50 xl:hidden" aria-label="Toggle menu">{mobileMenuOpen?<X size={19}/>:<MenuIcon size={19}/>}</button>
-        <button onClick={() => go('/')} className="flex min-w-0 shrink-0 items-center gap-2 text-left">{logoUrl ? <img src={logoUrl} alt="Zaytoon logo" className="h-10 w-10 shrink-0 rounded-full object-cover sm:h-11 sm:w-11"/> : <span aria-hidden="true" className="h-10 w-10 shrink-0 sm:h-11 sm:w-11"/>}<span><span className="block text-base font-black uppercase leading-none tracking-tight sm:text-2xl">ZAYTOON</span><span className="mt-1 block whitespace-nowrap text-[7px] font-extrabold uppercase tracking-[0.14em] text-[#D71920] sm:text-[9px] sm:tracking-[0.2em]">Restaurant · DG Khan</span></span></button>
+        <button onClick={() => go('/')} className="flex min-w-0 shrink-0 items-center gap-2 text-left">{logoUrl ? <img src={logoUrl} alt="Zaytoon logo" className="h-10 w-10 shrink-0 rounded-full object-cover sm:h-11 sm:w-11"/> : <span aria-hidden="true" className="h-10 w-10 shrink-0 sm:h-11 sm:w-11"/>}<span><span className="block text-base font-black uppercase leading-none tracking-tight sm:text-2xl">{brandName}</span><span className="mt-1 block whitespace-nowrap text-[7px] font-extrabold uppercase tracking-[0.14em] text-[#D71920] sm:text-[9px] sm:tracking-[0.2em]">Restaurant · DG Khan</span></span></button>
       </div>
       <nav className="hidden items-center gap-5 xl:flex">{links.map(link => <button key={link.path} onClick={() => go(link.path)} className={'relative py-2 text-[10px] font-black uppercase tracking-wide text-[#D71920] transition hover:text-[#a90f18] ' + (currentPath===link.path || (link.path!=='/' && currentPath.startsWith(link.path)) ? 'text-[#a90f18]' : 'text-[#D71920]')}>{link.label}{(currentPath===link.path || (link.path!=='/' && currentPath.startsWith(link.path))) && <span className="absolute -bottom-1 left-0 h-[3px] w-full bg-[#D71920]"/>}</button>)}</nav>
       <div className="flex shrink-0 items-center gap-2 sm:gap-3">
