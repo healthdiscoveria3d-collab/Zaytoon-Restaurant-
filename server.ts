@@ -116,8 +116,24 @@ async function hydrateDatabase() {
   else for (const item of categories) await saveRecord('categories', item.id, item);
 
   const savedMenuItems = await listRecords<typeof menuItems[number]>('menu_items');
-  if (savedMenuItems.length) menuItems = savedMenuItems;
-  else for (const item of menuItems) await saveRecord('menu_items', item.id, item);
+  if (savedMenuItems.length) {
+    menuItems = savedMenuItems;
+    // One-time image refresh: replace the repeated demo photos with dish-specific food photography.
+    if (!(siteSettings as typeof siteSettings & { productImagesMigrated?: boolean }).productImagesMigrated) {
+      menuItems = menuItems.map((savedItem) => {
+        const seededItem = initialMenuItems.find((item) => item.slug === savedItem.slug);
+        return seededItem ? { ...savedItem, image: seededItem.image } : savedItem;
+      });
+      for (const item of menuItems) {
+        const previous = savedMenuItems.find((saved) => saved.id === item.id);
+        if (previous && previous.image !== item.image) await saveRecord('menu_items', item.id, item);
+      }
+      siteSettings = { ...siteSettings, productImagesMigrated: true };
+      await saveRecord('site_settings', 'main', siteSettings);
+    }
+  } else {
+    for (const item of menuItems) await saveRecord('menu_items', item.id, item);
+  }
 
   const savedDeals = await listRecords<typeof deals[number]>('deals');
   if (savedDeals.length) deals = savedDeals;
