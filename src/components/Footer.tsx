@@ -2,8 +2,8 @@ import React from 'react';
 import { MapPin, Phone, Mail, ArrowRight, UserRound } from 'lucide-react';
 interface FooterProps { navigate: (path: string) => void; }
 export const Footer: React.FC<FooterProps> = ({ navigate }) => {
-  const [logoUrl, setLogoUrl] = React.useState('');
-  React.useEffect(() => { fetch('/api/v1/site-settings/public').then(r => r.json()).then(result => setLogoUrl(String(result.data?.logoUrl || ''))).catch(() => setLogoUrl('')); }, []);
+  const [settings, setSettings] = React.useState({ logoUrl: '', brandName: 'ZAYTOON', address: 'Near Ghazi Ghat Toll Plaza, Dera Ghazi Khan', phone: '+92 302 6777908', email: 'info@zaytoonrestaurant.pk' });
+  React.useEffect(() => { fetch('/api/v1/site-settings/public').then(r => r.json()).then(result => { if (result.data) setSettings(current => ({ ...current, ...result.data })); }).catch(() => {}); }, []);
   const go=(path:string)=>{navigate(path);window.scrollTo({top:0,behavior:'smooth'});};
   return <footer className="bg-[#171717] text-white">
     <div className="mx-auto grid max-w-7xl gap-10 px-5 py-14 sm:grid-cols-2 sm:px-8 lg:grid-cols-4">
