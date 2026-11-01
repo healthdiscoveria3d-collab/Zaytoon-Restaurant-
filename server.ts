@@ -116,28 +116,34 @@ async function hydrateDatabase() {
   else for (const item of categories) await saveRecord('categories', item.id, item);
 
   const savedMenuItems = await listRecords<typeof menuItems[number]>('menu_items');
-  if (savedMenuItems.length) {
-    menuItems = savedMenuItems;
-    // One-time image refresh: replace the repeated demo photos with dish-specific food photography.
-    if (!(siteSettings as typeof siteSettings & { productImagesMigrated?: boolean }).productImagesMigrated) {
-      menuItems = menuItems.map((savedItem) => {
-        const seededItem = initialMenuItems.find((item) => item.slug === savedItem.slug);
-        return seededItem ? { ...savedItem, image: seededItem.image } : savedItem;
-      });
-      for (const item of menuItems) {
-        const previous = savedMenuItems.find((saved) => saved.id === item.id);
-        if (previous && previous.image !== item.image) await saveRecord('menu_items', item.id, item);
-      }
-      siteSettings = { ...siteSettings, productImagesMigrated: true };
-      await saveRecord('site_settings', 'main', siteSettings);
-    }
-  } else {
-    for (const item of menuItems) await saveRecord('menu_items', item.id, item);
-  }
+  if (savedMenuItems.length) menuItems = savedMenuItems;
+  else for (const item of menuItems) await saveRecord('menu_items', item.id, item);
 
   const savedDeals = await listRecords<typeof deals[number]>('deals');
   if (savedDeals.length) deals = savedDeals;
   else for (const item of deals) await saveRecord('deals', item.id, item);
+
+  // Versioned image refresh updates old database records without resetting prices or other admin edits.
+  const imagesMigrated = Boolean((siteSettings as typeof siteSettings & { productImagesMigratedV2?: boolean }).productImagesMigratedV2);
+  if (!imagesMigrated) {
+    categories = categories.map((savedItem) => {
+      const seededItem = initialCategories.find((item) => item.id === savedItem.id);
+      return seededItem ? { ...savedItem, image: seededItem.image } : savedItem;
+    });
+    menuItems = menuItems.map((savedItem) => {
+      const seededItem = initialMenuItems.find((item) => item.id === savedItem.id);
+      return seededItem ? { ...savedItem, image: seededItem.image } : savedItem;
+    });
+    deals = deals.map((savedItem) => {
+      const seededItem = initialDeals.find((item) => item.id === savedItem.id);
+      return seededItem ? { ...savedItem, image: seededItem.image } : savedItem;
+    });
+    for (const item of categories) await saveRecord('categories', item.id, item);
+    for (const item of menuItems) await saveRecord('menu_items', item.id, item);
+    for (const item of deals) await saveRecord('deals', item.id, item);
+    siteSettings = { ...siteSettings, productImagesMigratedV2: true };
+    await saveRecord('site_settings', 'main', siteSettings);
+  }
 
   const savedGallery = await listRecords<typeof gallery[number]>('gallery');
   if (savedGallery.length) gallery = savedGallery;
