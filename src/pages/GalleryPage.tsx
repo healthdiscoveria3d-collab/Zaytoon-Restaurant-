@@ -26,15 +26,15 @@ export const GalleryPage: React.FC<GalleryPageProps> = () => {
   return (
     <div className="space-y-12 pb-24">
       {/* Header */}
-      <section className="bg-[#12372D] text-white py-16">
+      <section className="bg-[#D71920] text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
-          <span className="text-xs font-semibold uppercase tracking-widest text-[#B69A62]">
+          <span className="text-xs font-semibold uppercase tracking-widest text-[#F4C542]">
             Visual Moments
           </span>
-          <h1 className="text-4xl sm:text-5xl font-display font-bold text-[#F7F3EA]">
+          <h1 className="text-4xl sm:text-5xl font-display font-bold text-[#FFFFFF]">
             The Zaytoon Experience Gallery
           </h1>
-          <p className="text-sm sm:text-base text-[#EDE5D7]/85 max-w-2xl mx-auto">
+          <p className="text-sm sm:text-base text-[#F4F4F4]/85 max-w-2xl mx-auto">
             Glimpses of our scenic Indus river terraces, live charcoal cooking, and family dining pavilions.
           </p>
         </div>
@@ -50,8 +50,8 @@ export const GalleryPage: React.FC<GalleryPageProps> = () => {
               onClick={() => setActiveCategory(cat.value)}
               className={`px-4 py-2 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors ${
                 activeCategory === cat.value
-                  ? 'bg-[#12372D] text-white shadow-sm'
-                  : 'bg-white border border-[#EDE5D7] text-[#242824] hover:bg-[#EDE5D7]/50'
+                  ? 'bg-[#D71920] text-white shadow-sm'
+                  : 'bg-white border border-[#F4F4F4] text-[#171717] hover:bg-[#F4F4F4]/50'
               }`}
             >
               {cat.label}
@@ -65,9 +65,9 @@ export const GalleryPage: React.FC<GalleryPageProps> = () => {
             <div
               key={item.id}
               onClick={() => setActiveLightbox(item)}
-              className="group bg-white rounded-xl overflow-hidden border border-[#EDE5D7] shadow-sm hover:shadow-xl transition-all cursor-pointer flex flex-col justify-between"
+              className="group bg-white rounded-xl overflow-hidden border border-[#F4F4F4] shadow-sm hover:shadow-xl transition-all cursor-pointer flex flex-col justify-between"
             >
-              <div className="relative h-72 sm:h-80 bg-[#EDE5D7] overflow-hidden">
+              <div className="relative h-72 sm:h-80 bg-[#F4F4F4] overflow-hidden">
                 <img
                   src={item.image}
                   alt={item.title}
@@ -75,21 +75,21 @@ export const GalleryPage: React.FC<GalleryPageProps> = () => {
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                  <span className="px-4 py-2 bg-white/90 text-[#12372D] rounded-full text-xs font-semibold flex items-center gap-2 shadow-lg">
-                    <ZoomIn className="w-4 h-4 text-[#B69A62]" />
+                  <span className="px-4 py-2 bg-white/90 text-[#D71920] rounded-full text-xs font-semibold flex items-center gap-2 shadow-lg">
+                    <ZoomIn className="w-4 h-4 text-[#F4C542]" />
                     <span>View Photo</span>
                   </span>
                 </div>
               </div>
 
               <div className="p-5 space-y-1">
-                <span className="text-[11px] uppercase tracking-wider text-[#B69A62] font-semibold">
+                <span className="text-[11px] uppercase tracking-wider text-[#F4C542] font-semibold">
                   {item.category}
                 </span>
-                <h3 className="font-display font-bold text-lg text-[#12372D]">
+                <h3 className="font-display font-bold text-lg text-[#D71920]">
                   {item.title}
                 </h3>
-                <p className="text-xs text-[#242824]/80 leading-relaxed">
+                <p className="text-xs text-[#171717]/80 leading-relaxed">
                   {item.caption}
                 </p>
               </div>
@@ -120,7 +120,7 @@ export const GalleryPage: React.FC<GalleryPageProps> = () => {
             </div>
             <div className="text-center text-white mt-4 space-y-1">
               <h3 className="font-display font-bold text-xl">{activeLightbox.title}</h3>
-              <p className="text-xs text-[#EDE5D7]/80 max-w-lg">{activeLightbox.caption}</p>
+              <p className="text-xs text-[#F4F4F4]/80 max-w-lg">{activeLightbox.caption}</p>
             </div>
           </div>
         </div>
