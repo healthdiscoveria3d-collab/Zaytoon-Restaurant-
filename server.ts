@@ -507,6 +507,17 @@ async function startServer() {
   } else {
     // Production: serve built static files
     const distPath = path.resolve(__dirname, 'dist');
+
+    // Serve original restaurant photos directly from the repository's public folder.
+    // This keeps /images/* working even if a deployment build omits Vite's public copy.
+    app.use(
+      '/images',
+      express.static(path.resolve(__dirname, 'public/images'), {
+        maxAge: '7d',
+        fallthrough: false,
+      })
+    );
+
     app.use(express.static(distPath));
     app.get('*', (_req: Request, res: Response) => {
       res.sendFile(path.resolve(distPath, 'index.html'));
