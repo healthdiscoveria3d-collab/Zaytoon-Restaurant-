@@ -74,3 +74,19 @@ main .border-\[\#D71920\]{border-color:#d71920}
   header .text-xl { font-size: 15px; }
   main .px-5 { padding-left: 14px; padding-right: 14px; }
 }
+
+/* Menu search: keep one outer field border; prevent global form styles on inner input */
+main input.menu-search-input {
+  width: 100%;
+  min-height: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  padding: 0;
+  box-shadow: none;
+}
+main input.menu-search-input:focus {
+  border: 0;
+  outline: none;
+  box-shadow: none;
+}
