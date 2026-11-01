@@ -2,7 +2,6 @@ import express, { Request, Response } from 'express';
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
-import JSZip from 'jszip';
 import {
   initialSiteSettings,
   initialCategories,
@@ -461,61 +460,6 @@ app.post('/api/v1/contact-messages', (req: Request, res: Response) => {
     message: 'Thank you for your message. Our hospitality manager will contact you promptly.',
     data: { id: inquiry.id },
   });
-});
-
-// ============================================================
-// Full Project Zip Download Endpoint (User Request: Complete ZIP)
-// ============================================================
-app.get('/api/v1/download-project-zip', async (_req: Request, res: Response) => {
-  try {
-    const zip = new JSZip();
-    const rootDir = __dirname;
-
-    // Helper to recursively add files excluding node_modules, .git, and dist
-    const addDirectoryToZip = (currentDir: string, zipFolder: JSZip) => {
-      const items = fs.readdirSync(currentDir);
-      for (const item of items) {
-        if (
-          item === 'node_modules' ||
-          item === '.git' ||
-          item === 'dist' ||
-          item === '.cache' ||
-          item.endsWith('.zip')
-        ) {
-          continue;
-        }
-
-        const fullPath = path.join(currentDir, item);
-        const stat = fs.statSync(fullPath);
-
-        if (stat.isDirectory()) {
-          const subFolder = zipFolder.folder(item);
-          if (subFolder) {
-            addDirectoryToZip(fullPath, subFolder);
-          }
-        } else {
-          const content = fs.readFileSync(fullPath);
-          zipFolder.file(item, content);
-        }
-      }
-    };
-
-    addDirectoryToZip(rootDir, zip);
-
-    const zipBuffer = await zip.generateAsync({
-      type: 'nodebuffer',
-      compression: 'DEFLATE',
-      compressionOptions: { level: 6 },
-    });
-
-    res.setHeader('Content-Type', 'application/zip');
-    res.setHeader('Content-Disposition', 'attachment; filename="zaytoon-restaurant-website-complete.zip"');
-    res.setHeader('Content-Length', zipBuffer.length);
-    res.send(zipBuffer);
-  } catch (error: any) {
-    console.error('Error generating project zip:', error);
-    res.status(500).json({ success: false, message: 'Failed to generate project zip archive' });
-  }
 });
 
 // Health check endpoint
