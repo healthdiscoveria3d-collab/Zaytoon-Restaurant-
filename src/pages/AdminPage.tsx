@@ -41,6 +41,7 @@ export const AdminPage: React.FC = () => {
   const [openRowMenu, setOpenRowMenu] = useState<string | null>(null);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
+  const [siteLogoUrl, setSiteLogoUrl] = useState('');
 
   const contentCollections: Partial<Record<Tab, string>> = {
     menu: 'menu_items', categories: 'categories', deals: 'deals', gallery: 'gallery', settings: 'site_settings',
@@ -79,6 +80,11 @@ export const AdminPage: React.FC = () => {
   }, []);
 
   useEffect(() => { if (authenticated) loadData(); }, [authenticated]);
+
+  useEffect(() => {
+    if (!authenticated) return;
+    fetch('/api/v1/site-settings/public').then((response) => response.json()).then((result) => setSiteLogoUrl(String(result.data?.logoUrl || ''))).catch(() => setSiteLogoUrl(''));
+  }, [authenticated]);
 
   useEffect(() => {
     if (!authenticated || tab !== 'menu') return;
@@ -237,7 +243,7 @@ export const AdminPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-[#eef2f8] text-[#172033] lg:flex">
       <aside className="hidden bg-gradient-to-b from-[#172f45] via-[#203f58] to-[#152b40] p-4 text-white lg:sticky lg:top-0 lg:block lg:h-screen lg:w-64 lg:shrink-0 lg:p-5">
-        <div className="flex items-center gap-3"><span className="grid h-11 w-11 place-items-center rounded-2xl bg-gradient-to-br from-[#ffd166] to-[#f4a261] text-lg font-black text-[#263449] shadow-lg">Z</span><div><p className="text-sm font-black uppercase tracking-[.14em]">Zaytoon</p><p className="text-[9px] font-bold uppercase tracking-[.2em] text-[#d5bd8b]">Restaurant · Admin</p></div></div>
+        <div className="flex items-center gap-3">{siteLogoUrl ? <img src={siteLogoUrl} alt="Zaytoon logo" className="h-11 w-11 rounded-xl bg-white object-contain p-1"/> : <span className="grid h-11 w-11 place-items-center rounded-2xl bg-gradient-to-br from-[#ffd166] to-[#f4a261] text-lg font-black text-[#263449] shadow-lg">Z</span>}<div><p className="text-sm font-black uppercase tracking-[.14em]">Zaytoon</p><p className="text-[9px] font-bold uppercase tracking-[.2em] text-[#d5bd8b]">Restaurant · Admin</p></div></div>
         <nav className="mt-6 flex flex-col gap-1">
           {nav.map(item=><button key={item.id} onClick={()=>{setTab(item.id);setSearchQuery('');setError('');setMobileNavOpen(false);}} className={'flex shrink-0 items-center gap-3 rounded-xl border px-3 py-3.5 text-left text-xs font-semibold transition '+(tab===item.id?'border-white/20 bg-gradient-to-r from-[#ffd166] to-[#f4a261] text-[#263449] shadow-lg':'border-transparent text-white/75 hover:border-white/10 hover:bg-white/10 hover:text-white')}>{item.icon}{item.label}</button>)}
         </nav>
@@ -245,7 +251,7 @@ export const AdminPage: React.FC = () => {
           <button onClick={logout} className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#ffd166] to-[#f4a261] px-3 py-3 text-[10px] font-black uppercase tracking-wider text-[#263449] shadow-md transition hover:brightness-105"><LogOut size={14}/> Logout</button>
         </div>
       </aside>
-      {mobileNavOpen && <div className="fixed inset-0 z-50 lg:hidden"><button aria-label="Close navigation" onClick={()=>setMobileNavOpen(false)} className="absolute inset-0 bg-black/50"/><div className="absolute inset-y-0 left-0 flex w-[ min(82vw,300px)] flex-col bg-[#19382d] p-5 text-white shadow-2xl"><div className="mb-6 flex items-center justify-between"><div className="flex items-center gap-3"><span className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-[#ffd166] to-[#f4a261] font-black text-[#263449]">Z</span><div><p className="text-sm font-black uppercase tracking-wider">Zaytoon</p><p className="text-[9px] uppercase tracking-widest text-[#d5bd8b]">Restaurant · Admin</p></div></div><button onClick={()=>setMobileNavOpen(false)} aria-label="Close menu" className="grid h-9 w-9 place-items-center rounded-lg hover:bg-white/10"><X size={19}/></button></div><nav className="flex flex-1 flex-col gap-1">{nav.map(item=><button key={item.id} onClick={()=>{setTab(item.id);setSearchQuery('');setError('');setMobileNavOpen(false);}} className={'flex items-center gap-3 rounded-xl border px-3 py-3.5 text-left text-xs font-semibold '+(tab===item.id?'border-white/20 bg-gradient-to-r from-[#ffd166] to-[#f4a261] text-[#263449] shadow-lg':'border-transparent text-white/75 hover:bg-white/10')}>{item.icon}{item.label}</button>)}</nav><div className="mt-4"><button onClick={logout} className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#ffd166] to-[#f4a261] px-3 py-3 text-[10px] font-black uppercase tracking-wider text-[#263449] shadow-md"><LogOut size={14}/> Logout</button></div></div></div>}
+      {mobileNavOpen && <div className="fixed inset-0 z-50 lg:hidden"><button aria-label="Close navigation" onClick={()=>setMobileNavOpen(false)} className="absolute inset-0 bg-black/50"/><div className="absolute inset-y-0 left-0 flex w-[ min(82vw,300px)] flex-col bg-[#19382d] p-5 text-white shadow-2xl"><div className="mb-6 flex items-center justify-between"><div className="flex items-center gap-3">{siteLogoUrl ? <img src={siteLogoUrl} alt="Zaytoon logo" className="h-10 w-10 rounded-xl bg-white object-contain p-1"/> : <span className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-[#ffd166] to-[#f4a261] font-black text-[#263449]">Z</span>}<div><p className="text-sm font-black uppercase tracking-wider">Zaytoon</p><p className="text-[9px] uppercase tracking-widest text-[#d5bd8b]">Restaurant · Admin</p></div></div><button onClick={()=>setMobileNavOpen(false)} aria-label="Close menu" className="grid h-9 w-9 place-items-center rounded-lg hover:bg-white/10"><X size={19}/></button></div><nav className="flex flex-1 flex-col gap-1">{nav.map(item=><button key={item.id} onClick={()=>{setTab(item.id);setSearchQuery('');setError('');setMobileNavOpen(false);}} className={'flex items-center gap-3 rounded-xl border px-3 py-3.5 text-left text-xs font-semibold '+(tab===item.id?'border-white/20 bg-gradient-to-r from-[#ffd166] to-[#f4a261] text-[#263449] shadow-lg':'border-transparent text-white/75 hover:bg-white/10')}>{item.icon}{item.label}</button>)}</nav><div className="mt-4"><button onClick={logout} className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#ffd166] to-[#f4a261] px-3 py-3 text-[10px] font-black uppercase tracking-wider text-[#263449] shadow-md"><LogOut size={14}/> Logout</button></div></div></div>}
       <main className="min-w-0 flex-1 px-4 py-6 pb-12 sm:px-7 lg:px-9 lg:py-8">
         <div className="mb-7 flex flex-wrap items-center justify-between gap-3"><div className="flex min-w-0 items-center gap-3"><button onClick={()=>setMobileNavOpen(true)} aria-label="Open categories" className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-[#dce5ef] bg-white text-[#19382d] shadow-sm lg:hidden"><Menu size={19}/></button><div><p className="text-[10px] font-black uppercase tracking-[.22em] text-[#c26b36]">ZAYTOON RESTAURANT  /  ADMINISTRATION</p><h1 className="mt-1 text-3xl font-semibold tracking-tight text-[#20372d]">{tab==='dashboard'?'Restaurant overview':nav.find(item=>item.id===tab)?.label}</h1><p className="mt-1 text-xs text-[#85877e]">Manage restaurant operations, customer orders, reservations and website content from one place.</p></div></div><span className="flex items-center gap-2 rounded-full border border-emerald-200 bg-white px-3 py-2 text-[10px] font-bold text-emerald-700 shadow-sm"><span className="h-2 w-2 rounded-full bg-emerald-500"/> Secure session active</span></div>
         {error && <div className="mb-5 flex items-center justify-between gap-3 rounded-lg border border-red-200 bg-red-50 p-3 text-xs text-red-700"><span>{error}</span><button onClick={()=>setError('')} className="font-black">×</button></div>}
@@ -287,13 +293,14 @@ export const AdminPage: React.FC = () => {
                 const fieldLabels: Record<string, string> = {
                   isDemoItem: 'Demo Content', isFeatured: 'Featured on Website',
                   isAvailable: 'Item Availability', categoryName: 'Menu Category',
-                  categoryId: 'Category Reference', id: 'Record ID',
+                  categoryId: 'Category Reference', id: 'Record ID', logoUrl: 'Restaurant Logo URL',
                 };
                 const fieldHelp: Record<string, string> = {
                   isDemoItem: 'Use for sample or demonstration items only.',
                   isFeatured: 'Highlight this item in featured sections of the website.',
                   isAvailable: 'Control whether customers can order this item.',
                   categoryName: 'Choose the category where this menu item belongs.',
+                  logoUrl: 'Paste a direct image URL here. Save to update the website header, footer and admin sidebar.',
                 };
                 const isMenuSwitch = ['isDemoItem', 'isFeatured', 'isAvailable'].includes(key);
                 return <label key={key} className="block min-w-0 text-[10px] font-bold uppercase tracking-wide text-gray-500">
@@ -303,6 +310,7 @@ export const AdminPage: React.FC = () => {
                     <span><span className="block text-xs font-bold text-[#263b30]">{key==='isDemoItem'?(value?'Demo item':'Regular menu item'):key==='isFeatured'?(value?'Featured item':'Not featured'):value?'Available to order':'Currently unavailable'}</span><span className="mt-1 block text-[10px] font-normal text-gray-500">{key==='isDemoItem'?'Controls whether this is marked as sample content.':key==='isFeatured'?'Controls featured placement on the website.':'Controls customer ordering availability.'}</span></span>
                     <span className={'relative h-6 w-11 shrink-0 rounded-full transition '+(value?'bg-[#315744]':'bg-gray-300')}><span className={'absolute top-1 h-4 w-4 rounded-full bg-white shadow transition '+(value?'left-6':'left-1')}/></span>
                   </button> :
+                  key === 'logoUrl' ? <><input value={String(value ?? '')} onChange={(e)=>updateDraftField(key,e.target.value)} placeholder="https://example.com/zaytoon-logo.png" className="mt-2 w-full rounded-xl border border-gray-200 bg-[#fafafa] px-3 py-3 text-xs font-normal normal-case text-gray-800 outline-none focus:border-[#9a8050]"/>{String(value || '').trim() && <div className="mt-3 flex items-center gap-3 rounded-xl border border-gray-200 bg-white p-3"><img src={String(value)} alt="Logo preview" className="h-14 w-14 rounded-lg object-contain"/><span className="text-[10px] font-medium normal-case text-gray-500">Logo preview</span></div>}</> :
                   key === 'categoryName' ? <select value={String(value ?? '')} onChange={(e)=>{const selected=categoryOptions.find((item:any)=>item.name===e.target.value);updateDraftField('categoryName',e.target.value);if(selected?.id)updateDraftField('categoryId',selected.id);}} className="mt-2 w-full rounded-xl border border-gray-200 bg-[#fafafa] px-3 py-3 text-xs font-semibold normal-case text-gray-800 outline-none focus:border-[#9a8050]">
                     <option value="">Select a category</option>{categoryOptions.map((item:any)=><option key={item.id} value={item.name}>{item.name}</option>)}
                     {!categoryOptions.some((item:any)=>item.name===value) && value ? <option value={String(value)}>{String(value)}</option> : null}
