@@ -10,6 +10,7 @@ import {
   initialGallery,
 } from './src/data/initialData.ts';
 import { Order, Reservation, OrderStatus } from './src/types/index.ts';
+import { databaseEnabled, initializeDatabase, listRecords, getRecord, saveRecord } from './src/server/database.ts';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -100,6 +101,39 @@ interface ContactInquiry {
   createdAt: string;
 }
 const inquiries: ContactInquiry[] = [];
+
+async function hydrateDatabase() {
+  await initializeDatabase();
+  if (!databaseEnabled) return;
+
+  const savedSettings = await getRecord<typeof siteSettings>('site_settings', 'main');
+  if (savedSettings) siteSettings = savedSettings;
+  else await saveRecord('site_settings', 'main', siteSettings);
+
+  const savedCategories = await listRecords<typeof categories[number]>('categories');
+  if (savedCategories.length) categories = savedCategories;
+  else for (const item of categories) await saveRecord('categories', item.id, item);
+
+  const savedMenuItems = await listRecords<typeof menuItems[number]>('menu_items');
+  if (savedMenuItems.length) menuItems = savedMenuItems;
+  else for (const item of menuItems) await saveRecord('menu_items', item.id, item);
+
+  const savedDeals = await listRecords<typeof deals[number]>('deals');
+  if (savedDeals.length) deals = savedDeals;
+  else for (const item of deals) await saveRecord('deals', item.id, item);
+
+  const savedGallery = await listRecords<typeof gallery[number]>('gallery');
+  if (savedGallery.length) gallery = savedGallery;
+  else for (const item of gallery) await saveRecord('gallery', item.id, item);
+
+  orders.clear();
+  for (const item of await listRecords<Order>('orders')) orders.set(item.reference, item);
+
+  reservations.clear();
+  for (const item of await listRecords<Reservation>('reservations')) reservations.set(item.reference, item);
+
+  inquiries.splice(0, inquiries.length, ...(await listRecords<ContactInquiry>('inquiries')));
+}
 
 // ==========================================
 // API v1 Routes (Clean Public Surface)
@@ -197,7 +231,7 @@ app.get('/api/v1/contact', (_req: Request, res: Response) => {
 });
 
 // Submit Online Order
-app.post('/api/v1/orders', (req: Request, res: Response) => {
+app.post('/api/v1/orders', async (req: Request, res: Response) => {
   try {
     const {
       customerName,
@@ -277,6 +311,7 @@ app.post('/api/v1/orders', (req: Request, res: Response) => {
     };
 
     orders.set(reference, newOrder);
+    if (databaseEnabled) await saveRecord('orders', reference, newOrder);
 
     res.status(201).json({
       success: true,
@@ -289,7 +324,7 @@ app.post('/api/v1/orders', (req: Request, res: Response) => {
 });
 
 // Track Order (Secure: requires matching phone or exact reference)
-app.get('/api/v1/orders/track', (req: Request, res: Response) => {
+app.get('/api/v1/orders/track', async (req: Request, res: Response) => {
   const { reference, phone } = req.query;
 
   if (!reference || typeof reference !== 'string') {
@@ -368,7 +403,7 @@ app.get('/api/v1/reservations/availability', (req: Request, res: Response) => {
 });
 
 // Book Table Reservation
-app.post('/api/v1/reservations', (req: Request, res: Response) => {
+app.post('/api/v1/reservations', async (req: Request, res: Response) => {
   try {
     const { fullName, phone, email, date, timeSlot, guests, seatingPreference, specialRequest } = req.body;
 
@@ -420,6 +455,7 @@ app.post('/api/v1/reservations', (req: Request, res: Response) => {
     };
 
     reservations.set(reference, newReservation);
+    if (databaseEnabled) await saveRecord('reservations', reference, newReservation);
 
     res.status(201).json({
       success: true,
@@ -432,7 +468,7 @@ app.post('/api/v1/reservations', (req: Request, res: Response) => {
 });
 
 // Submit Contact Message
-app.post('/api/v1/contact-messages', (req: Request, res: Response) => {
+app.post('/api/v1/contact-messages', async (req: Request, res: Response) => {
   const { fullName, phone, email, subject, message } = req.body;
 
   if (!fullName || !phone || !message) {
@@ -454,6 +490,7 @@ app.post('/api/v1/contact-messages', (req: Request, res: Response) => {
   };
 
   inquiries.push(inquiry);
+  if (databaseEnabled) await saveRecord('inquiries', inquiry.id, inquiry);
 
   res.status(201).json({
     success: true,
@@ -466,6 +503,7 @@ app.post('/api/v1/contact-messages', (req: Request, res: Response) => {
 app.get('/api/health', (_req: Request, res: Response) => {
   res.json({
     status: 'ok',
+    database: databaseEnabled ? 'connected' : 'development-memory-mode',
     service: 'zaytoon-public-api',
     timestamp: new Date().toISOString(),
     version: '1.0.0',
@@ -477,6 +515,7 @@ app.get('/api/health', (_req: Request, res: Response) => {
 // ==========================================
 async function startServer() {
   const serverPort = Number(process.env.PORT) || 3000;
+  await hydrateDatabase();
 
   if (process.env.NODE_ENV !== 'production') {
     const { createServer: createViteServer } = await import('vite');
