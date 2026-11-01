@@ -86,22 +86,22 @@ export const ReservationPage: React.FC<ReservationPageProps> = ({ navigate }) =>
   return (
     <div className="space-y-12 pb-24">
       {/* Header */}
-      <section className="bg-[#12372D] text-white py-16">
+      <section className="bg-[#D71920] text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
-          <span className="text-xs font-semibold uppercase tracking-widest text-[#B69A62]">
+          <span className="text-xs font-semibold uppercase tracking-widest text-[#F4C542]">
             Plan Your Dining Stop
           </span>
-          <h1 className="text-4xl sm:text-5xl font-display font-bold text-[#F7F3EA]">
+          <h1 className="text-4xl sm:text-5xl font-display font-bold text-[#FFFFFF]">
             Table & Terrace Reservations
           </h1>
-          <p className="text-sm sm:text-base text-[#EDE5D7]/85 max-w-2xl mx-auto">
+          <p className="text-sm sm:text-base text-[#F4F4F4]/85 max-w-2xl mx-auto">
             Book your family table in our air-conditioned dining halls or secure an open-air table on the Indus riverside terrace.
           </p>
         </div>
       </section>
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-white rounded-xl border border-[#EDE5D7] shadow-sm p-6 sm:p-10 space-y-8">
+        <div className="bg-white rounded-xl border border-[#F4F4F4] shadow-sm p-6 sm:p-10 space-y-8">
           {errorMsg && (
             <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-xs text-red-700 flex items-center gap-2">
               <AlertCircle className="w-4 h-4 shrink-0" />
@@ -112,14 +112,14 @@ export const ReservationPage: React.FC<ReservationPageProps> = ({ navigate }) =>
           <form onSubmit={handleSubmit} className="space-y-8">
             {/* Step 1: Date & Time */}
             <div className="space-y-4">
-              <h2 className="font-display font-bold text-lg text-[#12372D] flex items-center gap-2">
-                <Calendar className="w-5 h-5 text-[#B69A62]" />
+              <h2 className="font-display font-bold text-lg text-[#D71920] flex items-center gap-2">
+                <Calendar className="w-5 h-5 text-[#F4C542]" />
                 <span>1. Select Date & Dining Time</span>
               </h2>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold uppercase text-[#12372D] mb-1">
+                  <label className="block text-xs font-semibold uppercase text-[#D71920] mb-1">
                     Reservation Date *
                   </label>
                   <input
@@ -128,18 +128,18 @@ export const ReservationPage: React.FC<ReservationPageProps> = ({ navigate }) =>
                     min={new Date().toISOString().split('T')[0]}
                     value={date}
                     onChange={(e) => setDate(e.target.value)}
-                    className="w-full text-sm p-3 rounded-lg border border-[#EDE5D7] bg-white focus:outline-none focus:ring-1 focus:ring-[#B69A62]"
+                    className="w-full text-sm p-3 rounded-lg border border-[#F4F4F4] bg-white focus:outline-none focus:ring-1 focus:ring-[#F4C542]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold uppercase text-[#12372D] mb-1">
+                  <label className="block text-xs font-semibold uppercase text-[#D71920] mb-1">
                     Preferred Time Slot *
                   </label>
                   <select
                     value={timeSlot}
                     onChange={(e) => setTimeSlot(e.target.value)}
-                    className="w-full text-sm p-3 rounded-lg border border-[#EDE5D7] bg-white focus:outline-none focus:ring-1 focus:ring-[#B69A62]"
+                    className="w-full text-sm p-3 rounded-lg border border-[#F4F4F4] bg-white focus:outline-none focus:ring-1 focus:ring-[#F4C542]"
                   >
                     <option value="13:00">1:00 PM (Lunch)</option>
                     <option value="14:00">2:00 PM (Lunch)</option>
@@ -157,7 +157,7 @@ export const ReservationPage: React.FC<ReservationPageProps> = ({ navigate }) =>
               </div>
 
               {/* Slot Availability Indicator */}
-              <div className="p-3.5 bg-[#F7F3EA] rounded-lg border border-[#EDE5D7] text-xs text-[#777B75] flex items-center justify-between">
+              <div className="p-3.5 bg-[#FFFFFF] rounded-lg border border-[#F4F4F4] text-xs text-[#6B7280] flex items-center justify-between">
                 <span>
                   Real-time status for {date} at {timeSlot}:
                 </span>
@@ -169,21 +169,21 @@ export const ReservationPage: React.FC<ReservationPageProps> = ({ navigate }) =>
             </div>
 
             {/* Step 2: Guest Count & Seating Zone */}
-            <div className="space-y-4 pt-4 border-t border-[#EDE5D7]">
-              <h2 className="font-display font-bold text-lg text-[#12372D] flex items-center gap-2">
-                <Users className="w-5 h-5 text-[#B69A62]" />
+            <div className="space-y-4 pt-4 border-t border-[#F4F4F4]">
+              <h2 className="font-display font-bold text-lg text-[#D71920] flex items-center gap-2">
+                <Users className="w-5 h-5 text-[#F4C542]" />
                 <span>2. Party Size & Seating Zone</span>
               </h2>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold uppercase text-[#12372D] mb-1">
+                  <label className="block text-xs font-semibold uppercase text-[#D71920] mb-1">
                     Number of Guests *
                   </label>
                   <select
                     value={guests}
                     onChange={(e) => setGuests(e.target.value)}
-                    className="w-full text-sm p-3 rounded-lg border border-[#EDE5D7] bg-white focus:outline-none focus:ring-1 focus:ring-[#B69A62]"
+                    className="w-full text-sm p-3 rounded-lg border border-[#F4F4F4] bg-white focus:outline-none focus:ring-1 focus:ring-[#F4C542]"
                   >
                     {[1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 15, 20, 25, 30].map((num) => (
                       <option key={num} value={num}>
@@ -194,13 +194,13 @@ export const ReservationPage: React.FC<ReservationPageProps> = ({ navigate }) =>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold uppercase text-[#12372D] mb-1">
+                  <label className="block text-xs font-semibold uppercase text-[#D71920] mb-1">
                     Seating Preference
                   </label>
                   <select
                     value={seatingPreference}
                     onChange={(e) => setSeatingPreference(e.target.value)}
-                    className="w-full text-sm p-3 rounded-lg border border-[#EDE5D7] bg-white focus:outline-none focus:ring-1 focus:ring-[#B69A62]"
+                    className="w-full text-sm p-3 rounded-lg border border-[#F4F4F4] bg-white focus:outline-none focus:ring-1 focus:ring-[#F4C542]"
                   >
                     <option value="outdoor_riverside">Outdoor Riverside Terrace (Indus View)</option>
                     <option value="indoor_family_hall">Air-Conditioned Indoor Family Hall</option>
@@ -212,14 +212,14 @@ export const ReservationPage: React.FC<ReservationPageProps> = ({ navigate }) =>
             </div>
 
             {/* Step 3: Contact Details */}
-            <div className="space-y-4 pt-4 border-t border-[#EDE5D7]">
-              <h2 className="font-display font-bold text-lg text-[#12372D]">
+            <div className="space-y-4 pt-4 border-t border-[#F4F4F4]">
+              <h2 className="font-display font-bold text-lg text-[#D71920]">
                 3. Primary Guest Contact Details
               </h2>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold uppercase text-[#12372D] mb-1">
+                  <label className="block text-xs font-semibold uppercase text-[#D71920] mb-1">
                     Full Name *
                   </label>
                   <input
@@ -228,12 +228,12 @@ export const ReservationPage: React.FC<ReservationPageProps> = ({ navigate }) =>
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
                     placeholder="e.g. Sharjeel Khan"
-                    className="w-full text-sm p-3 rounded-lg border border-[#EDE5D7] bg-white focus:outline-none focus:ring-1 focus:ring-[#B69A62]"
+                    className="w-full text-sm p-3 rounded-lg border border-[#F4F4F4] bg-white focus:outline-none focus:ring-1 focus:ring-[#F4C542]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold uppercase text-[#12372D] mb-1">
+                  <label className="block text-xs font-semibold uppercase text-[#D71920] mb-1">
                     Mobile Phone (WhatsApp Enabled) *
                   </label>
                   <input
@@ -242,12 +242,12 @@ export const ReservationPage: React.FC<ReservationPageProps> = ({ navigate }) =>
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder="e.g. 0302 6777908"
-                    className="w-full text-sm p-3 rounded-lg border border-[#EDE5D7] bg-white focus:outline-none focus:ring-1 focus:ring-[#B69A62]"
+                    className="w-full text-sm p-3 rounded-lg border border-[#F4F4F4] bg-white focus:outline-none focus:ring-1 focus:ring-[#F4C542]"
                   />
                 </div>
 
                 <div className="sm:col-span-2">
-                  <label className="block text-xs font-semibold uppercase text-[#12372D] mb-1">
+                  <label className="block text-xs font-semibold uppercase text-[#D71920] mb-1">
                     Email Address (Optional)
                   </label>
                   <input
@@ -255,12 +255,12 @@ export const ReservationPage: React.FC<ReservationPageProps> = ({ navigate }) =>
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="name@example.com"
-                    className="w-full text-sm p-3 rounded-lg border border-[#EDE5D7] bg-white focus:outline-none focus:ring-1 focus:ring-[#B69A62]"
+                    className="w-full text-sm p-3 rounded-lg border border-[#F4F4F4] bg-white focus:outline-none focus:ring-1 focus:ring-[#F4C542]"
                   />
                 </div>
 
                 <div className="sm:col-span-2">
-                  <label className="block text-xs font-semibold uppercase text-[#12372D] mb-1">
+                  <label className="block text-xs font-semibold uppercase text-[#D71920] mb-1">
                     Special Requests or Occasion (Optional)
                   </label>
                   <textarea
@@ -268,15 +268,15 @@ export const ReservationPage: React.FC<ReservationPageProps> = ({ navigate }) =>
                     value={specialRequest}
                     onChange={(e) => setSpecialRequest(e.target.value)}
                     placeholder="e.g. Family birthday, high chair for infant, priority karahi cooking upon arrival..."
-                    className="w-full text-sm p-3 rounded-lg border border-[#EDE5D7] bg-white focus:outline-none focus:ring-1 focus:ring-[#B69A62]"
+                    className="w-full text-sm p-3 rounded-lg border border-[#F4F4F4] bg-white focus:outline-none focus:ring-1 focus:ring-[#F4C542]"
                   />
                 </div>
               </div>
             </div>
 
             {/* Verification Clause */}
-            <div className="p-4 bg-[#EDE5D7]/50 rounded-lg text-xs text-[#777B75] space-y-1">
-              <strong className="text-[#12372D] block">Important Reservation Notice:</strong>
+            <div className="p-4 bg-[#F4F4F4]/50 rounded-lg text-xs text-[#6B7280] space-y-1">
+              <strong className="text-[#D71920] block">Important Reservation Notice:</strong>
               <p>
                 Online requests are received by our host desk immediately. Because table capacities are limited during peak hours, our supervisor will telephone or WhatsApp you to reconfirm your party before holding your table.
               </p>
@@ -285,7 +285,7 @@ export const ReservationPage: React.FC<ReservationPageProps> = ({ navigate }) =>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full py-4 bg-[#12372D] hover:bg-[#0B241E] text-white font-semibold text-sm rounded shadow-md transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+              className="w-full py-4 bg-[#D71920] hover:bg-[#171717] text-white font-semibold text-sm rounded shadow-md transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
             >
               {isSubmitting ? (
                 <span>Registering Reservation Request...</span>
