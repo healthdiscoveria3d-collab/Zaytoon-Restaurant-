@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
-import { createHmac, timingSafeEqual } from 'crypto';
+import { createHmac, randomBytes, scryptSync, timingSafeEqual } from 'crypto';
 import {
   initialSiteSettings,
   initialCategories,
@@ -711,95 +711,73 @@ app.get('/api/v1/orders/track', async (req: Request, res: Response) => {
 });
 
 // Check Reservation Slot Availability
-app.get('/api/v1/reservations/availability', (req: Request, res: Response) => {
-  const { date } = req.query;
-  const targetDate = typeof date === 'string' ? date : new Date().toISOString().split('T')[0];
-
-  const bookedSlots = Array.from(reservations.values())
-    .filter((r) => r.date === targetDate && r.status !== 'cancelled' && r.status !== 'declined')
-    .map((r) => r.timeSlot);
-
-  // Standard dining slots
-  const allSlots = [
-    '13:00', '14:00', '15:00', '17:00',
-    '18:30', '19:30', '20:30', '21:30', '22:30', '23:30', '01:00'
-  ];
-
-  const availability = allSlots.map((slot) => {
-    const bookingsInSlot = bookedSlots.filter((s) => s === slot).length;
-    // Limit to max 5 table reservations per slot to prevent double booking
-    return {
-      slot,
-      available: bookingsInSlot < 5,
-      remainingTables: Math.max(0, 5 - bookingsInSlot),
-    };
-  });
-
-  res.json({ success: true, date: targetDate, data: availability });
+app.get('/api/v1/reservations/availability', async (req: Request, res: Response) => {
+  try {
+    const { date } = req.query;
+    const targetDate = typeof date === 'string' ? date : new Date().toISOString().split('T')[0];
+    if (databaseEnabled) {
+      const stored = await listRecords<Reservation>('reservations');
+      reservations.clear();
+      for (const item of stored) reservations.set(item.reference, item);
+    }
+    const slots = Array.isArray(siteSettings.reservationTimeSlots) ? siteSettings.reservationTimeSlots : ['13:00', '14:00', '15:00', '17:00', '18:30', '19:30', '20:30', '21:30', '22:30', '23:30', '01:00'];
+    const maxTables = Math.max(1, Number(siteSettings.reservationMaxTablesPerSlot) || 5);
+    const booked = Array.from(reservations.values()).filter(item => item.date === targetDate && item.status !== 'cancelled' && item.status !== 'declined');
+    const data = slots.map((slot: string) => {
+      const count = booked.filter(item => item.timeSlot === slot).length;
+      return { slot, available: count < maxTables, remainingTables: Math.max(0, maxTables - count) };
+    });
+    res.json({ success: true, date: targetDate, data, maxGuests: Number(siteSettings.reservationMaxGuests) || 40 });
+  } catch {
+    res.status(500).json({ success: false, message: 'Could not check table availability.' });
+  }
 });
 
-// Book Table Reservation
 app.post('/api/v1/reservations', async (req: Request, res: Response) => {
   try {
     const { fullName, phone, email, date, timeSlot, guests, seatingPreference, specialRequest } = req.body;
-
     if (!fullName || !phone || !date || !timeSlot || !guests) {
-      res.status(400).json({
-        success: false,
-        message: 'Please provide full name, mobile number, reservation date, time, and guest count.',
-      });
+      res.status(400).json({ success: false, message: 'Please provide name, phone, date, time and guest count.' });
       return;
     }
-
-    const guestCount = parseInt(guests, 10);
-    if (isNaN(guestCount) || guestCount < 1 || guestCount > 40) {
-      res.status(400).json({
-        success: false,
-        message: 'Guest count must be between 1 and 40 persons. For larger events, please contact us directly.',
-      });
+    if (!databaseEnabled) {
+      res.status(503).json({ success: false, message: 'Reservations are temporarily unavailable. Please call the restaurant.' });
       return;
     }
-
-    // Verify slot capacity
-    const currentBookings = Array.from(reservations.values()).filter(
-      (r) => r.date === date && r.timeSlot === timeSlot && r.status !== 'cancelled' && r.status !== 'declined'
-    ).length;
-
-    if (currentBookings >= 5) {
-      res.status(409).json({
-        success: false,
-        message: 'The selected time slot is fully booked. Please select an alternate dining hour.',
-      });
+    const guestCount = Number.parseInt(String(guests), 10);
+    const maxGuests = Math.max(1, Number(siteSettings.reservationMaxGuests) || 40);
+    if (!Number.isInteger(guestCount) || guestCount < 1 || guestCount > maxGuests) {
+      res.status(400).json({ success: false, message: `Guest count must be between 1 and ${maxGuests}.` });
       return;
     }
-
-    const randomSuffix = Math.floor(1000 + Math.random() * 9000);
-    const reference = `ZTR-${randomSuffix}`;
-
+    const slots = Array.isArray(siteSettings.reservationTimeSlots) ? siteSettings.reservationTimeSlots : ['13:00', '14:00', '15:00', '17:00', '18:30', '19:30', '20:30', '21:30', '22:30', '23:30', '01:00'];
+    if (!slots.includes(timeSlot)) {
+      res.status(400).json({ success: false, message: 'That reservation time is not available. Refresh and choose another slot.' });
+      return;
+    }
+    const stored = await listRecords<Reservation>('reservations');
+    reservations.clear();
+    for (const item of stored) reservations.set(item.reference, item);
+    const maxTables = Math.max(1, Number(siteSettings.reservationMaxTablesPerSlot) || 5);
+    const currentBookings = stored.filter(item => item.date === date && item.timeSlot === timeSlot && item.status !== 'cancelled' && item.status !== 'declined').length;
+    if (currentBookings >= maxTables) {
+      res.status(409).json({ success: false, message: 'This time slot is fully booked. Choose another time.' });
+      return;
+    }
+    const reference = `ZTR-${Date.now().toString(36).toUpperCase()}-${randomBytes(3).toString('hex').toUpperCase()}`;
+    const options = Array.isArray(siteSettings.reservationSeatingOptions) ? siteSettings.reservationSeatingOptions : ['indoor_family_hall', 'outdoor_riverside', 'executive_lounge', 'any'];
     const newReservation: Reservation = {
-      reference,
-      fullName: fullName.trim(),
-      phone: phone.trim(),
-      email: email ? email.trim() : undefined,
-      date,
-      timeSlot,
-      guests: guestCount,
-      seatingPreference: seatingPreference || 'any',
-      specialRequest: specialRequest ? specialRequest.trim() : undefined,
-      status: 'received',
-      createdAt: new Date().toISOString(),
+      reference, fullName: String(fullName).trim(), phone: String(phone).trim(),
+      email: email ? String(email).trim() : undefined, date: String(date), timeSlot: String(timeSlot),
+      guests: guestCount, seatingPreference: (options.includes(seatingPreference) ? seatingPreference : 'any') as Reservation['seatingPreference'],
+      specialRequest: specialRequest ? String(specialRequest).trim() : undefined,
+      status: 'received', createdAt: new Date().toISOString(),
     };
-
+    await saveRecord('reservations', reference, newReservation);
     reservations.set(reference, newReservation);
-    if (databaseEnabled) await saveRecord('reservations', reference, newReservation);
-
-    res.status(201).json({
-      success: true,
-      message: 'Reservation request received. Our host will confirm availability shortly via phone call.',
-      data: newReservation,
-    });
-  } catch (err: any) {
-    res.status(500).json({ success: false, message: 'Failed to process reservation request' });
+    res.status(201).json({ success: true, message: 'Reservation request received. Our host will confirm availability shortly.', data: newReservation });
+  } catch {
+    res.status(500).json({ success: false, message: 'Failed to save reservation. Please try again.' });
   }
 });
 
