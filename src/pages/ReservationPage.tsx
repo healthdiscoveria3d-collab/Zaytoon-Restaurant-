@@ -16,7 +16,7 @@ export const ReservationPage: React.FC<ReservationPageProps> = ({ navigate }) =>
   const [timeSlot, setTimeSlot] = useState('20:30');
   const [bookingSettings, setBookingSettings] = useState(initialSiteSettings);
   const [guests, setGuests] = useState('4');
-  const [seatingPreference, setSeatingPreference] = useState('indoor');
+  const [seatingPreference, setSeatingPreference] = useState('outdoor_riverside');
   const [specialRequest, setSpecialRequest] = useState('');
 
   const [availableSlots, setAvailableSlots] = useState<{ slot: string; available: boolean; remainingTables: number }[]>([]);
