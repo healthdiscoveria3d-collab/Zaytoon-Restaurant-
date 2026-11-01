@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Search, Clock, Plus, Info, Sparkles, Filter, ShoppingBag, Check } from 'lucide-react';
 import { initialCategories, initialMenuItems } from '../data/initialData.ts';
 import { MenuItem } from '../types/index.ts';
@@ -12,6 +12,15 @@ interface MenuPageProps {
 
 export const MenuPage: React.FC<MenuPageProps> = ({ initialCategorySlug, navigate }) => {
   const { addToCart } = useCart();
+  const [categories, setCategories] = useState(initialCategories);
+  const [menuItems, setMenuItems] = useState(initialMenuItems);
+  useEffect(() => {
+    Promise.all([fetch('/api/v1/menu/categories').then(r => r.json()), fetch('/api/v1/menu/items').then(r => r.json())])
+      .then(([categoryResult, itemResult]) => {
+        if (categoryResult.success && Array.isArray(categoryResult.data)) setCategories(categoryResult.data);
+        if (itemResult.success && Array.isArray(itemResult.data)) setMenuItems(itemResult.data);
+      }).catch(() => {});
+  }, []);
   const [activeCategorySlug, setActiveCategorySlug] = useState<string>(
     initialCategorySlug || 'all'
   );
@@ -19,10 +28,10 @@ export const MenuPage: React.FC<MenuPageProps> = ({ initialCategorySlug, navigat
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
 
   const filteredItems = useMemo(() => {
-    let items = [...initialMenuItems];
+    let items = [...menuItems];
 
     if (activeCategorySlug !== 'all') {
-      const cat = initialCategories.find((c) => c.slug === activeCategorySlug);
+      const cat = categories.find((c) => c.slug === activeCategorySlug);
       if (cat) {
         items = items.filter((i) => i.categoryId === cat.id);
       }
@@ -39,7 +48,7 @@ export const MenuPage: React.FC<MenuPageProps> = ({ initialCategorySlug, navigat
     }
 
     return items;
-  }, [activeCategorySlug, searchQuery]);
+  }, [activeCategorySlug, searchQuery, categories, menuItems]);
 
   const handleCategorySelect = (slug: string) => {
     setActiveCategorySlug(slug);
@@ -67,7 +76,7 @@ export const MenuPage: React.FC<MenuPageProps> = ({ initialCategorySlug, navigat
             >
               All Items
             </button>
-            {initialCategories.map((cat) => (
+            {categories.map((cat) => (
               <button
                 key={cat.id}
                 onClick={() => handleCategorySelect(cat.slug)}
@@ -104,12 +113,12 @@ export const MenuPage: React.FC<MenuPageProps> = ({ initialCategorySlug, navigat
             <h1 className="text-2xl sm:text-3xl font-display font-bold text-[#D71920]">
               {activeCategorySlug === 'all'
                 ? 'All Menu Offerings'
-                : initialCategories.find((c) => c.slug === activeCategorySlug)?.name}
+                : categories.find((c) => c.slug === activeCategorySlug)?.name}
             </h1>
             <p className="text-xs text-[#6B7280] mt-0.5">
               {activeCategorySlug === 'all'
                 ? 'Cooked live per order with pure butter or desi ghee · 24/7 service'
-                : initialCategories.find((c) => c.slug === activeCategorySlug)?.description}
+                : categories.find((c) => c.slug === activeCategorySlug)?.description}
             </p>
           </div>
           <span className="text-xs font-semibold text-[#6B7280] tabular-nums">
