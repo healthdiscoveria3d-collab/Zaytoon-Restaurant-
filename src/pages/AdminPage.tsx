@@ -81,6 +81,17 @@ export const AdminPage: React.FC = () => {
 
   useEffect(() => { if (authenticated) loadData(); }, [authenticated]);
 
+  // Keep the reservations screen fresh while the admin is monitoring incoming bookings.
+  useEffect(() => {
+    if (!authenticated || tab !== 'reservations') return;
+    const refreshReservations = () => {
+      request('/reservations').then(result => setReservations(result.data || [])).catch(err => setError(err instanceof Error ? err.message : 'Could not refresh reservations.'));
+    };
+    refreshReservations();
+    const timer = window.setInterval(refreshReservations, 15000);
+    return () => window.clearInterval(timer);
+  }, [authenticated, tab]);
+
   useEffect(() => {
     if (!authenticated) return;
     fetch('/api/v1/site-settings/public').then((response) => response.json()).then((result) => setSiteLogoUrl(String(result.data?.logoUrl || ''))).catch(() => setSiteLogoUrl(''));
