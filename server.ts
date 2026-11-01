@@ -469,7 +469,8 @@ app.post('/api/v1/reservations', async (req: Request, res: Response) => {
 
 // Submit Contact Message
 app.post('/api/v1/contact-messages', async (req: Request, res: Response) => {
-  const { fullName, phone, email, subject, message } = req.body;
+  try {
+    const { fullName, phone, email, subject, message } = req.body;
 
   if (!fullName || !phone || !message) {
     res.status(400).json({
@@ -492,11 +493,14 @@ app.post('/api/v1/contact-messages', async (req: Request, res: Response) => {
   inquiries.push(inquiry);
   if (databaseEnabled) await saveRecord('inquiries', inquiry.id, inquiry);
 
-  res.status(201).json({
-    success: true,
-    message: 'Thank you for your message. Our hospitality manager will contact you promptly.',
-    data: { id: inquiry.id },
-  });
+    res.status(201).json({
+      success: true,
+      message: 'Thank you for your message. Our hospitality manager will contact you promptly.',
+      data: { id: inquiry.id },
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Failed to save contact message.' });
+  }
 });
 
 // Health check endpoint
