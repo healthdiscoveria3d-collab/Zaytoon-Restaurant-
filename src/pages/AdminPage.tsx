@@ -42,7 +42,7 @@ export const AdminPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
-  const [siteLogoUrl, setSiteLogoUrl] = useState('/images/zaytoon-logo.jpg');
+  const [siteLogoUrl, setSiteLogoUrl] = useState('/images/zaytoon-garden-logo.svg');
   const [dashboardPeriod, setDashboardPeriod] = useState<'today' | 'week' | 'month'>('today');
 
   const contentCollections: Partial<Record<Tab, string>> = {
@@ -114,7 +114,7 @@ export const AdminPage: React.FC = () => {
 
   useEffect(() => {
     if (!authenticated) return;
-    fetch('/api/v1/site-settings/public').then((response) => response.json()).then((result) => setSiteLogoUrl(String(result.data?.logoUrl || '/images/zaytoon-logo.jpg'))).catch(() => setSiteLogoUrl('/images/zaytoon-logo.jpg'));
+    fetch('/api/v1/site-settings/public').then((response) => response.json()).then((result) => setSiteLogoUrl(String(result.data?.logoUrl || '/images/zaytoon-garden-logo.svg'))).catch(() => setSiteLogoUrl('/images/zaytoon-garden-logo.svg'));
   }, [authenticated]);
 
   useEffect(() => {
@@ -397,7 +397,7 @@ export const AdminPage: React.FC = () => {
                 <div className="flex flex-wrap items-center gap-4 p-4 sm:p-5">
                   <div className="grid h-20 w-20 shrink-0 place-items-center overflow-hidden rounded-2xl border border-[#e5ece7] bg-[#f4f8f5]">{(contentRows[0]?.logoUrl || siteLogoUrl) ? <img src={contentRows[0]?.logoUrl || siteLogoUrl} alt="Zaytoon logo preview" className="h-full w-full object-contain"/> : <Leaf size={30} className="text-[#08764e]"/>}</div>
                   <div className="min-w-0 flex-1"><h3 className="text-sm font-black text-[#173d2d]">{contentRows[0]?.brandName || 'Zaytoon Restaurant'}</h3><p className="mt-1 text-xs text-[#819188]">Restaurant name, logo and website settings</p><p className="mt-2 text-[10px] font-semibold text-[#08764e]">{contentRows.length ? 'Settings record loaded' : 'Setup required'}</p></div>
-                  <button onClick={() => chooseContent(contentRows[0] || { id: 'main', brandName: 'Zaytoon Garden Restaurant', logoUrl: siteLogoUrl || '/images/zaytoon-logo.jpg' })} className="w-full rounded-xl bg-[#006b45] px-4 py-3 text-xs font-bold text-white sm:w-auto"><Pencil size={13} className="mr-2 inline"/> Edit website settings</button>
+                  <button onClick={() => chooseContent(contentRows[0] || { id: 'main', brandName: 'Zaytoon Garden Restaurant', logoUrl: siteLogoUrl || '/images/zaytoon-garden-logo.svg' })} className="w-full rounded-xl bg-[#006b45] px-4 py-3 text-xs font-bold text-white sm:w-auto"><Pencil size={13} className="mr-2 inline"/> Edit website settings</button>
                 </div>
               </article> :
                 contentRows.map((row) => <article key={row.id} className="overflow-hidden rounded-2xl border border-[#e2ebe5] bg-white shadow-[0_4px_16px_rgba(20,70,45,0.05)]"><div className="flex min-h-28 items-center justify-center overflow-hidden bg-[#f4f8f5]">{row.image ? <img src={row.image} alt={row.name || row.title || 'Content preview'} className="max-h-44 w-full object-contain p-2"/> : <div className="flex flex-col items-center gap-2 py-6 text-[#91a99b]">{tab==='categories'?<Tags size={28}/>:tab==='deals'?<Percent size={28}/>:<Images size={28}/>}<span className="text-[10px] font-semibold uppercase tracking-wider">{pretty(tab)} preview</span></div>}</div><div className="p-3.5"><div className="flex items-start justify-between gap-2"><div className="min-w-0"><h3 className="truncate text-sm font-black text-[#183c2d]">{row.name || row.title || row.id}</h3><p className="mt-1 line-clamp-2 min-h-8 text-[10px] leading-4 text-[#819188]">{row.description || row.shortDescription || row.caption || row.category || 'Manage this item on your restaurant website.'}</p></div>{tab==='menu'&&<span className="shrink-0 text-xs font-black text-[#08764e]">PKR {Number(row.price||0).toLocaleString()}</span>}{tab==='deals'&&<span className="shrink-0 text-xs font-black text-[#08764e]">PKR {Number(row.offerPrice||0).toLocaleString()}</span>}</div><div className="mt-3 flex items-center justify-between gap-2 border-t border-[#edf2ef] pt-3"><span className="text-[9px] font-semibold text-[#82958a]">{tab==='menu'?(row.isAvailable?'Available':'Unavailable'):tab==='deals'?(row.isActive?'Active deal':'Inactive'):tab==='gallery'?'Gallery image':tab==='categories'?'Menu category':'Website content'}</span><button onClick={()=>chooseContent(row)} className="inline-flex items-center gap-1.5 rounded-lg bg-[#08764e] px-3 py-2 text-[10px] font-bold text-white"><Pencil size={12}/> Edit</button></div></div></article>)}
