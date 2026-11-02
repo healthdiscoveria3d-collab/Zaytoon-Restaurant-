@@ -18,7 +18,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ navigate }) => {
         <div className="absolute inset-0">
           <img
             src={heroImage}
-            alt="Zaytoon Riverside"
+            alt="Zaytoon Garden Restaurant"
             referrerPolicy="no-referrer"
             className="w-full h-full object-cover object-center"
           />
@@ -42,7 +42,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ navigate }) => {
         <div className="bg-white rounded-2xl p-7 sm:p-12 lg:p-14 border border-[#F4F4F4] shadow-sm space-y-10">
           <div className="border-l-4 border-[#F4C542] pl-6 sm:pl-8 py-3">
             <h2 className="text-3xl sm:text-4xl font-display font-bold text-[#D71920] mb-4">
-              Welcome to Zaytoon Restaurant
+              Welcome to Zaytoon Garden Restaurant
             </h2>
             <p className="text-lg sm:text-xl text-[#171717] leading-loose italic">
               &ldquo;{settings.aboutHistory}&rdquo;
@@ -52,19 +52,19 @@ export const AboutPage: React.FC<AboutPageProps> = ({ navigate }) => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 pt-8 border-t border-[#F4F4F4]">
             <div className="space-y-4">
               <h3 className="font-display font-bold text-2xl text-[#D71920]">
-                The Historic Ghazi Ghat Setting
+                A Garden Dining Experience
               </h3>
               <p className="text-base sm:text-lg text-[#171717]/85 leading-relaxed">
-                The banks of the Indus at Ghazi Ghat have for centuries been a welcoming stop for transiting travelers moving across Punjab and Balochistan. Zaytoon elevates this heritage with dedicated riverside terraces where evening breezes and water reflections set an unforgettable backdrop for dining.
+                Zaytoon Garden Restaurant is located near Shah Shams Toll Plaza in Bili Wala, Multan. Its garden-style setting makes it a destination for families, friends and groups. Replace this demo copy with the restaurant’s approved brand story before launch.
               </p>
             </div>
 
             <div className="space-y-4">
               <h3 className="font-display font-bold text-2xl text-[#D71920]">
-                Round-the-Clock (24/7) Highway Service
+                Pakistani, Chinese & BBQ Favourites
               </h3>
               <p className="text-base sm:text-lg text-[#171717]/85 leading-relaxed">
-                We understand that highway travel on the N-70 does not stop with the sunset. Our clay tandoors stay fired, our pots of aromatic Karak Chai stay steaming, and our kitchen prepares fresh food around the clock for late-night motorists, bus passengers, and night owls.
+                Public restaurant listings mention Pakistani and Chinese cuisine, BBQ and popular dishes such as karahi, reshmi kebab, fried rice, chow mein and Russian salad. Menu availability should be confirmed directly with the restaurant.
               </p>
             </div>
           </div>
@@ -88,7 +88,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ navigate }) => {
               01
             </div>
             <h3 className="font-display font-bold text-2xl sm:text-3xl text-[#D71920]">
-              Indus Waterside Dining
+              Outdoor Garden Dining
             </h3>
             <p className="text-sm sm:text-base text-[#171717]/80 leading-relaxed">
               Open-air terrace seating providing fresh river breeze and scenic waterside panoramas under the evening stars.
@@ -127,7 +127,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ navigate }) => {
               Staff Trustworthiness
             </h3>
             <p className="text-sm sm:text-base text-[#171717]/80 leading-relaxed">
-              Trained, courteous hospitality personnel renowned across Dera Ghazi Khan for integrity, punctuality, and customer care.
+              A relaxed setting listed for family dining, outdoor seating and group visits. Confirm exact facilities with restaurant management.
             </p>
           </div>
         </div>
@@ -147,7 +147,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ navigate }) => {
           <div className="rounded-2xl overflow-hidden shadow-lg h-80 sm:h-96 bg-[#F4F4F4]">
             <img
               src={heroImage}
-              alt="Riverside Dusk"
+              alt="Garden Dining"
               referrerPolicy="no-referrer"
               className="w-full h-full object-cover"
             />
@@ -163,7 +163,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ navigate }) => {
               Experience Zaytoon In Person
             </h3>
             <p className="text-base sm:text-lg text-[#171717]/80 leading-relaxed">
-              We welcome you any hour of the day or night on the banks of the Indus.
+              Visit us near Shah Shams Toll Plaza, Bili Wala, Multan. Call ahead to confirm opening hours and availability.
             </p>
           </div>
 
