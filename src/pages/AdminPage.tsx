@@ -41,7 +41,7 @@ export const AdminPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
-  const [siteLogoUrl, setSiteLogoUrl] = useState('');
+  const [siteLogoUrl, setSiteLogoUrl] = useState('/images/zaytoon-logo.jpg');
   const [dashboardPeriod, setDashboardPeriod] = useState<'today' | 'week' | 'month'>('today');
 
   const contentCollections: Partial<Record<Tab, string>> = {
@@ -107,7 +107,7 @@ export const AdminPage: React.FC = () => {
 
   useEffect(() => {
     if (!authenticated) return;
-    fetch('/api/v1/site-settings/public').then((response) => response.json()).then((result) => setSiteLogoUrl(String(result.data?.logoUrl || ''))).catch(() => setSiteLogoUrl(''));
+    fetch('/api/v1/site-settings/public').then((response) => response.json()).then((result) => setSiteLogoUrl(String(result.data?.logoUrl || '/images/zaytoon-logo.jpg'))).catch(() => setSiteLogoUrl('/images/zaytoon-logo.jpg'));
   }, [authenticated]);
 
   useEffect(() => {
@@ -158,6 +158,7 @@ export const AdminPage: React.FC = () => {
     };
     const template = templates[tab];
     if (!template) return;
+    template.id = `${tab}-${Date.now().toString(36)}`;
     setContentSelection('__new__');
     setContentJson(JSON.stringify(template, null, 2));
     setEditModalOpen(true);
@@ -168,8 +169,8 @@ export const AdminPage: React.FC = () => {
     if (!collection) return;
     try {
       const data = JSON.parse(contentJson);
-      const id = tab === 'settings' ? 'main' : String(data.id || '').trim();
-      if (!id) throw new Error('Record ke andar id zaroor likhein.');
+      const id = tab === 'settings' ? 'main' : String(data.id || `${tab}-${Date.now().toString(36)}`).trim();
+      data.id = id;
       await request('/content/' + collection + '/' + encodeURIComponent(id), {
         method: 'PUT', body: JSON.stringify({ data }),
       });
@@ -351,14 +352,14 @@ export const AdminPage: React.FC = () => {
           {editModalOpen && <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/55 p-3 sm:p-6"><div className="max-h-[94vh] w-full max-w-4xl overflow-y-auto rounded-2xl border border-[#dce5ef] bg-white p-4 shadow-2xl sm:p-6">
             <div className="mb-4 flex flex-wrap items-center justify-between gap-3"><div><h2 className="font-black">{tab === 'settings' ? 'Edit Website Settings' : contentSelection === '__new__' ? 'Create Record' : 'Edit Record'}</h2><p className="mt-1 text-[10px] text-gray-500">Fill in the details below. Fields are explained in simple words.</p></div><div className="flex items-center gap-2"><button onClick={saveContent} disabled={!contentJson.trim() || busy} className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#203f58] to-[#287b72] px-4 py-2.5 text-[10px] font-black text-white disabled:opacity-40"><Save size={14}/> Save changes</button>{tab !== 'settings' && contentSelection !== '__new__' && <button onClick={deleteContent} className="flex items-center gap-2 rounded-lg border border-red-200 px-3 py-2.5 text-[10px] font-bold text-red-600"><Trash2 size={14}/> Delete</button>}<button onClick={()=>setEditModalOpen(false)} aria-label="Close editor" className="grid h-9 w-9 place-items-center rounded-lg border border-gray-200 text-gray-500 hover:bg-gray-100"><X size={17}/></button></div></div>
             {contentJson && Object.keys(parsedContentDraft).length > 0 ? <div className="grid gap-4 sm:grid-cols-2">
-              {Object.entries(parsedContentDraft).filter(([key]) => !(tab === 'menu' && key === 'categoryId')).map(([key, value]) => {
+              {Object.entries(parsedContentDraft).filter(([key]) => key !== 'id' && !(tab === 'menu' && key === 'categoryId')).map(([key, value]) => {
                 const fieldLabels: Record<string, string> = {
                   name: 'Product / Staff Name', title: 'Title', role: 'Job Role', phone: 'Phone Number', monthlySalary: 'Monthly Salary (PKR)', salaryPaid: 'Salary Paid This Month', joiningDate: 'Joining Date', slug: 'Website URL Slug',
                   description: 'Product Description', price: 'Price (PKR)', image: 'Product Image URL',
                   preparationTime: 'Preparation Time', spiciness: 'Spice Level', tags: 'Tags / Search Keywords',
                   isDemoItem: 'Demo Content', isFeatured: 'Featured on Website',
                   isAvailable: 'Available for Ordering', categoryName: 'Menu Category',
-                  categoryId: 'Category Reference', id: 'Record ID', logoUrl: 'Restaurant Logo URL', reservationTimeSlots: 'Reservation Time Slots', reservationMaxTablesPerSlot: 'Tables Available Per Time Slot', reservationMaxGuests: 'Maximum Guests Per Booking', reservationSeatingOptions: 'Available Seating Areas',
+                  categoryId: 'Category Reference', logoUrl: 'Restaurant Logo URL', reservationTimeSlots: 'Reservation Time Slots', reservationMaxTablesPerSlot: 'Tables Available Per Time Slot', reservationMaxGuests: 'Maximum Guests Per Booking', reservationSeatingOptions: 'Available Seating Areas',
                 };
                 const fieldHelp: Record<string, string> = {
                   name: 'Customer ko website par yehi product name nazar aayega. Example: Chicken Malai Handi.',
@@ -373,7 +374,6 @@ export const AdminPage: React.FC = () => {
                   isFeatured: 'ON karne se product website ke featured section mein highlight ho sakta hai.',
                   isAvailable: 'ON = customer order kar sakta hai. OFF = product unavailable hoga.',
                   categoryName: 'Woh menu section choose karein jahan product show hona chahiye.',
-                  id: 'System record ID. Isay change na karein.',
                   reservationTimeSlots: 'Har time alag line par HH:MM format mein likhein. Example: 18:30',
                   reservationMaxTablesPerSlot: 'Har time slot par maximum kitni table bookings accept hongi.',
                   reservationMaxGuests: 'Ek reservation mein maximum guests ki tadaad.',
@@ -397,7 +397,7 @@ export const AdminPage: React.FC = () => {
                     <span className={'relative h-6 w-11 shrink-0 rounded-full transition '+(value?'bg-[#315744]':'bg-gray-300')}><span className={'absolute top-1 h-4 w-4 rounded-full bg-white shadow transition '+(value?'left-6':'left-1')}/></span>
                   </button> :
                   key === 'image' ? <><input value={String(value ?? '')} onChange={(e)=>updateDraftField(key,e.target.value)} placeholder="/images/dish.jpg or https://..." className="mt-2 w-full rounded-xl border border-gray-200 bg-[#fafafa] px-3 py-3 text-xs font-normal normal-case text-gray-800 outline-none focus:border-[#9a8050]"/>{String(value || '').trim() && <div className="mt-3 overflow-hidden rounded-xl border border-gray-200 bg-white p-2"><img src={String(value)} alt="Product preview" className="h-44 w-full rounded-lg object-cover"/><p className="mt-2 text-[10px] font-medium normal-case text-gray-500">Live product image preview</p></div>}</> :
-                  key === 'logoUrl' ? <><input value={String(value ?? '')} onChange={(e)=>updateDraftField(key,e.target.value)} placeholder="https://example.com/zaytoon-logo.png" className="mt-2 w-full rounded-xl border border-gray-200 bg-[#fafafa] px-3 py-3 text-xs font-normal normal-case text-gray-800 outline-none focus:border-[#9a8050]"/>{String(value || '').trim() && <div className="mt-3 flex items-center gap-3 rounded-xl border border-gray-200 bg-white p-3"><img src={String(value)} alt="Logo preview" className="h-14 w-14 rounded-lg object-contain"/><span className="text-[10px] font-medium normal-case text-gray-500">Logo preview</span></div>}</> :
+                  key === 'logoUrl' ? <><input value={String(value ?? '')} onChange={(e)=>updateDraftField(key,e.target.value)} placeholder="/images/zaytoon-logo.jpg or https://..." className="mt-2 w-full rounded-xl border border-gray-200 bg-[#fafafa] px-3 py-3 text-xs font-normal normal-case text-gray-800 outline-none focus:border-[#9a8050]"/>{String(value || '').trim() && <div className="mt-3 flex items-center gap-3 rounded-xl border border-gray-200 bg-white p-3"><img src={String(value)} alt="Logo preview" className="h-14 w-14 rounded-lg object-contain"/><span className="text-[10px] font-medium normal-case text-gray-500">Logo preview</span></div>}</> :
                   key === 'categoryName' ? <select value={String(value ?? '')} onChange={(e)=>{const selected=categoryOptions.find((item:any)=>item.name===e.target.value);updateDraftField('categoryName',e.target.value);if(selected?.id)updateDraftField('categoryId',selected.id);}} className="mt-2 w-full rounded-xl border border-gray-200 bg-[#fafafa] px-3 py-3 text-xs font-semibold normal-case text-gray-800 outline-none focus:border-[#9a8050]">
                     <option value="">Select a category</option>{categoryOptions.map((item:any)=><option key={item.id} value={item.name}>{item.name}</option>)}
                     {!categoryOptions.some((item:any)=>item.name===value) && value ? <option value={String(value)}>{String(value)}</option> : null}
