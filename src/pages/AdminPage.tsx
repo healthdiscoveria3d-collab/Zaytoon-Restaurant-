@@ -76,19 +76,23 @@ export const AdminPage: React.FC = () => {
     } finally { setBusy(false); }
   };
 
-  // Keep one history guard for the whole admin session. Back from any section returns to Overview.
+  // Add one history guard on entry; Back from a subpage returns to Overview.
+  useEffect(() => {
+    window.history.pushState({ adminPanel: true }, '', window.location.pathname);
+  }, []);
   useEffect(() => {
     const adminPath = window.location.pathname;
-    window.history.pushState({ adminPanel: true }, '', adminPath);
     const returnToOverview = () => {
-      setMobileNavOpen(false);
-      setTab('dashboard');
-      setSearchQuery('');
-      window.history.pushState({ adminPanel: true }, '', adminPath);
+      if (tab !== 'dashboard') {
+        setMobileNavOpen(false);
+        setTab('dashboard');
+        setSearchQuery('');
+        window.history.pushState({ adminPanel: true }, '', adminPath);
+      }
     };
     window.addEventListener('popstate', returnToOverview);
     return () => window.removeEventListener('popstate', returnToOverview);
-  }, []);
+  }, [tab]);
 
   useEffect(() => {
     request('/me').then(() => setAuthenticated(true)).catch(() => setAuthenticated(false)).finally(() => setChecking(false));
