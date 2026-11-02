@@ -32,6 +32,7 @@ let categories = [...initialCategories];
 let menuItems = [...initialMenuItems];
 let deals = [...initialDeals];
 let gallery = [...initialGallery];
+let staffMembers: any[] = [];
 
 // Customer orders store
 const orders: Map<string, Order> = new Map();
@@ -179,6 +180,8 @@ async function hydrateDatabase() {
     siteSettings = { ...siteSettings, highwayPlatterImageMigratedV1: true };
     await saveRecord('site_settings', 'main', siteSettings);
   }
+
+  staffMembers = await listRecords<any>('staff');
 
   const savedGallery = await listRecords<typeof gallery[number]>('gallery');
   if (savedGallery.length) gallery = savedGallery;
@@ -494,7 +497,7 @@ app.get('/api/admin/messages', requireAdmin, (_req: Request, res: Response) => {
 });
 
 // Admin content management: menu, categories, deals, gallery and site settings.
-const adminCollections = ['menu_items', 'categories', 'deals', 'gallery', 'site_settings'] as const;
+const adminCollections = ['menu_items', 'categories', 'deals', 'gallery', 'staff', 'site_settings'] as const;
 type AdminCollection = typeof adminCollections[number];
 
 function getAdminCollection(collection: AdminCollection): any[] {
@@ -502,6 +505,7 @@ function getAdminCollection(collection: AdminCollection): any[] {
   if (collection === 'categories') return categories;
   if (collection === 'deals') return deals;
   if (collection === 'gallery') return gallery;
+  if (collection === 'staff') return staffMembers;
   return [siteSettings];
 }
 
@@ -510,6 +514,7 @@ function setAdminCollection(collection: AdminCollection, data: any[]) {
   else if (collection === 'categories') categories = data;
   else if (collection === 'deals') deals = data;
   else if (collection === 'gallery') gallery = data;
+  else if (collection === 'staff') staffMembers = data;
   else if (data[0]) siteSettings = data[0];
 }
 
