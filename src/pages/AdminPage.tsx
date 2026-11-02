@@ -104,6 +104,11 @@ export const AdminPage: React.FC = () => {
   }, [authenticated, tab]);
 
   useEffect(() => {
+    if (!authenticated || tab !== 'dashboard') return;
+    request('/content/menu_items').then(result => setContentRows(result.data || [])).catch(err => setError(err instanceof Error ? err.message : 'Could not load menu preview.'));
+  }, [authenticated, tab]);
+
+  useEffect(() => {
     const collection = contentCollections[tab];
     if (!authenticated || !collection) return;
     setBusy(true);
@@ -192,6 +197,7 @@ export const AdminPage: React.FC = () => {
   const filteredOrders = orders.filter((item) => item.status !== 'completed' && [item.reference, item.customerName, item.customerPhone, item.status].join(' ').toLowerCase().includes(searchQuery.toLowerCase()));
   const completedOrders = orders.filter((item) => item.status === 'completed' && [item.reference, item.customerName, item.customerPhone].join(' ').toLowerCase().includes(searchQuery.toLowerCase()));
   const filteredReservations = reservations.filter((item) => [item.reference, item.fullName, item.phone, item.status].join(' ').toLowerCase().includes(searchQuery.toLowerCase()));
+  const menuPreviewItems = contentRows;
   const filteredMessages = messages.filter((item) => [item.fullName, item.phone, item.subject, item.message].join(' ').toLowerCase().includes(searchQuery.toLowerCase()));
 
   let parsedContentDraft: Record<string, any> = {};
@@ -366,6 +372,7 @@ export const AdminPage: React.FC = () => {
                     <span><span className="block text-xs font-bold text-[#263b30]">{key==='salaryPaid'?(value?'Salary paid':'Salary unpaid'):key==='isDemoItem'?(value?'Demo item':'Regular menu item'):key==='isFeatured'?(value?'Featured item':'Not featured'):value?'Available to order':'Currently unavailable'}</span><span className="mt-1 block text-[10px] font-normal text-gray-500">{key==='salaryPaid'?'Mark whether this month’s salary has been paid.':key==='isDemoItem'?'Controls whether this is marked as sample content.':key==='isFeatured'?'Controls featured placement on the website.':'Controls customer ordering availability.'}</span></span>
                     <span className={'relative h-6 w-11 shrink-0 rounded-full transition '+(value?'bg-[#315744]':'bg-gray-300')}><span className={'absolute top-1 h-4 w-4 rounded-full bg-white shadow transition '+(value?'left-6':'left-1')}/></span>
                   </button> :
+                  key === 'image' ? <><input value={String(value ?? '')} onChange={(e)=>updateDraftField(key,e.target.value)} placeholder="/images/dish.jpg or https://..." className="mt-2 w-full rounded-xl border border-gray-200 bg-[#fafafa] px-3 py-3 text-xs font-normal normal-case text-gray-800 outline-none focus:border-[#9a8050]"/>{String(value || '').trim() && <div className="mt-3 overflow-hidden rounded-xl border border-gray-200 bg-white p-2"><img src={String(value)} alt="Product preview" className="h-44 w-full rounded-lg object-cover"/><p className="mt-2 text-[10px] font-medium normal-case text-gray-500">Live product image preview</p></div>}</> :
                   key === 'logoUrl' ? <><input value={String(value ?? '')} onChange={(e)=>updateDraftField(key,e.target.value)} placeholder="https://example.com/zaytoon-logo.png" className="mt-2 w-full rounded-xl border border-gray-200 bg-[#fafafa] px-3 py-3 text-xs font-normal normal-case text-gray-800 outline-none focus:border-[#9a8050]"/>{String(value || '').trim() && <div className="mt-3 flex items-center gap-3 rounded-xl border border-gray-200 bg-white p-3"><img src={String(value)} alt="Logo preview" className="h-14 w-14 rounded-lg object-contain"/><span className="text-[10px] font-medium normal-case text-gray-500">Logo preview</span></div>}</> :
                   key === 'categoryName' ? <select value={String(value ?? '')} onChange={(e)=>{const selected=categoryOptions.find((item:any)=>item.name===e.target.value);updateDraftField('categoryName',e.target.value);if(selected?.id)updateDraftField('categoryId',selected.id);}} className="mt-2 w-full rounded-xl border border-gray-200 bg-[#fafafa] px-3 py-3 text-xs font-semibold normal-case text-gray-800 outline-none focus:border-[#9a8050]">
                     <option value="">Select a category</option>{categoryOptions.map((item:any)=><option key={item.id} value={item.name}>{item.name}</option>)}
