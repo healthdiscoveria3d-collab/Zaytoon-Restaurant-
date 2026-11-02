@@ -19,7 +19,7 @@ const heroPhoto = '/images/hero_zaytoon_dining.jpg';
 const interiorPhoto = '/images/restaurant_interior.jpg';
 
 export const initialSiteSettings: SiteSettings = {
-  logoUrl: '',
+  logoUrl: '/images/zaytoon-garden-logo.svg',
   reservationTimeSlots: ['12:00', '13:00', '14:00', '15:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00', '01:00'],
   reservationMaxTablesPerSlot: 8,
   reservationMaxGuests: 40,
