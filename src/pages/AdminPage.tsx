@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { LayoutDashboard, ClipboardList, CalendarDays, MessageSquare, LogOut, ShieldCheck, Utensils, LockKeyhole, BookOpen, Tags, Percent, Images, Settings, Plus, Save, Trash2, Pencil, Menu, X, Leaf, Truck, BarChart3, ChefHat, ShoppingCart, Users, UserRound, TrendingUp } from 'lucide-react';
+import { LayoutDashboard, ClipboardList, CalendarDays, MessageSquare, LogOut, ShieldCheck, Utensils, LockKeyhole, BookOpen, Tags, Percent, Images, Settings, Plus, Save, Trash2, Pencil, Menu, X, Leaf, Truck, BarChart3, ChefHat, ShoppingCart, Users, UserRound, TrendingUp, WalletCards } from 'lucide-react';
 
 type Tab = 'dashboard' | 'orders' | 'completed' | 'reservations' | 'messages' | 'menu' | 'categories' | 'deals' | 'gallery' | 'staff' | 'settings';
 type Order = {
@@ -341,14 +341,14 @@ export const AdminPage: React.FC = () => {
                 <div><p className="text-sm font-semibold text-[#8a918d]">Hello,</p><h2 className="text-2xl font-black tracking-tight text-[#173d2d] sm:text-3xl">{username || 'Admin'}</h2><p className="mt-1 text-xs text-[#8a918d]">Here is your restaurant’s performance.</p></div>
                 <select value={dashboardPeriod} onChange={e=>setDashboardPeriod(e.target.value as any)} className="rounded-full border border-[#e4e9e5] bg-white px-4 py-2.5 text-xs font-bold text-[#315744] shadow-sm"><option value="month">Last Month</option><option value="week">This Week</option><option value="today">Today</option></select>
               </div>
-              <div className="grid min-w-0 grid-cols-1 gap-3 min-[390px]:grid-cols-2 sm:gap-4">
+              <div className="grid min-w-0 grid-cols-2 gap-3 sm:gap-4">
                 {[
-                  {label:'Total Orders',value:scoped.length,sub:'Orders received',icon:<ShoppingCart size={21}/>,tone:'bg-[#edf4ee] text-[#52785d]'},
-                  {label:'Total Revenue',value:'PKR '+revenue.toLocaleString(),sub:'Completed orders',icon:<span className="text-xl font-black">₨</span>,tone:'bg-[#edf4ee] text-[#52785d]'},
-                  {label:'Total Customers',value:customers,sub:'Unique customers',icon:<Users size={21}/>,tone:'bg-[#edf4ee] text-[#52785d]'},
-                  {label:'Active Customers',value:activeCustomers,sub:'With active orders',icon:<UserRound size={21}/>,tone:'bg-[#edf4ee] text-[#52785d]'}
-                ].map(card=><article key={card.label} className="min-h-[118px] min-w-0 rounded-2xl border border-[#edf0ed] bg-white p-3 shadow-[0_5px_20px_rgba(22,55,38,.07)] min-[390px]:p-3.5 sm:min-h-[142px] sm:p-5">
-                  <div className="flex min-w-0 items-start gap-2 min-[390px]:gap-3"><span className={'grid h-11 w-11 shrink-0 place-items-center rounded-full '+card.tone}>{card.icon}</span><div className="min-w-0"><p className="text-xs font-bold leading-5 text-[#414a44]">{card.label}</p><p className="mt-1 break-words text-xl font-black tracking-tight text-[#171d19] sm:text-2xl">{card.value}</p></div></div>
+                  {label:'Total Orders',value:scoped.length,sub:'Orders received',icon:<ShoppingCart size={21}/>,tone:'bg-[#e8f1ff] text-[#2874d0]'},
+                  {label:'Total Revenue',value:'PKR '+revenue.toLocaleString(),sub:'Completed orders',icon:<WalletCards size={21}/>,tone:'bg-[#fff1df] text-[#e58a19]'},
+                  {label:'Total Customers',value:customers,sub:'Unique customers',icon:<Users size={21}/>,tone:'bg-[#f0eaff] text-[#8056c9]'},
+                  {label:'Active Customers',value:activeCustomers,sub:'With active orders',icon:<UserRound size={21}/>,tone:'bg-[#e4f7ed] text-[#21945c]'}
+                ].map(card=><article key={card.label} className="min-h-[126px] min-w-0 rounded-2xl border border-[#edf0ed] bg-white p-3 shadow-[0_5px_20px_rgba(22,55,38,.07)] sm:min-h-[142px] sm:p-5">
+                  <div className="flex min-w-0 items-start gap-2 sm:gap-3"><span className={'grid h-11 w-11 shrink-0 place-items-center rounded-full '+card.tone}>{card.icon}</span><div className="min-w-0"><p className="text-xs font-bold leading-5 text-[#414a44]">{card.label}</p><p className="mt-1 break-words text-xl font-black tracking-tight text-[#171d19] sm:text-2xl">{card.value}</p></div></div>
                   <p className="mt-4 flex items-center gap-1.5 text-[10px] text-[#8b968f]"><TrendingUp size={13}/> {card.sub}</p>
                 </article>)}
               </div>
