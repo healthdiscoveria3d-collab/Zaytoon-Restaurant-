@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { LayoutDashboard, ClipboardList, CalendarDays, MessageSquare, LogOut, ShieldCheck, Utensils, LockKeyhole, BookOpen, Tags, Percent, Images, Settings, Plus, Save, Trash2, MoreVertical, Pencil, Menu, X, Leaf } from 'lucide-react';
+import { LayoutDashboard, ClipboardList, CalendarDays, MessageSquare, LogOut, ShieldCheck, Utensils, LockKeyhole, BookOpen, Tags, Percent, Images, Settings, Plus, Save, Trash2, MoreVertical, Pencil, Menu, X, Leaf, Truck, BarChart3 } from 'lucide-react';
 
 type Tab = 'dashboard' | 'orders' | 'completed' | 'reservations' | 'messages' | 'menu' | 'categories' | 'deals' | 'gallery' | 'staff' | 'settings';
 type Order = {
@@ -281,7 +281,7 @@ export const AdminPage: React.FC = () => {
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="flex min-w-0 items-center gap-3">
               <button onClick={()=>setMobileNavOpen(true)} aria-label="Open navigation" className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[#edf6f1] text-[#006b45] lg:hidden"><Menu size={19}/></button>
-              <div><p className="text-[10px] font-black uppercase tracking-[.2em] text-[#16835a]">ZAYTOON RESTAURANT · MANAGEMENT</p><h1 className="mt-1 text-2xl font-bold tracking-tight text-[#173d2d] sm:text-3xl">{tab==='dashboard'?'Dashboard overview':nav.find(item=>item.id===tab)?.label}</h1><p className="mt-1 text-xs text-[#7b8c82]">Manage orders, reservations and your restaurant website.</p></div>
+              <div className="flex items-center gap-2"><span className="grid h-8 w-8 place-items-center rounded-lg bg-[#006b45] text-white"><Leaf size={17}/></span><div><p className="text-[10px] font-black uppercase tracking-[.2em] text-[#16835a]">ZAYTOON RESTAURANT · MANAGEMENT</p><h1 className="mt-1 text-2xl font-bold tracking-tight text-[#173d2d] sm:text-3xl">{tab==='dashboard'?'Dashboard overview':nav.find(item=>item.id===tab)?.label}</h1><p className="mt-1 text-xs text-[#7b8c82]">Manage orders, reservations and your restaurant website.</p></div></div>
             </div>
             <div className="flex w-full items-center gap-3 sm:w-auto">
               <div className="relative min-w-0 flex-1 sm:w-64"><input value={searchQuery} onChange={e=>setSearchQuery(e.target.value)} placeholder="Search orders, guests..." className="w-full rounded-xl border border-[#e4ece7] bg-[#f7faf8] px-4 py-3 text-xs outline-none focus:border-[#16835a]"/></div>
