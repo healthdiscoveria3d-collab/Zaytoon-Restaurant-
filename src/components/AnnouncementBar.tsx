@@ -2,10 +2,10 @@ import React from 'react';
 import { Tag, Truck, Clock3, UtensilsCrossed, Sparkles } from 'lucide-react';
 
 const updates = [
-  { Icon: Tag, text: 'Explore the latest Zaytoon deals' },
-  { Icon: Truck, text: 'Choose pickup or delivery at checkout' },
-  { Icon: UtensilsCrossed, text: 'Discover Pakistani favourites and BBQ' },
-  { Icon: Clock3, text: 'Plan your next visit at Zaytoon' },
+  { Icon: Tag, text: 'Discover Pakistani, Chinese and BBQ favourites' },
+  { Icon: Truck, text: 'Enjoy a relaxed garden dining experience' },
+  { Icon: UtensilsCrossed, text: 'Plan a family meal at Zaytoon Garden' },
+  { Icon: Clock3, text: 'Near Shah Shams Toll Plaza, Multan' },
 ];
 
 export const AnnouncementBar: React.FC = () => (
