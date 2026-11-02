@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { LayoutDashboard, ClipboardList, CalendarDays, MessageSquare, LogOut, ShieldCheck, Utensils, LockKeyhole, BookOpen, Tags, Percent, Images, Settings, Plus, Save, Trash2, Pencil, Menu, X, Leaf, Truck, BarChart3, ChefHat, ShoppingCart, Users, UserRound, TrendingUp, WalletCards } from 'lucide-react';
 
 type Tab = 'dashboard' | 'orders' | 'completed' | 'reservations' | 'messages' | 'menu' | 'categories' | 'deals' | 'gallery' | 'staff' | 'settings';
@@ -405,7 +406,7 @@ export const AdminPage: React.FC = () => {
           </div>
           </div>
         </section>}
-        {editModalOpen && <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/55 p-3 sm:p-6"><div className="max-h-[94vh] w-full max-w-4xl overflow-y-auto rounded-2xl border border-[#dce5ef] bg-white p-4 shadow-2xl sm:p-6">
+        {editModalOpen && createPortal(<div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/55 p-3 sm:p-6"><div className="max-h-[94vh] w-full max-w-4xl overflow-y-auto rounded-2xl border border-[#dce5ef] bg-white p-4 shadow-2xl sm:p-6">
             <div className="mb-4 flex flex-wrap items-center justify-between gap-3"><div><h2 className="font-black">{tab === 'settings' ? 'Edit Website Settings' : contentSelection === '__new__' ? 'Create Record' : 'Edit Record'}</h2><p className="mt-1 text-[10px] text-gray-500">Fill in the details below. Fields are explained in simple words.</p></div><div className="flex items-center gap-2"><button onClick={saveContent} disabled={!contentJson.trim() || busy} className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#203f58] to-[#287b72] px-4 py-2.5 text-[10px] font-black text-white disabled:opacity-40"><Save size={14}/> Save changes</button>{tab !== 'settings' && contentSelection !== '__new__' && <button onClick={deleteContent} className="flex items-center gap-2 rounded-lg border border-red-200 px-3 py-2.5 text-[10px] font-bold text-red-600"><Trash2 size={14}/> Delete</button>}<button onClick={()=>setEditModalOpen(false)} aria-label="Close editor" className="grid h-9 w-9 place-items-center rounded-lg border border-gray-200 text-gray-500 hover:bg-gray-100"><X size={17}/></button></div></div>
             {contentJson && Object.keys(parsedContentDraft).length > 0 ? <div className="grid gap-4 sm:grid-cols-2">
               {Object.entries(parsedContentDraft).filter(([key]) => key !== 'id' && key !== 'slug' && key !== 'categoryId').map(([key, value]) => {
@@ -468,7 +469,7 @@ export const AdminPage: React.FC = () => {
             </div> : <p className="rounded-lg bg-gray-50 p-6 text-center text-xs text-gray-500">Select a record or press New to start editing.</p>}
             <details className="mt-4"><summary className="cursor-pointer text-[10px] font-bold text-gray-500">Advanced: view / edit raw JSON</summary><textarea value={contentJson} onChange={(e)=>setContentJson(e.target.value)} spellCheck={false} className="mt-2 min-h-48 w-full rounded-lg border border-gray-200 bg-[#fafafa] p-3 font-mono text-[10px] leading-5 outline-none focus:border-[#D71920]"/></details>
             <p className="mt-2 text-[10px] text-gray-400">Tip: Only change the details you understand. Leave other fields as they are. You can close this window without saving to cancel.</p>
-          </div></div>}
+          </div></div>, document.body)}
         {busy && <p className="mt-5 text-center text-[10px] font-bold uppercase tracking-wider text-gray-400">Refreshing data…</p>}
       </main>
       <nav className="fixed bottom-0 left-0 right-0 z-40 grid grid-cols-4 border-t border-[#edf0ed] bg-white/95 px-2 pb-[max(env(safe-area-inset-bottom),8px)] pt-2 shadow-[0_-5px_22px_rgba(20,50,35,.08)] backdrop-blur lg:hidden">
