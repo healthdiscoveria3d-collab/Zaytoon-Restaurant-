@@ -273,7 +273,7 @@ export const AdminPage: React.FC = () => {
   if (!authenticated) return (
     <div className="min-h-screen bg-[#19382d] px-4 py-12 text-white">
       <div className="mx-auto max-w-md">
-        <div className="mb-8 flex items-center gap-3"><span className="grid h-12 w-12 place-items-center rounded-2xl border border-[#d5bd8b]/40 bg-white text-[#006b45] shadow-lg"><Leaf size={25}/></span><div><p className="text-xs font-black uppercase tracking-[.2em] text-[#d5bd8b]">Zaytoon Restaurant</p><p className="text-sm text-white/55">Private management portal</p></div></div>
+        <div className="mb-8 flex items-center gap-3"><span className="grid h-12 w-12 place-items-center rounded-2xl border border-[#d5bd8b]/40 bg-white text-[#006b45] shadow-lg"><Leaf size={25}/></span><div><p className="text-xs font-black uppercase tracking-[.2em] text-[#d5bd8b]">Zaytoon Garden Restaurant</p><p className="text-sm text-white/55">Multan · Private management portal</p></div></div>
         <div className="rounded-[28px] border border-white/10 bg-white/[0.07] p-7 shadow-2xl backdrop-blur-xl sm:p-9">
           <div className="mb-6 flex items-center gap-3"><span className="grid h-11 w-11 place-items-center rounded-xl bg-white/10"><LockKeyhole size={20}/></span><div><h1 className="text-2xl font-black">Admin Login</h1><p className="mt-1 text-xs text-white/50">Authorized restaurant staff only</p></div></div>
           <form onSubmit={login} className="space-y-4">
@@ -305,7 +305,7 @@ export const AdminPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-[#f3f7f5] text-[#18352b] lg:flex">
       <aside className="hidden bg-gradient-to-b from-[#006b45] via-[#08764e] to-[#00583b] p-4 text-white lg:sticky lg:top-0 lg:block lg:h-screen lg:w-64 lg:shrink-0 lg:p-5">
-        <div className="flex items-center gap-3">{siteLogoUrl ? <img src={siteLogoUrl} alt="Zaytoon logo" className="h-11 w-11 rounded-full bg-black object-contain p-0.5"/> : <span className="grid h-11 w-11 place-items-center rounded-2xl border border-white/30 bg-white text-[#006b45] shadow-lg"><Leaf size={25}/></span>}<div><p className="text-sm font-black uppercase tracking-[.14em]">Zaytoon</p><p className="text-[9px] font-bold uppercase tracking-[.2em] text-[#d5bd8b]">Restaurant · Admin</p></div></div>
+        <div className="flex items-center gap-3">{siteLogoUrl ? <img src={siteLogoUrl} alt="Zaytoon logo" className="h-11 w-11 rounded-full bg-black object-contain p-0.5"/> : <span className="grid h-11 w-11 place-items-center rounded-2xl border border-white/30 bg-white text-[#006b45] shadow-lg"><Leaf size={25}/></span>}<div><p className="text-sm font-black uppercase tracking-[.14em]" >Zaytoon Garden</p><p className="text-[9px] font-bold uppercase tracking-[.2em] text-[#d5bd8b]">Multan · Admin</p></div></div>
         <nav className="mt-6 flex flex-col gap-1">
           {nav.map(item=><button key={item.id} onClick={()=>{setTab(item.id);setSearchQuery('');setError('');setMobileNavOpen(false);}} className={'flex shrink-0 items-center gap-3 rounded-xl border px-3 py-3.5 text-left text-xs font-semibold transition '+(tab===item.id?'border-white/20 bg-white text-[#006b45] shadow-lg':'border-transparent text-white/75 hover:border-white/10 hover:bg-white/10 hover:text-white')}>{item.icon}{item.label}</button>)}
         </nav>
@@ -320,7 +320,7 @@ export const AdminPage: React.FC = () => {
             <button onClick={()=>setMobileNavOpen(true)} aria-label="Open navigation" className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[#edf6f1] text-[#006b45] lg:hidden"><Menu size={19}/></button>
             <span className="grid h-14 w-14 shrink-0 place-items-center overflow-hidden rounded-full border border-[#e3e9e5] bg-black shadow-sm">{siteLogoUrl ? <img src={siteLogoUrl} alt="Zaytoon Restaurant logo" className="h-full w-full rounded-full object-cover"/> : <span className="text-lg font-black text-white">Z</span>}</span>
             <div className="min-w-0 flex-1">
-              <p className="text-sm font-black uppercase leading-snug tracking-[.055em] text-[#08764e] sm:text-xl">ZAYTOON RESTAURANT</p>
+              <p className="text-sm font-black uppercase leading-snug tracking-[.055em] text-[#08764e] sm:text-xl" >ZAYTOON GARDEN RESTAURANT</p>
               <p className="mt-1 text-[8px] font-bold uppercase leading-3 tracking-[.14em] text-[#a18a5d] sm:text-[9px]">Restaurant management</p>
             </div>
             <div className="hidden shrink-0 items-center gap-2 rounded-full bg-[#edf6f1] px-3 py-2 sm:flex"><span className="h-2 w-2 rounded-full bg-[#20a36b]"/><span className="text-[10px] font-bold text-[#16835a]">Secure session</span></div>
@@ -433,7 +433,7 @@ export const AdminPage: React.FC = () => {
                   reservationTimeSlots: 'Har time alag line par HH:MM format mein likhein. Example: 18:30',
                   reservationMaxTablesPerSlot: 'Har time slot par maximum kitni table bookings accept hongi.',
                   reservationMaxGuests: 'Ek reservation mein maximum guests ki tadaad.',
-                  reservationSeatingOptions: 'Har seating option alag line par. IDs: indoor_family_hall, outdoor_riverside, executive_lounge, any.',
+                  reservationSeatingOptions: 'Har seating option alag line par. IDs: indoor_family_hall, outdoor_garden, family_lawn, any.',
                   logoUrl: 'Paste a direct image URL here. Save to update the website header, footer and admin sidebar.',
                 };
                 const fieldPlaceholders: Record<string, string> = {
