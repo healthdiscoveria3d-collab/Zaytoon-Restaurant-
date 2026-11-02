@@ -8,10 +8,10 @@ export const Header: React.FC<HeaderProps> = ({ currentPath, navigate }) => {
   const { totalItems, subtotal, openCart, fulfilment, setFulfilment, selectedLocation } = useCart();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [logoUrl, setLogoUrl] = useState<string>('');
+  const [logoUrl, setLogoUrl] = useState<string>('/images/zaytoon-garden-logo.svg');
   const [brandName, setBrandName] = useState('Zaytoon Garden Restaurant');
   const [phone, setPhone] = useState('+92 317 1110000');
-  useEffect(() => { fetch('/api/v1/site-settings/public').then(r => r.json()).then(result => { setLogoUrl(String(result.data?.logoUrl || '')); setBrandName(String(result.data?.brandName || 'Zaytoon Garden Restaurant')); setPhone(String(result.data?.phone || '+92 317 1110000')); }).catch(() => {}); }, []);
+  useEffect(() => { fetch('/api/v1/site-settings/public').then(r => r.json()).then(result => { setLogoUrl(String(result.data?.logoUrl || '/images/zaytoon-garden-logo.svg')); setBrandName(String(result.data?.brandName || 'Zaytoon Garden Restaurant')); setPhone(String(result.data?.phone || '+92 317 1110000')); }).catch(() => {}); }, []);
   useEffect(() => { const onScroll = () => setIsScrolled(window.scrollY > 8); window.addEventListener('scroll', onScroll, { passive: true }); return () => window.removeEventListener('scroll', onScroll); }, []);
   const links = [{label:'Home',path:'/'},{label:'Menu',path:'/menu'},{label:'Deals',path:'/deals'},{label:'About',path:'/about'},{label:'Gallery',path:'/gallery'},{label:'Contact',path:'/contact'}];
   const go = (path:string) => { navigate(path); setMobileMenuOpen(false); window.scrollTo({top:0,behavior:'smooth'}); };
