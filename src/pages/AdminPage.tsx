@@ -299,8 +299,8 @@ export const AdminPage: React.FC = () => {
         </div>
       </aside>
       {mobileNavOpen && <div className="fixed inset-0 z-50 lg:hidden"><button aria-label="Close navigation" onClick={()=>setMobileNavOpen(false)} className="absolute inset-0 bg-black/50"/><div className="absolute inset-y-0 left-0 flex w-[ min(82vw,300px)] flex-col bg-[#006b45] p-5 text-white shadow-2xl"><div className="mb-6 flex items-center justify-between"><div className="flex items-center gap-3">{siteLogoUrl ? <img src={siteLogoUrl} alt="Zaytoon logo" className="h-10 w-10 rounded-full bg-black object-contain p-0.5"/> : <span className="grid h-10 w-10 place-items-center rounded-xl border border-white/30 bg-white text-[#006b45]"><Leaf size={23}/></span>}<div><p className="text-sm font-black uppercase tracking-wider">Zaytoon</p><p className="text-[9px] uppercase tracking-widest text-[#d5bd8b]">Restaurant · Admin</p></div></div><button onClick={()=>setMobileNavOpen(false)} aria-label="Close menu" className="grid h-9 w-9 place-items-center rounded-lg hover:bg-white/10"><X size={19}/></button></div><nav className="flex flex-1 flex-col gap-1">{nav.map(item=><button key={item.id} onClick={()=>{setTab(item.id);setSearchQuery('');setError('');setMobileNavOpen(false);}} className={'flex items-center gap-3 rounded-xl border px-3 py-3.5 text-left text-xs font-semibold '+(tab===item.id?'border-white/20 bg-white text-[#006b45] shadow-lg':'border-transparent text-white/75 hover:bg-white/10')}>{item.icon}{item.label}</button>)}</nav><div className="mt-4"><button onClick={logout} className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#ffd166] to-[#f4a261] px-3 py-3 text-[10px] font-black uppercase tracking-wider text-[#263449] shadow-md"><LogOut size={14}/> Logout</button></div></div></div>}
-      <main className="min-w-0 flex-1 px-4 py-5 pb-24 sm:px-7 lg:px-8 lg:py-6">
-        <header className="mb-5 rounded-2xl border border-[#e4ece7] bg-white p-4 shadow-[0_5px_22px_rgba(0,70,45,0.05)] sm:px-5">
+      <main className="min-w-0 flex-1 overflow-x-hidden px-3 py-4 pb-32 sm:px-7 lg:px-8 lg:py-6 lg:pb-6">
+        <header className="mb-4 min-w-0 rounded-2xl border border-[#e4ece7] bg-white p-3 shadow-[0_5px_22px_rgba(0,70,45,0.05)] sm:mb-5 sm:p-4 sm:px-5">
           <div className="flex items-center gap-3">
             <button onClick={()=>setMobileNavOpen(true)} aria-label="Open navigation" className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[#edf6f1] text-[#006b45] lg:hidden"><Menu size={19}/></button>
             <span className="grid h-14 w-14 shrink-0 place-items-center overflow-hidden rounded-full border border-[#e3e9e5] bg-black shadow-sm">{siteLogoUrl ? <img src={siteLogoUrl} alt="Zaytoon Restaurant logo" className="h-full w-full rounded-full object-cover"/> : <span className="text-lg font-black text-white">Z</span>}</span>
@@ -316,7 +316,7 @@ export const AdminPage: React.FC = () => {
           </div>
         </header>
         {error && <div className="mb-5 flex items-center justify-between gap-3 rounded-lg border border-red-200 bg-red-50 p-3 text-xs text-red-700"><span>{error}</span><button onClick={()=>setError('')} className="font-black">×</button></div>}
-        {tab==='dashboard' && <section className="space-y-5">
+        {tab==='dashboard' && <section className="min-w-0 space-y-4 overflow-hidden sm:space-y-5">
           {(() => {
             const now=new Date();
             const start=new Date(now);
@@ -341,20 +341,20 @@ export const AdminPage: React.FC = () => {
                 <div><p className="text-sm font-semibold text-[#8a918d]">Hello,</p><h2 className="text-2xl font-black tracking-tight text-[#173d2d] sm:text-3xl">{username || 'Admin'}</h2><p className="mt-1 text-xs text-[#8a918d]">Here is your restaurant’s performance.</p></div>
                 <select value={dashboardPeriod} onChange={e=>setDashboardPeriod(e.target.value as any)} className="rounded-full border border-[#e4e9e5] bg-white px-4 py-2.5 text-xs font-bold text-[#315744] shadow-sm"><option value="month">Last Month</option><option value="week">This Week</option><option value="today">Today</option></select>
               </div>
-              <div className="grid grid-cols-2 gap-3 sm:gap-4">
+              <div className="grid min-w-0 grid-cols-1 gap-3 min-[390px]:grid-cols-2 sm:gap-4">
                 {[
                   {label:'Total Orders',value:scoped.length,sub:'Orders received',icon:<ShoppingCart size={21}/>,tone:'bg-[#edf4ee] text-[#52785d]'},
                   {label:'Total Revenue',value:'PKR '+revenue.toLocaleString(),sub:'Completed orders',icon:<span className="text-xl font-black">₨</span>,tone:'bg-[#edf4ee] text-[#52785d]'},
                   {label:'Total Customers',value:customers,sub:'Unique customers',icon:<Users size={21}/>,tone:'bg-[#edf4ee] text-[#52785d]'},
                   {label:'Active Customers',value:activeCustomers,sub:'With active orders',icon:<UserRound size={21}/>,tone:'bg-[#edf4ee] text-[#52785d]'}
-                ].map(card=><article key={card.label} className="min-h-[142px] rounded-2xl border border-[#edf0ed] bg-white p-4 shadow-[0_5px_20px_rgba(22,55,38,.07)] sm:p-5">
-                  <div className="flex items-start gap-3"><span className={'grid h-11 w-11 shrink-0 place-items-center rounded-full '+card.tone}>{card.icon}</span><div className="min-w-0"><p className="text-xs font-bold leading-5 text-[#414a44]">{card.label}</p><p className="mt-1 break-words text-xl font-black tracking-tight text-[#171d19] sm:text-2xl">{card.value}</p></div></div>
+                ].map(card=><article key={card.label} className="min-h-[118px] min-w-0 rounded-2xl border border-[#edf0ed] bg-white p-3 shadow-[0_5px_20px_rgba(22,55,38,.07)] min-[390px]:p-3.5 sm:min-h-[142px] sm:p-5">
+                  <div className="flex min-w-0 items-start gap-2 min-[390px]:gap-3"><span className={'grid h-11 w-11 shrink-0 place-items-center rounded-full '+card.tone}>{card.icon}</span><div className="min-w-0"><p className="text-xs font-bold leading-5 text-[#414a44]">{card.label}</p><p className="mt-1 break-words text-xl font-black tracking-tight text-[#171d19] sm:text-2xl">{card.value}</p></div></div>
                   <p className="mt-4 flex items-center gap-1.5 text-[10px] text-[#8b968f]"><TrendingUp size={13}/> {card.sub}</p>
                 </article>)}
               </div>
               <div className="rounded-2xl border border-[#edf0ed] bg-white p-4 shadow-[0_5px_20px_rgba(22,55,38,.06)] sm:p-5">
                 <div className="mb-2"><h3 className="text-base font-bold text-[#202923]">Overall Performance</h3><p className="mt-1 text-[10px] text-[#9aa39d]">Daily order activity · Last 7 days</p></div>
-                <div className="h-48 w-full">
+                <div className="h-40 w-full min-w-0 sm:h-48">
                   <svg viewBox="0 0 600 160" preserveAspectRatio="none" className="h-full w-full" role="img" aria-label="Daily order activity chart">
                     <defs><linearGradient id="ordersArea" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stopColor="#5c896b" stopOpacity=".18"/><stop offset="100%" stopColor="#5c896b" stopOpacity="0"/></linearGradient></defs>
                     <polygon points={`24,150 ${points} 516,150`} fill="url(#ordersArea)"/>
@@ -365,7 +365,7 @@ export const AdminPage: React.FC = () => {
               </div>
               <div className="grid gap-4 lg:grid-cols-2">
                 <div className="rounded-2xl border border-[#edf0ed] bg-white p-4 shadow-sm"><div className="mb-3 flex items-center justify-between"><h3 className="text-sm font-bold">Recent Orders</h3><button onClick={()=>setTab('orders')} className="text-xs font-bold text-[#08764e]">View all →</button></div>{active.slice().sort((a,b)=>b.createdAt.localeCompare(a.createdAt)).slice(0,4).map(o=><div key={o.reference} className="flex justify-between gap-3 border-t border-[#f0f2f0] py-3"><div><p className="text-xs font-bold">{o.customerName}</p><p className="mt-1 text-[10px] text-[#89948d]">{o.reference} · {pretty(o.status)}</p></div><p className="text-xs font-black text-[#08764e]">PKR {Number(o.total).toLocaleString()}</p></div>)}{!active.length&&<p className="py-4 text-center text-xs text-[#89948d]">No active orders.</p>}</div>
-                <div className="rounded-2xl border border-[#edf0ed] bg-white p-4 shadow-sm"><div className="mb-3 flex items-center justify-between"><h3 className="text-sm font-bold">Menu Items</h3><button onClick={()=>setTab('menu')} className="text-xs font-bold text-[#08764e]">Manage →</button></div><div className="grid grid-cols-2 gap-3">{menuPreviewItems.slice(0,4).map(p=><div key={p.id} className="overflow-hidden rounded-xl border border-[#edf0ed]"><img src={p.image} alt={p.name} className="h-20 w-full object-cover"/><div className="p-2"><p className="truncate text-[11px] font-bold">{p.name}</p><p className="mt-1 text-[11px] font-black text-[#08764e]">PKR {Number(p.price||0).toLocaleString()}</p></div></div>)}</div>{!menuPreviewItems.length&&<p className="py-4 text-center text-xs text-[#89948d]">Menu items loading or not added yet.</p>}</div>
+                <div className="rounded-2xl border border-[#edf0ed] bg-white p-4 shadow-sm"><div className="mb-3 flex items-center justify-between"><h3 className="text-sm font-bold">Menu Items</h3><button onClick={()=>setTab('menu')} className="text-xs font-bold text-[#08764e]">Manage →</button></div><div className="grid grid-cols-1 gap-3 min-[390px]:grid-cols-2">{menuPreviewItems.slice(0,4).map(p=><div key={p.id} className="overflow-hidden rounded-xl border border-[#edf0ed]"><img src={p.image} alt={p.name} className="h-20 w-full object-cover"/><div className="p-2"><p className="truncate text-[11px] font-bold">{p.name}</p><p className="mt-1 text-[11px] font-black text-[#08764e]">PKR {Number(p.price||0).toLocaleString()}</p></div></div>)}</div>{!menuPreviewItems.length&&<p className="py-4 text-center text-xs text-[#89948d]">Menu items loading or not added yet.</p>}</div>
               </div>
             </>;
           })()}
