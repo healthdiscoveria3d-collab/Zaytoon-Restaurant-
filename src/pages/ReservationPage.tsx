@@ -16,7 +16,7 @@ export const ReservationPage: React.FC<ReservationPageProps> = ({ navigate }) =>
   const [timeSlot, setTimeSlot] = useState('20:30');
   const [bookingSettings, setBookingSettings] = useState(initialSiteSettings);
   const [guests, setGuests] = useState('4');
-  const [seatingPreference, setSeatingPreference] = useState('outdoor_riverside');
+  const [seatingPreference, setSeatingPreference] = useState('outdoor_garden');
   const [specialRequest, setSpecialRequest] = useState('');
 
   const [availableSlots, setAvailableSlots] = useState<{ slot: string; available: boolean; remainingTables: number }[]>([]);
@@ -100,7 +100,7 @@ export const ReservationPage: React.FC<ReservationPageProps> = ({ navigate }) =>
             Table & Terrace Reservations
           </h1>
           <p className="text-sm sm:text-base text-[#F4F4F4]/85 max-w-2xl mx-auto">
-            Book your family table in our air-conditioned dining halls or secure an open-air table on the Indus riverside terrace.
+            Request a table for your family or group. Choose indoor seating or the outdoor garden area.
           </p>
         </div>
       </section>
@@ -193,7 +193,7 @@ export const ReservationPage: React.FC<ReservationPageProps> = ({ navigate }) =>
                     onChange={(e) => setSeatingPreference(e.target.value)}
                     className="w-full text-sm p-3 rounded-lg border border-[#F4F4F4] bg-white focus:outline-none focus:ring-1 focus:ring-[#F4C542]"
                   >
-                    {(Array.isArray(bookingSettings.reservationSeatingOptions) ? bookingSettings.reservationSeatingOptions : ['outdoor_riverside', 'indoor_family_hall', 'executive_lounge', 'any']).map((option: string) => <option key={option} value={option}>{({ indoor_family_hall: 'Air-Conditioned Indoor Family Hall', outdoor_riverside: 'Outdoor Standard Terrace (Indus View)', executive_lounge: 'Executive / Travelers Lounge', any: 'First Available Best Table' } as Record<string, string>)[option] || option.replaceAll('_', ' ')}</option>)}
+                    {(Array.isArray(bookingSettings.reservationSeatingOptions) ? bookingSettings.reservationSeatingOptions : ['outdoor_garden', 'indoor_family_hall', 'family_lawn', 'any']).map((option: string) => <option key={option} value={option}>{({ indoor_family_hall: 'Indoor Family Seating', outdoor_garden: 'Outdoor Garden Seating', family_lawn: 'Family Lawn', any: 'First Available Table' } as Record<string, string>)[option] || option.replaceAll('_', ' ')}</option>)}
                   </select>
                 </div>
               </div>
@@ -229,7 +229,7 @@ export const ReservationPage: React.FC<ReservationPageProps> = ({ navigate }) =>
                     required
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    placeholder="e.g. 0302 6777908"
+                    placeholder="e.g. 0317 1110000"
                     className="w-full text-sm p-3 rounded-lg border border-[#F4F4F4] bg-white focus:outline-none focus:ring-1 focus:ring-[#F4C542]"
                   />
                 </div>
