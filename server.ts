@@ -181,6 +181,21 @@ async function hydrateDatabase() {
     await saveRecord('site_settings', 'main', siteSettings);
   }
 
+  // One-time tenant customization for the Zaytoon Garden Restaurant Multan prospect demo.
+  // This updates the admin-managed records once; subsequent edits in Admin remain persistent.
+  if (!(siteSettings as any).zaytoonGardenMultanDemoV1) {
+    siteSettings = { ...initialSiteSettings, zaytoonGardenMultanDemoV1: true } as typeof siteSettings;
+    categories = [...initialCategories];
+    menuItems = [...initialMenuItems];
+    deals = [...initialDeals];
+    gallery = [...initialGallery];
+    await saveRecord('site_settings', 'main', siteSettings);
+    for (const item of categories) await saveRecord('categories', item.id, item);
+    for (const item of menuItems) await saveRecord('menu_items', item.id, item);
+    for (const item of deals) await saveRecord('deals', item.id, item);
+    for (const item of gallery) await saveRecord('gallery', item.id, item);
+  }
+
   staffMembers = await listRecords<any>('staff');
 
   const savedGallery = await listRecords<typeof gallery[number]>('gallery');
