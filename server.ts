@@ -129,73 +129,10 @@ async function hydrateDatabase() {
   if (savedDeals.length) deals = savedDeals;
   else for (const item of deals) await saveRecord('deals', item.id, item);
 
-  // Versioned image refresh updates old database records without resetting prices or other admin edits.
-  const imagesMigrated = Boolean((siteSettings as typeof siteSettings & { productImagesMigratedV3?: boolean }).productImagesMigratedV3);
-  if (!imagesMigrated) {
-    categories = categories.map((savedItem) => {
-      const seededItem = initialCategories.find((item) => item.id === savedItem.id);
-      return seededItem ? { ...savedItem, image: seededItem.image } : savedItem;
-    });
-    menuItems = menuItems.map((savedItem) => {
-      const seededItem = initialMenuItems.find((item) => item.id === savedItem.id);
-      return seededItem ? { ...savedItem, image: seededItem.image } : savedItem;
-    });
-    deals = deals.map((savedItem) => {
-      const seededItem = initialDeals.find((item) => item.id === savedItem.id);
-      return seededItem ? { ...savedItem, image: seededItem.image } : savedItem;
-    });
-    for (const item of categories) await saveRecord('categories', item.id, item);
-    for (const item of menuItems) await saveRecord('menu_items', item.id, item);
-    for (const item of deals) await saveRecord('deals', item.id, item);
-    siteSettings = { ...siteSettings, productImagesMigratedV3: true };
-    await saveRecord('site_settings', 'main', siteSettings);
-  }
-
-  // One-time targeted image repair for Murgh Makhni Handi; preserve all other saved menu edits.
-  const makhniImageMigrated = Boolean((siteSettings as typeof siteSettings & { murghMakhniImageMigratedV1?: boolean }).murghMakhniImageMigratedV1);
-  if (!makhniImageMigrated) {
-    const repairedItem = menuItems.find((item) => item.id === 'item-white-makhni-handi');
-    if (repairedItem) {
-      const seededItem = initialMenuItems.find((item) => item.id === 'item-white-makhni-handi');
-      if (seededItem) {
-        const updatedItem = { ...repairedItem, image: seededItem.image };
-        menuItems = menuItems.map((item) => item.id === updatedItem.id ? updatedItem : item);
-        await saveRecord('menu_items', updatedItem.id, updatedItem);
-      }
-    }
-    siteSettings = { ...siteSettings, murghMakhniImageMigratedV1: true };
-    await saveRecord('site_settings', 'main', siteSettings);
-  }
-
-  // One-time targeted image repair for the N-70 Highway Express Platter.
-  const highwayPlatterImageMigrated = Boolean((siteSettings as typeof siteSettings & { highwayPlatterImageMigratedV1?: boolean }).highwayPlatterImageMigratedV1);
-  if (!highwayPlatterImageMigrated) {
-    const savedDeal = deals.find((item) => item.id === 'deal-highway-traveler-platter');
-    const seededDeal = initialDeals.find((item) => item.id === 'deal-highway-traveler-platter');
-    if (savedDeal && seededDeal) {
-      const updatedDeal = { ...savedDeal, image: seededDeal.image };
-      deals = deals.map((item) => item.id === updatedDeal.id ? updatedDeal : item);
-      await saveRecord('deals', updatedDeal.id, updatedDeal);
-    }
-    siteSettings = { ...siteSettings, highwayPlatterImageMigratedV1: true };
-    await saveRecord('site_settings', 'main', siteSettings);
-  }
-
-  // One-time tenant customization for the Zaytoon Garden Restaurant Multan prospect demo.
-  // This updates the admin-managed records once; subsequent edits in Admin remain persistent.
-  if (!(siteSettings as any).zaytoonGardenMultanDemoV1) {
-    siteSettings = { ...initialSiteSettings, zaytoonGardenMultanDemoV1: true } as typeof siteSettings;
-    categories = [...initialCategories];
-    menuItems = [...initialMenuItems];
-    deals = [...initialDeals];
-    gallery = [...initialGallery];
-    await saveRecord('site_settings', 'main', siteSettings);
-    for (const item of categories) await saveRecord('categories', item.id, item);
-    for (const item of menuItems) await saveRecord('menu_items', item.id, item);
-    for (const item of deals) await saveRecord('deals', item.id, item);
-    for (const item of gallery) await saveRecord('gallery', item.id, item);
-  }
-
+  // Never overwrite admin-managed image URLs during startup or tenant updates.
+  // Existing category, menu, deal and gallery records are the source of truth.
+  // Seed defaults only when a collection is empty (handled above).
+  
   staffMembers = await listRecords<any>('staff');
 
   const savedGallery = await listRecords<typeof gallery[number]>('gallery');
