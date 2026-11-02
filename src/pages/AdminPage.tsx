@@ -76,17 +76,18 @@ export const AdminPage: React.FC = () => {
     } finally { setBusy(false); }
   };
 
-  // Keep Android/browser Back inside the admin portal instead of leaving the panel.
+  // Android/browser Back from any section returns to the dashboard overview.
   useEffect(() => {
     const adminPath = window.location.pathname;
-    window.history.pushState({ adminPanel: true }, '', adminPath);
-    const keepAdminOpen = () => {
-      if (window.location.pathname !== adminPath) window.history.pushState({ adminPanel: true }, '', adminPath);
-      else window.history.pushState({ adminPanel: true }, '', adminPath);
+    window.history.pushState({ adminPanel: true, tab }, '', adminPath);
+    const returnToOverview = () => {
+      setMobileNavOpen(false);
+      setTab('dashboard');
+      window.history.pushState({ adminPanel: true, tab: 'dashboard' }, '', adminPath);
     };
-    window.addEventListener('popstate', keepAdminOpen);
-    return () => window.removeEventListener('popstate', keepAdminOpen);
-  }, []);
+    window.addEventListener('popstate', returnToOverview);
+    return () => window.removeEventListener('popstate', returnToOverview);
+  }, [tab]);
 
   useEffect(() => {
     request('/me').then(() => setAuthenticated(true)).catch(() => setAuthenticated(false)).finally(() => setChecking(false));
@@ -294,18 +295,20 @@ export const AdminPage: React.FC = () => {
       </aside>
       {mobileNavOpen && <div className="fixed inset-0 z-50 lg:hidden"><button aria-label="Close navigation" onClick={()=>setMobileNavOpen(false)} className="absolute inset-0 bg-black/50"/><div className="absolute inset-y-0 left-0 flex w-[ min(82vw,300px)] flex-col bg-[#006b45] p-5 text-white shadow-2xl"><div className="mb-6 flex items-center justify-between"><div className="flex items-center gap-3">{siteLogoUrl ? <img src={siteLogoUrl} alt="Zaytoon logo" className="h-10 w-10 rounded-xl bg-white object-contain p-1"/> : <span className="grid h-10 w-10 place-items-center rounded-xl border border-white/30 bg-white text-[#006b45]"><Leaf size={23}/></span>}<div><p className="text-sm font-black uppercase tracking-wider">Zaytoon</p><p className="text-[9px] uppercase tracking-widest text-[#d5bd8b]">Restaurant · Admin</p></div></div><button onClick={()=>setMobileNavOpen(false)} aria-label="Close menu" className="grid h-9 w-9 place-items-center rounded-lg hover:bg-white/10"><X size={19}/></button></div><nav className="flex flex-1 flex-col gap-1">{nav.map(item=><button key={item.id} onClick={()=>{setTab(item.id);setSearchQuery('');setError('');setMobileNavOpen(false);}} className={'flex items-center gap-3 rounded-xl border px-3 py-3.5 text-left text-xs font-semibold '+(tab===item.id?'border-white/20 bg-white text-[#006b45] shadow-lg':'border-transparent text-white/75 hover:bg-white/10')}>{item.icon}{item.label}</button>)}</nav><div className="mt-4"><button onClick={logout} className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#ffd166] to-[#f4a261] px-3 py-3 text-[10px] font-black uppercase tracking-wider text-[#263449] shadow-md"><LogOut size={14}/> Logout</button></div></div></div>}
       <main className="min-w-0 flex-1 px-4 py-5 pb-12 sm:px-7 lg:px-8 lg:py-6">
-        <header className="mb-6 rounded-2xl border border-[#e4ece7] bg-white px-4 py-4 shadow-[0_5px_22px_rgba(0,70,45,0.05)] sm:px-6">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div className="flex min-w-0 items-center gap-3">
-              <button onClick={()=>setMobileNavOpen(true)} aria-label="Open navigation" className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[#edf6f1] text-[#006b45] lg:hidden"><Menu size={19}/></button>
-              <div className="flex items-center gap-2"><span className="grid h-12 w-12 shrink-0 place-items-center overflow-hidden rounded-xl border border-[#e3e9e5] bg-white shadow-sm">{siteLogoUrl ? <img src={siteLogoUrl} alt="Zaytoon logo" className="h-full w-full object-contain p-1"/> : <Leaf size={26} className="text-[#08764e]"/>}</span><div><p className="text-base font-black uppercase tracking-[.16em] text-[#08764e] sm:text-lg">ZAYTOON RESTAURANT</p><p className="mt-0.5 text-[9px] font-bold uppercase tracking-[.22em] text-[#a18a5d]">Restaurant management</p><h1 className="mt-2 text-2xl font-bold tracking-tight text-[#173d2d] sm:text-3xl">{tab==='dashboard'?'Dashboard overview':nav.find(item=>item.id===tab)?.label}</h1><p className="mt-1 text-xs text-[#7b8c82]">Manage orders, reservations and your restaurant website.</p></div></div>
+        <header className="mb-5 rounded-2xl border border-[#e4ece7] bg-white p-4 shadow-[0_5px_22px_rgba(0,70,45,0.05)] sm:px-5">
+          <div className="flex items-center gap-3">
+            <button onClick={()=>setMobileNavOpen(true)} aria-label="Open navigation" className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[#edf6f1] text-[#006b45] lg:hidden"><Menu size={19}/></button>
+            <span className="grid h-14 w-14 shrink-0 place-items-center overflow-hidden rounded-full border border-[#e3e9e5] bg-black shadow-sm">{siteLogoUrl ? <img src={siteLogoUrl} alt="Zaytoon Restaurant logo" className="h-full w-full rounded-full object-cover"/> : <span className="text-lg font-black text-white">Z</span>}</span>
+            <div className="min-w-0 flex-1">
+              <p className="text-lg font-black uppercase leading-tight tracking-[.09em] text-[#08764e] sm:text-xl">ZAYTOON RESTAURANT</p>
+              <p className="mt-0.5 text-[9px] font-bold uppercase tracking-[.18em] text-[#a18a5d]">Restaurant management</p>
             </div>
-            <div className="flex w-full items-center gap-3 sm:w-auto">
-              <div className="relative min-w-0 flex-1 sm:w-64"><input value={searchQuery} onChange={e=>setSearchQuery(e.target.value)} placeholder="Search orders, guests..." className="w-full rounded-xl border border-[#e4ece7] bg-[#f7faf8] px-4 py-3 text-xs outline-none focus:border-[#16835a]"/></div>
-              <div className="flex shrink-0 items-center gap-2 rounded-xl bg-[#edf6f1] px-3 py-2.5">{siteLogoUrl ? <img src={siteLogoUrl} alt="Zaytoon logo" className="h-8 w-8 rounded-full bg-white object-contain p-1"/> : <span className="grid h-8 w-8 place-items-center rounded-full bg-[#006b45] text-xs font-black text-white">Z</span>}<span className="hidden text-left sm:block"><span className="block text-[10px] font-bold text-[#173d2d]">Administrator</span><span className="block text-[9px] text-[#789084]">Zaytoon Restaurant</span></span></div>
-            </div>
+            <div className="hidden shrink-0 items-center gap-2 rounded-full bg-[#edf6f1] px-3 py-2 sm:flex"><span className="h-2 w-2 rounded-full bg-[#20a36b]"/><span className="text-[10px] font-bold text-[#16835a]">Secure session</span></div>
           </div>
-          <div className="mt-3 flex items-center justify-between border-t border-[#edf2ef] pt-3"><span className="text-[10px] text-[#8a9a91]">Restaurant control center</span><span className="flex items-center gap-2 text-[10px] font-bold text-[#16835a]"><span className="h-2 w-2 rounded-full bg-[#20a36b]"/> Secure session active</span></div>
+          <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-[#edf2ef] pt-3">
+            <div><h1 className="text-base font-bold tracking-tight text-[#173d2d] sm:text-lg">{tab==='dashboard'?'Dashboard overview':nav.find(item=>item.id===tab)?.label}</h1><p className="mt-0.5 text-[11px] text-[#7b8c82]">Manage orders, reservations and your restaurant website.</p></div>
+            <div className="flex min-w-0 flex-1 items-center gap-2 sm:max-w-xs"><input value={searchQuery} onChange={e=>setSearchQuery(e.target.value)} placeholder="Search orders, guests..." className="w-full rounded-xl border border-[#e4ece7] bg-[#f7faf8] px-3 py-2.5 text-xs outline-none focus:border-[#16835a]"/></div>
+          </div>
         </header>
         {error && <div className="mb-5 flex items-center justify-between gap-3 rounded-lg border border-red-200 bg-red-50 p-3 text-xs text-red-700"><span>{error}</span><button onClick={()=>setError('')} className="font-black">×</button></div>}
         {tab==='dashboard' && <section className="mb-5">
