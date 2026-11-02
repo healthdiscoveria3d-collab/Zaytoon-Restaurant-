@@ -194,7 +194,7 @@ export const AdminPage: React.FC = () => {
     } catch { setError('Draft JSON is invalid. Re-select the record to reset it.'); }
   };
 
-  const filteredOrders = orders.filter((item) => item.status !== 'completed' && [item.reference, item.customerName, item.customerPhone, item.status].join(' ').toLowerCase().includes(searchQuery.toLowerCase()));
+  const filteredOrders = orders.filter((item) => !['completed','cancelled'].includes(item.status) && [item.reference, item.customerName, item.customerPhone, item.status].join(' ').toLowerCase().includes(searchQuery.toLowerCase()));
   const completedOrders = orders.filter((item) => item.status === 'completed' && [item.reference, item.customerName, item.customerPhone].join(' ').toLowerCase().includes(searchQuery.toLowerCase()));
   const filteredReservations = reservations.filter((item) => [item.reference, item.fullName, item.phone, item.status].join(' ').toLowerCase().includes(searchQuery.toLowerCase()));
   const menuPreviewItems = contentRows;
