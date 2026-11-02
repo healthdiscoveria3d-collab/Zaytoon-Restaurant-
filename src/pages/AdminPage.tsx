@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { LayoutDashboard, ClipboardList, CalendarDays, MessageSquare, LogOut, ShieldCheck, Utensils, LockKeyhole, BookOpen, Tags, Percent, Images, Settings, Plus, Save, Trash2, MoreVertical, Pencil, Menu, X, Leaf, Truck, BarChart3, ChefHat } from 'lucide-react';
+import { LayoutDashboard, ClipboardList, CalendarDays, MessageSquare, LogOut, ShieldCheck, Utensils, LockKeyhole, BookOpen, Tags, Percent, Images, Settings, Plus, Save, Trash2, Pencil, Menu, X, Leaf, Truck, BarChart3, ChefHat } from 'lucide-react';
 
 type Tab = 'dashboard' | 'orders' | 'completed' | 'reservations' | 'messages' | 'menu' | 'categories' | 'deals' | 'gallery' | 'staff' | 'settings';
 type Order = {
@@ -39,7 +39,6 @@ export const AdminPage: React.FC = () => {
   const [contentJson, setContentJson] = useState('');
   const [busy, setBusy] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [openRowMenu, setOpenRowMenu] = useState<string | null>(null);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [siteLogoUrl, setSiteLogoUrl] = useState('');
