@@ -78,7 +78,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ navigate }) => {
             What Distinguishes Zaytoon
           </h2>
           <p className="text-base sm:text-lg text-[#6B7280] leading-relaxed">
-            Our enduring principles that bring families and highway travelers back time after time.
+            A welcoming destination for families, friends and groups in Multan.
           </p>
         </div>
 
