@@ -46,7 +46,7 @@ export const ContactPage: React.FC = () => {
         throw new Error(data.message || 'Failed to submit message');
       }
 
-      setSuccessMsg('Your message has been delivered to Zaytoon Restaurant management. We will respond promptly.');
+      setSuccessMsg('Your message has been delivered to Zaytoon Garden Restaurant management. We will respond promptly.');
       setFullName('');
       setPhone('');
       setEmail('');
@@ -70,7 +70,7 @@ export const ContactPage: React.FC = () => {
             Contact & Directions
           </h1>
           <p className="text-sm sm:text-base text-[#F4F4F4]/85 max-w-2xl mx-auto">
-            Situated directly along the Indus riverbank near Ghazi Ghat Toll Plaza on the N-70 Highway.
+            Find us near Shah Shams Toll Plaza, Bili Wala, Multan. Call ahead for reservations and delivery information.
           </p>
         </div>
       </section>
@@ -81,7 +81,7 @@ export const ContactPage: React.FC = () => {
           <div className="lg:col-span-5 space-y-6">
             <div className="bg-white p-6 sm:p-8 rounded-xl border border-[#F4F4F4] shadow-sm space-y-6">
               <h2 className="font-display font-bold text-xl text-[#D71920]">
-                Restaurant Coordinates
+                Restaurant Location & Contact
               </h2>
 
               <div className="space-y-4 text-sm text-[#171717]/85">
@@ -91,7 +91,7 @@ export const ContactPage: React.FC = () => {
                     <strong className="block text-[#D71920]">Physical Location:</strong>
                     <span>{settings.address}</span>
                     <span className="block text-xs text-[#6B7280] mt-0.5">
-                      (N-70 National Highway Dining Milestone)
+                      Near Shah Shams Toll Plaza
                     </span>
                   </div>
                 </div>
@@ -145,7 +145,7 @@ export const ContactPage: React.FC = () => {
               {/* Direct Maps Action */}
               <div className="pt-4 border-t border-[#F4F4F4]">
                 <a
-                  href="https://maps.google.com/?q=Ghazi+Ghat+Toll+Plaza+Dera+Ghazi+Khan"
+                  href="https://www.google.com/maps/place/Zaytoon+Garden+Restaurant+Multan/@30.1019407,71.4943357,15z"
                   target="_blank"
                   rel="noreferrer"
                   className="w-full py-3 bg-[#D71920] hover:bg-[#171717] text-white font-semibold text-xs rounded-lg transition-colors flex items-center justify-center gap-2 shadow-sm"
@@ -215,7 +215,7 @@ export const ContactPage: React.FC = () => {
                     required
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    placeholder="e.g. 0302 6777908"
+                    placeholder="e.g. 0317 1110000"
                     className="w-full text-sm p-3 rounded-lg border border-[#F4F4F4] bg-[#FFFFFF]/30 focus:outline-none focus:ring-1 focus:ring-[#F4C542]"
                   />
                 </div>
