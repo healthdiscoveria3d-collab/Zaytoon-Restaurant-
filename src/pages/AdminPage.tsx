@@ -33,6 +33,7 @@ export const AdminPage: React.FC = () => {
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [messages, setMessages] = useState<Inquiry[]>([]);
   const [contentRows, setContentRows] = useState<any[]>([]);
+  const [staffRows, setStaffRows] = useState<any[]>([]);
   const [categoryOptions, setCategoryOptions] = useState<any[]>([]);
   const [contentSelection, setContentSelection] = useState('main');
   const [contentJson, setContentJson] = useState('');
@@ -106,6 +107,7 @@ export const AdminPage: React.FC = () => {
   useEffect(() => {
     if (!authenticated || tab !== 'dashboard') return;
     request('/content/menu_items').then(result => setContentRows(result.data || [])).catch(err => setError(err instanceof Error ? err.message : 'Could not load menu preview.'));
+    request('/content/staff').then(result => setStaffRows(result.data || [])).catch(() => setStaffRows([]));
   }, [authenticated, tab]);
 
   useEffect(() => {
@@ -305,7 +307,7 @@ export const AdminPage: React.FC = () => {
             const done=scoped.filter(o=>o.status==='completed');
             const revenue=done.reduce((n,o)=>n+o.total,0);
             const active=orders.filter(o=>!['completed','cancelled'].includes(o.status));
-            const staff=contentRows.filter(x=>x&&x.id&&x.name);
+            const staff=staffRows.filter(x=>x&&x.id&&x.name);
             return <>
               <div className="mb-5 flex flex-wrap items-center justify-between gap-3"><div><h2 className="text-base font-bold text-[#173d2d]">Business overview</h2><p className="mt-1 text-xs text-[#84958b]">Orders, revenue, menu and team at a glance</p></div><select value={dashboardPeriod} onChange={e=>setDashboardPeriod(e.target.value as any)} className="rounded-xl border border-[#dce9e1] bg-white px-4 py-2.5 text-xs font-bold text-[#006b45]"><option value="today">Today</option><option value="week">This week</option><option value="month">This month</option></select></div>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 2xl:grid-cols-4">{[{label:'Total Orders',value:scoped.length,hint:'Selected period'},{label:'Completed Orders',value:done.length,hint:'Successfully completed'},{label:'Revenue',value:'PKR '+revenue.toLocaleString(),hint:'Completed orders only'},{label:'Active Orders',value:active.length,hint:'Need attention'}].map((c,i)=><div key={c.label} className="rounded-2xl border border-[#e1ebe5] bg-white p-5 shadow-sm"><p className="text-[10px] font-black uppercase tracking-wider text-[#819188]">{c.label}</p><p className="mt-4 text-2xl font-black text-[#173d2d]">{c.value}</p><p className="mt-1 text-[10px] text-[#91a097]">{c.hint}</p></div>)}</div>
