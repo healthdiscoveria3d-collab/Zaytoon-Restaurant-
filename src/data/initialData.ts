@@ -84,7 +84,7 @@ export const initialCategories: MenuCategory[] = [
     description: 'A sample selection of soups, salads and desserts based on publicly listed favourites.',
     displayOrder: 5,
     image: kheerPhoto,
-    badge: '24/7 Chai',
+    badge: 'Popular',
   },
   {
     id: 'cat-breads',
@@ -394,7 +394,7 @@ export const initialDeals: Deal[] = [
     serves: '2 Persons',
     validUntil: '2026-12-31',
     isFeatured: true,
-    isActive: true,
+    isActive: false,
     badge: 'TRAVELER SPECIAL',
     terms: [
       'Available 24 hours round-the-clock for travelers.',
@@ -421,7 +421,7 @@ export const initialDeals: Deal[] = [
     serves: '2 to 3 Persons',
     validUntil: '2026-12-31',
     isFeatured: false,
-    isActive: true,
+    isActive: false,
     badge: 'LATE NIGHT 24/7',
     terms: [
       'Active between 10 PM and 4 AM.',
