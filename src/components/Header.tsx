@@ -9,7 +9,7 @@ export const Header: React.FC<HeaderProps> = ({ currentPath, navigate }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [logoUrl, setLogoUrl] = useState<string | null>(null);
-  const [brandName, setBrandName] = useState('ZAYTOON');
+  const [brandName, setBrandName] = useState('ZAYTOON RESTAURANT');
   useEffect(() => { fetch('/api/v1/site-settings/public').then(r => r.json()).then(result => { setLogoUrl(String(result.data?.logoUrl || '')); setBrandName(String(result.data?.brandName || 'ZAYTOON')); }).catch(() => setLogoUrl('')); }, []);
   useEffect(() => { const onScroll = () => setIsScrolled(window.scrollY > 8); window.addEventListener('scroll', onScroll, { passive: true }); return () => window.removeEventListener('scroll', onScroll); }, []);
   const links = [{label:'Home',path:'/'},{label:'Menu',path:'/menu'},{label:'Deals',path:'/deals'},{label:'About',path:'/about'},{label:'Gallery',path:'/gallery'},{label:'Contact',path:'/contact'}];
